@@ -1,10 +1,16 @@
 package stonks;
 
 public interface Constants {
-    /*Window settings*/
+    /*Application window settings*/
     public static final String APP_TITLE = "Stonks";
     public static final int APP_WIDTH = 1280;
     public static final int APP_HEIGHT = 720;
+    
+    /*DialogBox window settings*/
+    public static final int DBOX_WIDTH = 400;
+    public static final int DBOX_HEIGHT = 200;
+    public static enum DIALOG_TYPE {SUCCESS, ERROR, CONFIRM}
+    public static enum DIALOG_RETURN {X_CLOSED, NO, YES, OK, EXCEPTION}
     
     /*General*/
     

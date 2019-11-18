@@ -3,6 +3,7 @@ package stonks;
 import controllers.DashboardController;
 import controllers.GoalController;
 import controllers.ProfileController;
+import gui_components.DialogBox;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import models.GoalModel;
@@ -27,6 +28,9 @@ public class Stonks extends Application implements Constants{
         
         setupApp();
         setupWindow();
+        
+        /*DialogBox test - REMOVE LATER*/
+        DialogBox.display(DIALOG_TYPE.ERROR, "Limit of profiles reached", "You can only have 6 profiles, delete one to register another.");
     }
     
     public void setupApp(){
@@ -39,6 +43,7 @@ public class Stonks extends Application implements Constants{
         ProfileModel.setData(data);
         GoalModel.setData(data);
         WalletModel.setData(data);
+        
     }
     
     public void setupWindow(){
