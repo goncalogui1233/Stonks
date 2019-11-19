@@ -12,6 +12,42 @@ public interface Constants {
     public static enum DBOX_TYPE {SUCCESS, ERROR, CONFIRM}
     public static enum DBOX_RETURN {X_CLOSED, NO, YES, OK, EXCEPTION}
     public static final int DBOX_BUTTON_HEIGHT = 40;
+    public static enum DBOX_CONTENT {
+        /*ERROR MESSAGES*/
+        ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        
+        /*SUCCESS MESSAGES*/
+        SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        
+        /*CONFIRM MESSAGES*/
+        CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently...");
+        
+        String subTitle;
+        String newSubTitle;
+        String text;
+        
+        DBOX_CONTENT(String subTitle, String text){
+            this.subTitle = newSubTitle = subTitle;
+            this.text = text;
+        }
+        
+        public String getSubTitle(){
+            return newSubTitle;
+        }
+        
+        public String getText(){
+            return text;
+        }
+        
+        public String setExtra(String extra){
+            if(!subTitle.contains("{}"))
+                return null;
+            
+            newSubTitle = subTitle.replace("{}", extra);
+            
+            return newSubTitle;
+        }
+    }
     
     /*General*/
     

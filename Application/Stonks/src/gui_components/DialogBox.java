@@ -2,24 +2,15 @@ package gui_components;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,16 +21,16 @@ public class DialogBox implements Constants{
     private static Stage dialogBox;
     private static DBOX_RETURN answer;
     
-    public static DBOX_RETURN display(DBOX_TYPE type, String subTitle, String text){
+    public static DBOX_RETURN display(DBOX_TYPE type, DBOX_CONTENT content){
         dialogBox = new Stage();
         
         dialogBox.initStyle(StageStyle.UNDECORATED); /*Remove window default border and buttons (minimize, close, etc...)*/
         dialogBox.initModality(Modality.APPLICATION_MODAL); /*Unables clicks outside of this window*/
         dialogBox.setWidth(DBOX_WIDTH);
-        dialogBox.setHeight(DBOX_HEIGHT);
+        dialogBox.setMinHeight(DBOX_HEIGHT);
         dialogBox.setAlwaysOnTop(true); /*Cant be onfocused (application wise)*/
         
-        setupDialogBox(type, subTitle, text);
+        setupDialogBox(type, content.getSubTitle(), content.getText());
         
         dialogBox.showAndWait();
         
@@ -129,10 +120,10 @@ public class DialogBox implements Constants{
                 return;
         }
         
-        /*":first" & ":last" SELECTOR*/
+        /*":unique" & ":last" & ":first" SELECTOR*/
+        PseudoClass unique = PseudoClass.getPseudoClass("unique");
         PseudoClass first = PseudoClass.getPseudoClass("first");
         PseudoClass last = PseudoClass.getPseudoClass("last");
-        PseudoClass unique = PseudoClass.getPseudoClass("unique");
         
         for(Label btn:listButtons){
             btn.setId("button");
@@ -188,7 +179,5 @@ public class DialogBox implements Constants{
         //centerLayout.getStyleClass().add("BACKGROUND_GREEN");
         //bottomLayout.getStyleClass().add("BACKGROUND_BLUE");
         //imageContainer.getStyleClass().add("BACKGROUND_BLUE");
-        
-        return;
     }
 }
