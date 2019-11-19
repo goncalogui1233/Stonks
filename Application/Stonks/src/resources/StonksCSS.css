@@ -1,0 +1,44 @@
+/*DEBUG CSS ID CHUNKS*/
+.BACKGROUND_RED{
+    -fx-background-color: #AA0000;
+}
+.BACKGROUND_GREEN{
+    -fx-background-color: #00AA00;
+}
+.BACKGROUND_BLUE{
+    -fx-background-color: #0000AA;
+}
+
+/*GENERAL*/
+.root{
+    -fx-font-family: "Tahoma";
+}
+
+.label{
+    -fx-border-radius: 5px;
+    -fx-font-weight: normal;
+}
+
+/*DIALOG BOX*/
+#dialogBox#topLayout{
+    -fx-padding: 10px;
+}
+
+#dialogBox#title{
+    -fx-font-weight: bold;
+}
+
+#dialogBox#subTitle{
+    -fx-font-weight: bold;
+}
+
+#dialogBox#text{
+    -fx-font-weight: normal;
+}
+
+#dialogBox#button{
+    -fx-text-fill: #DDD;
+    -fx-font-weight: bold;
+    -fx-border-radius: 0px;
+    -fx-background-color: #333;
+}

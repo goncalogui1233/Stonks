@@ -3,6 +3,7 @@ package gui_components;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,11 +58,14 @@ public class DialogBox implements Constants{
         
         /*Content setup*/
         Label lblTitle;
+        
+        Pane imageContainer = new Pane();
         ImageView closeBtn = new ImageView(new Image("resources/DialogBox_Close.png"));
         closeBtn.setFitWidth(25);
         closeBtn.setFitHeight(25);
+        imageContainer.getChildren().add(closeBtn);
         
-        closeBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        imageContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             answer = DIALOG_RETURN.X_CLOSED;
             dialogBox.close();
         });
@@ -89,11 +93,40 @@ public class DialogBox implements Constants{
                 dialogBox.close();
                 return DIALOG_RETURN.EXCEPTION;
         }
+        
+        for(String s:listButtons){
+            Button btn = new Button(s);
+            btn.setId("button");
+            
+            btn.setMinSize((DBOX_WIDTH / listButtons.size()) - 1, DBOX_BUTTON_HEIGHT);
+            btn.setMaxSize((DBOX_WIDTH / listButtons.size()) - 1, DBOX_BUTTON_HEIGHT);
+            
+            bottomLayout.getChildren().add(btn);
+        }
+        
         topLayout.setLeft(lblTitle);
-        topLayout.setRight(closeBtn);
+        topLayout.setRight(imageContainer);
         topLayout.setBottom(lblSubTitle);
         
         centerLayout.getChildren().add(lblText);
+
+        /*CSS ID'S*/
+        rootLayout.setId("dialogBox");
+        
+        topLayout.setId("topLayout");
+        centerLayout.setId("centerLayout");
+        bottomLayout.setId("bottomLayout");
+        
+        lblTitle.setId("title");
+        lblSubTitle.setId("subTitle");
+        lblText.setId("text");
+        
+        /*DEBUG CSS*/
+        topLayout.getStyleClass().add("BACKGROUND_RED");
+        centerLayout.getStyleClass().add("BACKGROUND_GREEN");
+        bottomLayout.getStyleClass().add("BACKGROUND_BLUE");
+        
+        imageContainer.getStyleClass().add("BACKGROUND_BLUE");
         
         return answer;
     }
