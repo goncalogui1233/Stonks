@@ -83,3 +83,40 @@
     -fx-border-width: 0;
     -fx-background-radius: 0px 0px 4px 4px;
 }
+
+/*SideMenu*/
+#sideMenu{
+    -fx-border-width: 0 2 0 0;
+    -fx-border-color: #333;
+}
+#sideMenu#profileDiv{
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #333;
+    -fx-padding: 17px;
+}
+#sideMenu#profileDiv#profileIcon{
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+}
+#sideMenu#profileDiv#profileLinkDiv *{
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 10px 10px 10px 20px;
+}
+#sideMenu#linkDiv{
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #333;
+}
+#sideMenu#linkDiv *{
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 0px 17px 0px 17px;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-radius: 0px;
+    -fx-border-color: #DDD;
+    -fx-text-alignment: center;
+}
+#sideMenu#linkDiv *:last{
+    -fx-border-width: 0;
+}

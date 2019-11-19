@@ -27,7 +27,7 @@ public class DialogBox implements Constants{
         dialogBox.initStyle(StageStyle.UNDECORATED); /*Remove window default border and buttons (minimize, close, etc...)*/
         dialogBox.initModality(Modality.APPLICATION_MODAL); /*Unables clicks outside of this window*/
         dialogBox.setWidth(DBOX_WIDTH);
-        dialogBox.setMinHeight(DBOX_HEIGHT);
+        dialogBox.setHeight(DBOX_HEIGHT);
         dialogBox.setAlwaysOnTop(true); /*Cant be onfocused (application wise)*/
         
         setupDialogBox(type, content.getSubTitle(), content.getText());

@@ -1,12 +1,12 @@
 package stonks;
 
 public interface Constants {
-    /*Application window settings*/
+    /*Application window properties*/
     public static final String APP_TITLE = "Stonks";
     public static final int APP_WIDTH = 1280;
     public static final int APP_HEIGHT = 720;
     
-    /*DialogBox window settings*/
+    /*DialogBox window properties*/
     public static final int DBOX_WIDTH = 400;
     public static final int DBOX_HEIGHT = 200;
     public static enum DBOX_TYPE {SUCCESS, ERROR, CONFIRM}
@@ -48,6 +48,10 @@ public interface Constants {
             return newSubTitle;
         }
     }
+    
+    /*SideMenu properties*/
+    public static final int SIDEMENU_WIDTH = 256;
+    public static final int SIDEMENU_HEIGHT = APP_HEIGHT;
     
     /*General*/
     
