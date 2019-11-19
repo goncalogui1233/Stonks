@@ -1,9 +1,11 @@
 package models;
 
-import javafx.scene.paint.Color;
+import java.io.Serializable;
 import stonks.StonksData;
 
-public class ProfileModel {
+public class ProfileModel implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
     private static int idCounter = 0;
     private static StonksData data;
     
@@ -13,10 +15,10 @@ public class ProfileModel {
     private final String securityQuestion;
     private final String securityAnswer;
     private String password;
-    private Color color;
+    private String color;
 
     /*ProfileModel constructor WITH Password*/
-    public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, Color color) {
+    public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.securityQuestion = securityQuestion;
@@ -28,7 +30,7 @@ public class ProfileModel {
     }
     
     /*ProfileModel constructor WITHOUT Password*/
-    public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, Color color) {
+    public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.securityQuestion = securityQuestion;
@@ -78,11 +80,11 @@ public class ProfileModel {
         this.password = password;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 }
