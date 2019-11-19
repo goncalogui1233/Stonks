@@ -1,5 +1,6 @@
 package stonks;
 
+import com.sun.javafx.css.StyleManager;
 import controllers.DashboardController;
 import controllers.GoalController;
 import controllers.ProfileController;
@@ -30,7 +31,7 @@ public class Stonks extends Application implements Constants{
         setupWindow();
         
         /*DialogBox test - REMOVE LATER*/
-        DialogBox.display(DIALOG_TYPE.ERROR, "Limit of profiles reached", "You can only have 6 profiles, delete one to register another.");
+        DialogBox.display(DIALOG_TYPE.CONFIRM, "Limit of profiles reached", "You can only have 6 profiles, delete one to register another.");
     }
     
     public void setupApp(){
@@ -51,6 +52,9 @@ public class Stonks extends Application implements Constants{
         window.setResizable(false);
         window.setWidth(APP_WIDTH);
         window.setHeight(APP_HEIGHT);
+        
+        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+        StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS.css");
         
         window.show();
     }
