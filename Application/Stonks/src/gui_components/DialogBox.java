@@ -2,6 +2,9 @@ package gui_components;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.css.PseudoClass;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +20,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,9 +28,9 @@ import stonks.Constants;
 
 public class DialogBox implements Constants{
     private static Stage dialogBox;
-    private static DIALOG_RETURN answer;
+    private static DBOX_RETURN answer;
     
-    public static void display(DIALOG_TYPE type, String subTitle, String text){
+    public static DBOX_RETURN display(DBOX_TYPE type, String subTitle, String text){
         dialogBox = new Stage();
         
         dialogBox.initStyle(StageStyle.UNDECORATED); /*Remove window default border and buttons (minimize, close, etc...)*/
@@ -38,11 +42,12 @@ public class DialogBox implements Constants{
         setupDialogBox(type, subTitle, text);
         
         dialogBox.showAndWait();
+        
+        return answer;
     }
     
-    private static DIALOG_RETURN setupDialogBox(DIALOG_TYPE type, String subTitle, String text){
+    private static void setupDialogBox(DBOX_TYPE type, String subTitle, String text){
         BorderPane rootLayout = new BorderPane();
-        rootLayout.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderWidths.DEFAULT)));
         
         dialogBox.setScene(new Scene(rootLayout));
         
@@ -66,42 +71,86 @@ public class DialogBox implements Constants{
         imageContainer.getChildren().add(closeBtn);
         
         imageContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            answer = DIALOG_RETURN.X_CLOSED;
+            answer = DBOX_RETURN.X_CLOSED;
             dialogBox.close();
         });
         
         Label lblSubTitle = new Label(subTitle);
+        
         Label lblText = new Label(text);
+        lblText.setWrapText(true);
+        lblText.setTextAlignment(TextAlignment.JUSTIFY);
+        lblText.setMaxWidth(DBOX_WIDTH - 1);
         
-        List<String> listButtons = new ArrayList<>();
+        List<Label> listButtons = new ArrayList<>();
         
+        Label tempButton;
         switch(type){
             case SUCCESS:
                 lblTitle = new Label("Success");
-                listButtons.add("Ok");
+                
+                tempButton = new Label("Ok");
+                tempButton.setOnMouseClicked(e -> {
+                    answer = DBOX_RETURN.OK;
+                    dialogBox.close();
+                });
+                listButtons.add(tempButton);
                 break;
             case ERROR:
                 lblTitle = new Label("Error");
-                listButtons.add("Ok");
+                
+                tempButton = new Label("Ok");
+                tempButton.setOnMouseClicked(e -> {
+                    answer = DBOX_RETURN.OK;
+                    dialogBox.close();
+                });
+                listButtons.add(tempButton);
                 break;
             case CONFIRM:
                 lblTitle = new Label("Are you sure?");
-                listButtons.add("Yes");
-                listButtons.add("No");
+                
+                tempButton = new Label("Yes");
+                tempButton.setOnMouseClicked(e -> {
+                    answer = DBOX_RETURN.YES;
+                    dialogBox.close();
+                });
+                listButtons.add(tempButton);
+                
+                tempButton = new Label("No");
+                tempButton.setOnMouseClicked(e -> {
+                    answer = DBOX_RETURN.NO;
+                    dialogBox.close();
+                });
+                listButtons.add(tempButton);
                 break;
             default:
                 dialogBox.close();
-                return DIALOG_RETURN.EXCEPTION;
+                answer = DBOX_RETURN.EXCEPTION;
+                return;
         }
         
-        for(String s:listButtons){
-            Button btn = new Button(s);
+        /*":first" & ":last" SELECTOR*/
+        PseudoClass first = PseudoClass.getPseudoClass("first");
+        PseudoClass last = PseudoClass.getPseudoClass("last");
+        PseudoClass unique = PseudoClass.getPseudoClass("unique");
+        
+        for(Label btn:listButtons){
             btn.setId("button");
             
-            btn.setMinSize((DBOX_WIDTH / listButtons.size()) - 1, DBOX_BUTTON_HEIGHT);
-            btn.setMaxSize((DBOX_WIDTH / listButtons.size()) - 1, DBOX_BUTTON_HEIGHT);
+            btn.setMinSize((DBOX_WIDTH / listButtons.size()) - (4 / listButtons.size()), DBOX_BUTTON_HEIGHT);
+            btn.setMaxSize((DBOX_WIDTH / listButtons.size()) - (4 / listButtons.size()), DBOX_BUTTON_HEIGHT);
             
             bottomLayout.getChildren().add(btn);
+            
+            /*APPLY ":unique" SELECTOR IF THERE IS ONLY ONE BUTTON*/
+            if(listButtons.size() == 1)
+                btn.pseudoClassStateChanged(unique, true);
+            /*APPLY ":first" SELECTOR TO THE FIRST BUTTON*/
+            else if(btn.equals(listButtons.get(0)))
+                btn.pseudoClassStateChanged(first, true);
+            /*APPLY ":last" SELECTOR TO THE LAST BUTTON*/
+            else if(btn.equals(listButtons.get(listButtons.size() - 1)))
+                btn.pseudoClassStateChanged(last, true);
         }
         
         topLayout.setLeft(lblTitle);
@@ -110,6 +159,19 @@ public class DialogBox implements Constants{
         
         centerLayout.getChildren().add(lblText);
 
+        /*SELECTORS*/
+        PseudoClass selector;
+        if(type == DBOX_TYPE.ERROR)
+            selector = PseudoClass.getPseudoClass("error");
+        else if(type == DBOX_TYPE.SUCCESS)
+            selector = PseudoClass.getPseudoClass("success");
+        else
+            selector = null;
+        
+        try{
+            rootLayout.pseudoClassStateChanged(selector, true);
+        }catch(NullPointerException ex){ }
+        
         /*CSS ID'S*/
         rootLayout.setId("dialogBox");
         
@@ -122,12 +184,11 @@ public class DialogBox implements Constants{
         lblText.setId("text");
         
         /*DEBUG CSS*/
-        topLayout.getStyleClass().add("BACKGROUND_RED");
-        centerLayout.getStyleClass().add("BACKGROUND_GREEN");
-        bottomLayout.getStyleClass().add("BACKGROUND_BLUE");
+        //topLayout.getStyleClass().add("BACKGROUND_RED");
+        //centerLayout.getStyleClass().add("BACKGROUND_GREEN");
+        //bottomLayout.getStyleClass().add("BACKGROUND_BLUE");
+        //imageContainer.getStyleClass().add("BACKGROUND_BLUE");
         
-        imageContainer.getStyleClass().add("BACKGROUND_BLUE");
-        
-        return answer;
+        return;
     }
 }

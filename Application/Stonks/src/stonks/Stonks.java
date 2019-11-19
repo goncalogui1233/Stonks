@@ -31,7 +31,7 @@ public class Stonks extends Application implements Constants{
         setupWindow();
         
         /*DialogBox test - REMOVE LATER*/
-        DialogBox.display(DIALOG_TYPE.CONFIRM, "Limit of profiles reached", "You can only have 6 profiles, delete one to register another.");
+        System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, "Limit of profiles reached", "You can only have 6 profiles, delete one to register another."));
     }
     
     public void setupApp(){

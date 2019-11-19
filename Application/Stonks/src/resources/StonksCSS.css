@@ -12,6 +12,7 @@
 /*GENERAL*/
 .root{
     -fx-font-family: "Tahoma";
+    -fx-font-size: 12px;
 }
 
 .label{
@@ -20,16 +21,37 @@
 }
 
 /*DIALOG BOX*/
+#dialogBox{
+    -fx-border-color: #333;
+    -fx-border-width: 2;
+    -fx-border-radius: 5px;
+}
+
+#dialogBox:error{
+    -fx-border-color: #dc3545;
+}
+
+#dialogBox:success{
+    -fx-border-color: #28a745;
+}
+
 #dialogBox#topLayout{
+    -fx-padding: 10px 10px 0px 10px;
+}
+
+#dialogBox#centerLayout *{
     -fx-padding: 10px;
 }
 
 #dialogBox#title{
+    -fx-text-alignment: center;
     -fx-font-weight: bold;
+    -fx-font-size: 18px;
 }
 
 #dialogBox#subTitle{
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
 }
 
 #dialogBox#text{
@@ -37,8 +59,26 @@
 }
 
 #dialogBox#button{
+    -fx-alignment:center;
     -fx-text-fill: #DDD;
     -fx-font-weight: bold;
-    -fx-border-radius: 0px;
+    -fx-border-color: #DDD;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-radius:0px;
+    -fx-background-radius: 0px;
     -fx-background-color: #333;
+}
+
+#dialogBox#button:first{
+    -fx-border-width: 0;
+    -fx-background-radius: 0px 0px 0px 4px;
+}
+
+#dialogBox#button:last{
+    -fx-background-radius: 0px 0px 4px 0px;
+}
+
+#dialogBox#button:unique{
+    -fx-border-width: 0;
+    -fx-background-radius: 0px 0px 4px 4px;
 }
