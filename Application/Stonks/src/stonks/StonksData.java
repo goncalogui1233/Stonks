@@ -18,7 +18,25 @@ public class StonksData implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private HashMap<Integer, ProfileModel> listProfiles;
-    public ProfileModel currentProfile;
+    private ProfileModel currentProfile;
+
+    public HashMap<Integer, ProfileModel> getListProfiles() {
+        return listProfiles;
+    }
+
+    public void setListProfiles(HashMap<Integer, ProfileModel> listProfiles) {
+        this.listProfiles = listProfiles;
+    }
+
+    public ProfileModel getCurrentProfile() {
+        return currentProfile;
+    }
+
+    public void setCurrentProfile(ProfileModel currentProfile) {
+        this.currentProfile = currentProfile;
+    }
+    
+    
 
     public StonksData() {
         
