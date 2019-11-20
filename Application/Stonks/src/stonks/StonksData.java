@@ -1,11 +1,9 @@
 package stonks;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,9 +61,13 @@ public class StonksData implements Serializable {
                 FileInputStream fileIn = new FileInputStream("data.bin");
                 try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
                     Object obj = objectIn.readObject();
-                    
-                    StonksData data = (StonksData)obj;
-                    
+
+                    StonksData data = (StonksData) obj;
+
+                    if (data.listProfiles == null) {
+                        data.listProfiles = new HashMap<>();
+                    }
+
                     return data;
                 }
 

@@ -13,6 +13,26 @@ public class ProfileController {
         this.data = data;
     }
 
+    public int getNextId() {
+        if (data.getListProfiles() != null) {
+            if (data.getListProfiles().size() > 0) {
+
+                int biggest = 1;
+
+                for (Integer id : data.getListProfiles().keySet()) {
+                    if (id > biggest) {
+                        biggest = id;
+                    }
+                }
+
+                return ++biggest;
+            }
+        }
+
+        return 1;
+    }
+
+    //Inputs validation
     public boolean isFirstNameValid(String value) {
         if (value == null) {
             return false;
@@ -56,11 +76,17 @@ public class ProfileController {
 
         Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
         Matcher matcher = pattern.matcher(value);
-        
+
         return matcher.matches();
     }
 
     public int registerProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
+
+        if (data.getListProfiles() != null) {
+            if (data.getListProfiles().size() == 6) { //Constante
+                return 0;
+            }
+        }
 
         if (isFirstNameValid(firstName) && isLastNameValid(lastName) && isSecurityQuestionValid(securityQuestion)
                 && isSecurityAnswerValid(securityAnswer) && isColorValid(color)) {
@@ -78,8 +104,7 @@ public class ProfileController {
                 newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, color);
             }
 
-            System.out.println(newProfile.getId());
-            
+            newProfile.setId(this.getNextId());
             data.getListProfiles().put(newProfile.getId(), newProfile);
 
             return 1;
