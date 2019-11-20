@@ -20,14 +20,14 @@ public class TestsMain {
         System.out.println("Tests\n");
         StonksData data = new StonksData();
         data = data.loadDatabase();
-        //data.setCurrentProfile(new ProfileModel("firstName", "lastName", "question", "answer", "password", "#ffffff"));
-        //data.updateDatabase();
-
+        
         ProfileController pc = new ProfileController(data);
-        pc.registerProfile("Maria", "Leal", "question", "answer", null, "#f1f1f1");
+        pc.registerProfile("Maria", "Leal", "question", "answer", "Kappa123", "#f1f1f1");
         data.updateDatabase();
         
-        pc.loginProfile(6, null);
+        pc.loginProfile(6, "Kappa123");
+        pc.logoutProfile();
+        System.out.println(pc.recoverPassword(6, "answer"));
         
         if (data.getCurrentProfile() != null) {
             System.out.println("Loged in: " + data.getCurrentProfile().getFirstName() + " " + data.getCurrentProfile().getLastName());

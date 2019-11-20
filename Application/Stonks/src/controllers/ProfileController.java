@@ -177,4 +177,36 @@ public class ProfileController {
         }
         return 0;
     }
+
+    public int logoutProfile() {
+        if (this.profileIsLogedIn()) {
+            data.setCurrentProfile(null);
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public String recoverPassword(int id, String securityAnswer) {
+
+        //There can't be any loged in profile to recover a password
+        if (!this.profileIsLogedIn()) {
+            ProfileModel profile = getProfileById(id);
+
+            if (profile != null) {
+                //The profile must be associated with a password
+                if (profile.getPassword() != null) {
+                    //Checks if the security asnwer input is valid
+                    if (this.isSecurityAnswerValid(securityAnswer)) {
+                        //If the security answer input matches the profile security answer, returns the profile password
+                        if (securityAnswer.equals(profile.getSecurityAnswer())) {
+                            return profile.getPassword();
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 }
