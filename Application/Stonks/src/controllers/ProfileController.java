@@ -13,23 +13,54 @@ public class ProfileController {
         this.data = data;
     }
 
-    public int getNextId() {
-        if (data.getListProfiles() != null) {
-            if (data.getListProfiles().size() > 0) {
+    public boolean stonksHasProfiles() {
 
-                int biggest = 1;
-
-                for (Integer id : data.getListProfiles().keySet()) {
-                    if (id > biggest) {
-                        biggest = id;
-                    }
+        if (data != null) {
+            if (data.getListProfiles() != null) {
+                if (data.getListProfiles().size() > 0) {
+                    return true;
                 }
-
-                return ++biggest;
             }
         }
 
+        return false;
+    }
+
+    public boolean profileIsLogedIn() {
+
+        if (stonksHasProfiles()) {
+            if (data.getCurrentProfile() == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public int getNextId() {
+
+        if (stonksHasProfiles()) {
+            int biggest = 1;
+
+            for (Integer id : data.getListProfiles().keySet()) {
+                if (id > biggest) {
+                    biggest = id;
+                }
+            }
+
+            return ++biggest;
+        }
+
         return 1;
+    }
+
+    public ProfileModel getProfileById(int id) {
+
+        if (stonksHasProfiles()) {
+            return data.getListProfiles().get(id);
+        }
+
+        return null;
     }
 
     //Inputs validation
@@ -82,6 +113,10 @@ public class ProfileController {
 
     public int registerProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
 
+        if (data == null || data.getListProfiles() == null) {
+            return 0;
+        }
+
         if (data.getListProfiles() != null) {
             if (data.getListProfiles().size() == 6) { //Constante
                 return 0;
@@ -111,6 +146,35 @@ public class ProfileController {
 
         }
 
+        return 0;
+    }
+
+    public int loginProfile(int id, String password) {
+
+        //Profile can only login if there isnt any other loged profile
+        if (!this.profileIsLogedIn()) {
+
+            ProfileModel profile = this.getProfileById(id);
+
+            if (profile != null) {
+
+                //If the profile doesnt have a password, logs in the profile.
+                if (password == null && profile.getPassword() == null) {
+                    data.setCurrentProfile(profile);
+                    return 1;
+                }
+
+                //If the password input is correct
+                if (this.isPasswordValid(password)) {
+                    //If the password input matches the profile password, logs in the profile
+                    if (profile.getPassword().equals(password)) {
+                        data.setCurrentProfile(profile);
+                        return 1;
+                    }
+                }
+
+            }
+        }
         return 0;
     }
 }
