@@ -5,6 +5,7 @@
  */
 package stonks;
 
+import controllers.ProfileController;
 import models.ProfileModel;
 
 /**
@@ -12,14 +13,26 @@ import models.ProfileModel;
  * @author Tiago
  */
 public class TestsMain {
-    
-    public static void main (String args[]){
+
+    public static void main(String args[]) {
         System.out.println("Tests\n");
         StonksData data = new StonksData();
-        //data.currentProfile = new ProfileModel("firstName", "lastName", "question", "answer", "password", "#ffffff");
         data = data.loadDatabase();
-        /*data.currentProfile.setFirstName("firstname");
-        data.updateDatabase();*/
-        System.out.println(data.currentProfile.getFirstName());
+        //data.setCurrentProfile(new ProfileModel("firstName", "lastName", "question", "answer", "password", "#ffffff"));
+        //data.updateDatabase();
+        
+        //ProfileController pc = new ProfileController(data);
+        //pc.registerProfile("Maria", "Leal", "question", "answer", null, "#f1f1f1");
+        //data.updateDatabase();
+        if(data.getCurrentProfile() != null){
+            System.out.println(data.getCurrentProfile().getFirstName());
+        }
+        if (data.getListProfiles() != null) {
+            if (data.getListProfiles().size() > 0) {
+                System.out.println(data.getListProfiles().get(0).getFirstName());
+            } else {
+                System.out.println("No profiles created");
+            }
+        }
     }
 }
