@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import stonks.StonksData;
 
 public class ProfileModel implements Serializable{
@@ -16,6 +17,7 @@ public class ProfileModel implements Serializable{
     private final String securityAnswer;
     private String password;
     private String color;
+    private ArrayList<GoalModel> goals;
 
     /*ProfileModel constructor WITH Password*/
     public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
@@ -25,6 +27,7 @@ public class ProfileModel implements Serializable{
         this.securityAnswer = securityAnswer;
         this.password = password;
         this.color = color;
+        this.goals = new ArrayList();
         
         id = idCounter++;
     }
@@ -36,6 +39,7 @@ public class ProfileModel implements Serializable{
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.color = color;
+        this.goals = new ArrayList();
         
         id = idCounter++;
     }
@@ -90,5 +94,13 @@ public class ProfileModel implements Serializable{
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public ArrayList<GoalModel> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(ArrayList<GoalModel> goals) {
+        this.goals = goals;
     }
 }
