@@ -120,3 +120,16 @@
 #sideMenu#linkDiv *:last{
     -fx-border-width: 0;
 }
+
+/*Profile*/
+#TitleLabel{
+    -fx-font: bold 20pt "Arial";
+}
+
+#FormLabel{
+    -fx-font: bold 10pt "Arial";
+}
+
+#textFieldInput {
+    -fx-max-width: 150px;
+}

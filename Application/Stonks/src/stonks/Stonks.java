@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import models.GoalModel;
 import models.ProfileModel;
 import models.WalletModel;
+import views.ProfileEditView;
 
 public class Stonks extends Application implements Constants{
     private Stage window;
@@ -36,11 +37,9 @@ public class Stonks extends Application implements Constants{
         /*DialogBox test - REMOVE LATER*/
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
         
-        HBox mainTest = new HBox();
-        window.setScene(new Scene(mainTest));
-        mainTest.getChildren().add(new SideMenu().getRoot());
+        window.setScene(new Scene(new ProfileEditView()));
         
-        System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
+        //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }
     
     public void setupApp(){

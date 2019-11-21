@@ -56,6 +56,8 @@ public interface Constants {
     /*General*/
     
     /*Profile*/
+    public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
+    public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_HEIGHT;
     
     /*Dashboard*/
     
