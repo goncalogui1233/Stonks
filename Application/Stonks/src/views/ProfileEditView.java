@@ -1,8 +1,10 @@
 package views;
 
+import gui_components.DialogBox;
 import gui_components.SideMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -74,6 +76,16 @@ public class ProfileEditView extends HBox implements Constants{
         profileEditContainer.setCenter(vboxInput);
         
         hboxButton.getChildren().addAll(btnDeleteProfile, btnSave);
+        
+        btnDeleteProfile.setOnMouseClicked((event) ->
+        {
+            DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE);
+        });
+        
+        btnSave.setOnMouseClicked((event) ->
+        {
+            DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_PROFILE);
+        });
         
         rightPane.setRight(hboxButton);
         
