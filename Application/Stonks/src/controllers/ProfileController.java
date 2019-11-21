@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import models.ProfileModel;
@@ -208,5 +210,67 @@ public class ProfileController {
         }
 
         return null;
+    }
+
+    public int editProfile(int profileId, HashMap<String, String> fields) {
+
+        if (fields == null || fields.size() < 1) {
+            return 0;
+        }
+
+        if (this.stonksHasProfiles()) {
+            if (this.profileIsLogedIn()) {
+                if (data.getCurrentProfile().getId() == profileId) {
+
+                    String field;
+                    String newValue;
+
+                    for (Map.Entry<String, String> entry : fields.entrySet()) {
+                        field = entry.getKey();
+                        newValue = entry.getValue();
+
+                        if (field.equalsIgnoreCase("firstname")) {
+                            if (this.isFirstNameValid(newValue)) {
+                                data.getListProfiles().get(profileId).setFirstName(newValue);
+                                data.getCurrentProfile().setFirstName(newValue);
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                        if (field.equalsIgnoreCase("lastname")) {
+                            if (this.isLastNameValid(newValue)) {
+                                data.getListProfiles().get(profileId).setLastName(newValue);
+                                data.getCurrentProfile().setLastName(newValue);
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                        if (field.equalsIgnoreCase("password")) {
+                            if (this.isPasswordValid(newValue)) {
+                                data.getListProfiles().get(profileId).setPassword(newValue);
+                                data.getCurrentProfile().setPassword(newValue);
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                        if (field.equalsIgnoreCase("color")) {
+                            if (this.isColorValid(newValue)) {
+                                data.getListProfiles().get(profileId).setColor(newValue);
+                                data.getCurrentProfile().setColor(newValue);
+                            } else {
+                                return 0;
+                            }
+                        }
+                    }
+
+                    return 1;
+                }
+            }
+        }
+
+        return 0;
     }
 }
