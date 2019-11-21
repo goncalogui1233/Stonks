@@ -133,3 +133,24 @@
 #textFieldInput {
     -fx-max-width: 150px;
 }
+
+.label.labelButton{
+    -fx-alignment:center;
+    -fx-text-fill: #DDD;
+    -fx-font-weight: bold;
+    -fx-border-color: #DDD;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-background-color: #333;
+    -fx-padding: 10 10 10 10;
+    -fx-font-margin: 10 10 10 10;
+}
+
+.label.lbtnSaveChange{
+        -fx-background-color: grey;
+}
+
+.label.lbtnDelete{
+        -fx-background-color: red;
+}

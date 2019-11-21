@@ -62,6 +62,9 @@ public class ProfileEditView extends HBox implements Constants{
         Label btnDeleteProfile = new Label("Delete Profile");
         Label btnSave = new Label("Save Changes");
         
+        btnDeleteProfile.getStyleClass().addAll("labelButton","lbtnDelete");
+        btnSave.getStyleClass().addAll("labelButton", "lbtnSaveChange");
+        
         profileEditContainer.setTop(lblTitle);        
                 
         vboxInput.getChildren().addAll(lblFN,txtFN);
