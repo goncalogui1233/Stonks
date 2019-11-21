@@ -35,51 +35,48 @@ public class StonksData implements Serializable {
     public void setCurrentProfile(ProfileModel currentProfile) {
         this.currentProfile = currentProfile;
     }
-    
-    
 
     public StonksData() {
-        
+        this.listProfiles = new HashMap<>();
     }
 
     public StonksData loadDatabase() {
+
         File f = new File("data.bin"); //Colocar constante
+        FileInputStream fin;
+        ObjectInputStream ois;
+
         if (!f.exists()) {
             try {
                 f.createNewFile();
                 System.out.println("Create");
+                return this;
             } catch (IOException ex) {
                 return null;
             }
         } else {
-            FileInputStream fin;
+
             try {
-                fin = new FileInputStream("data.bin");
-                ObjectInputStream ois;
-                try {
-                    ois = new ObjectInputStream(fin);
-                    try {
-                        StonksData data;
-                        data = (StonksData) ois.readObject();
 
-                        ois.close();
-                        fin.close();
-                        return data;
-                        
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(StonksData.class.getName()).log(Level.SEVERE, null, ex);
+                FileInputStream fileIn = new FileInputStream("data.bin");
+                try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+                    Object obj = objectIn.readObject();
+
+                    StonksData data = (StonksData) obj;
+
+                    if (data.listProfiles == null) {
+                        data.listProfiles = new HashMap<>();
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(StonksData.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(StonksData.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            return null;
+                    return data;
+                }
+
+            } catch (Exception ex) {
+                return this;
+            }
         }
-        
-        return null;
+
+        //return null;
     }
 
     public void updateDatabase() {

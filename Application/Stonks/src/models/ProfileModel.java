@@ -9,7 +9,7 @@ public class ProfileModel implements Serializable{
     private static int idCounter = 0;
     private static StonksData data;
     
-    private final int id;
+    private int id;
     private String firstName;
     private String lastName;
     private final String securityQuestion;
@@ -48,6 +48,10 @@ public class ProfileModel implements Serializable{
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
