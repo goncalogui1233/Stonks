@@ -67,6 +67,8 @@ public class StonksData implements Serializable {
                     if (data.listProfiles == null) {
                         data.listProfiles = new HashMap<>();
                     }
+                    
+                    data.currentProfile = null;
 
                     return data;
                 }
