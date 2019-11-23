@@ -14,6 +14,7 @@ import models.GoalModel;
 import models.ProfileModel;
 import models.WalletModel;
 import views.ProfileEditView;
+import views.ProfileLoginView;
 import views.ProfileRegisterView;
 
 public class Stonks extends Application implements Constants{
@@ -39,7 +40,7 @@ public class Stonks extends Application implements Constants{
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
         
         //window.setScene(new Scene(new ProfileEditView()));
-        window.setScene(new Scene(new ProfileRegisterView()));
+        window.setScene(new Scene(new ProfileLoginView()));
         
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }
