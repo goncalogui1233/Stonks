@@ -1,5 +1,6 @@
 package models;
 
+import java.time.LocalDate;
 import java.util.Date;
 import stonks.StonksData;
 
@@ -9,11 +10,14 @@ public class WalletModel {
     
     private final int id;
     private int savedMoney;
-    private Date firstDepositDate;
-    private Date lastDepositDate;
+    private LocalDate firstDepositDate;
+    private LocalDate lastDepositDate;
 
     public WalletModel() {
         id = idCounter++;
+        savedMoney = 0;
+        firstDepositDate = null;
+        lastDepositDate = null;
     }
 
     public static void setData(StonksData data){
@@ -32,19 +36,19 @@ public class WalletModel {
         this.savedMoney = savedMoney;
     }
 
-    public Date getFirstDepositDate() {
+    public LocalDate getFirstDepositDate() {
         return firstDepositDate;
     }
 
-    public void setFirstDepositDate(Date firstDepositDate) {
+    public void setFirstDepositDate(LocalDate firstDepositDate) {
         this.firstDepositDate = firstDepositDate;
     }
 
-    public Date getLastDepositDate() {
+    public LocalDate getLastDepositDate() {
         return lastDepositDate;
     }
 
-    public void setLastDepositDate(Date lastDepositDate) {
+    public void setLastDepositDate(LocalDate lastDepositDate) {
         this.lastDepositDate = lastDepositDate;
     }
     
