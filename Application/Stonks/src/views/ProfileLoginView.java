@@ -23,7 +23,6 @@ public class ProfileLoginView extends HBox implements Constants{
     private VBox vbForm;
     private BorderPane bpLoginRoot;
     private HBox hbTitle;
-    private HBox hbOption;
     private BorderPane bpOption;
     //Title Labels
     private Label lblTitle;
@@ -72,7 +71,6 @@ public class ProfileLoginView extends HBox implements Constants{
         lblPassword.getStyleClass().add("FormLabel");
         txtPassword.getStyleClass().add("textFieldInput");
         
-        hbOption  = new HBox();
         btnForgotPassword = new Label("I forgot my password");
         btnSignIp = new Label("Sign in");
         
@@ -87,8 +85,7 @@ public class ProfileLoginView extends HBox implements Constants{
         bpOption.setLeft(btnForgotPassword);
         bpOption.setRight(btnSignIp);
         
-        vbForm.getChildren().addAll(lblPassword,txtPassword);
-      
+        vbForm.getChildren().addAll(lblPassword,txtPassword);      
         
         bpLoginRoot.setTop(hbTitle);
         bpLoginRoot.setCenter(vbForm);
