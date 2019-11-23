@@ -121,6 +121,23 @@
     -fx-border-width: 0;
 }
 
+/*SideProfileBar*/
+#sideProfileBar{
+    -fx-border-color: #333;
+    -fx-border-width: 0px 2px 0px 0px;
+    -fx-alignment:TOP_CENTER;
+}
+
+#sideProfileBar #profileIcon{
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+#sideProfileBar #divider-18{
+    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
 /*Profile*/
 .TitleLabel{
     -fx-font: bold 20pt "Arial";

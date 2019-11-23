@@ -53,6 +53,10 @@ public interface Constants {
     public static final int SIDEMENU_WIDTH = 256;
     public static final int SIDEMENU_HEIGHT = APP_HEIGHT;
     
+    /*SideProfileBar properties*/
+    public static final int SIDEPROFILEBAR_WIDTH = 115;
+    public static final int SIDEPROFILEBAR_HEIGHT = APP_HEIGHT;
+    
     /*General*/
     public static final String[] SECURITY_QUESTIONS_LIST = new String[]{
         "Select One",
