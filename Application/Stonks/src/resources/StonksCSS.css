@@ -122,15 +122,20 @@
 }
 
 /*Profile*/
-#TitleLabel{
+.TitleLabel{
     -fx-font: bold 20pt "Arial";
 }
 
-#FormLabel{
+.hbTitle{
+    -fx-alignment: center; 
+    -fx-padding: 50 0 0 25;
+}
+
+.FormLabel{
     -fx-font: bold 10pt "Arial";
 }
 
-#textFieldInput {
+.textFieldInput {
     -fx-max-width: 150px;
 }
 
@@ -148,9 +153,30 @@
 }
 
 .label.lbtnSaveChange{
-        -fx-background-color: grey;
+    -fx-background-color: grey;
 }
 
 .label.lbtnDelete{
-        -fx-background-color: red;
+    -fx-background-color: red;
+}
+
+#registerRoot{
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-border-radius: 5px;
+    -fx-text-alignment: center;
+}
+
+#registerVbox {
+    -fx-alignment: center-left;
+    -fx-padding: 0 50 50 50;
+}
+
+#registerVbox > * {
+    -fx-min-width: 50px;
+    -fx-max-width: 200px;
+}
+
+.signUp_btn{
+    -fx-alignment: center-right;
 }

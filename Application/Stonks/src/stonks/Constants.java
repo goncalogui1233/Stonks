@@ -54,6 +54,13 @@ public interface Constants {
     public static final int SIDEMENU_HEIGHT = APP_HEIGHT;
     
     /*General*/
+    public static final String[] SECURITY_QUESTIONS_LIST = new String[]{
+        "Select One",
+        "What was your childhood nickname?",
+        "What is the first name of your first grade teacher?",
+        "What was the name of the town where you were born?",
+        "What was the name of your first pet?",
+        "Who is your favorite fictional character?"};
     
     /*Profile*/
     public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
