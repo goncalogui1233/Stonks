@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
@@ -55,6 +56,8 @@ public class ProfileRegisterView extends HBox implements Constants
     
     //Choice Field
     private ChoiceBox cbSecurityQuestion;
+    //Colorpicker Field
+    private ColorPicker cpPickColor;
     
     public ProfileRegisterView()
     {
@@ -115,8 +118,10 @@ public class ProfileRegisterView extends HBox implements Constants
         lblSecurtyAnswer.getStyleClass().add("FormLabel");
         txtSecurtyAnswer.getStyleClass().add("textFieldInput");
         
-         lblColor = new Label("Color");
+        lblColor = new Label("Color");
         lblColor.getStyleClass().add("FormLabel");
+        cpPickColor = new ColorPicker();
+        cpPickColor.setId("colorPickerLogin");
         
         hbSignUp = new HBox();
         btnSignUp = new Label("Sign Up");
@@ -133,7 +138,7 @@ public class ProfileRegisterView extends HBox implements Constants
         vboxForm.getChildren().addAll(lblPassword,txtPassword);
         vboxForm.getChildren().addAll(lblSecurtyQuestion,cbSecurityQuestion);
         vboxForm.getChildren().addAll(lblSecurtyAnswer,txtSecurtyAnswer);
-        vboxForm.getChildren().addAll(lblColor);
+        vboxForm.getChildren().addAll(lblColor,cpPickColor);
                 
         bpContext.setTop(hbTitle);
         bpContext.setCenter(vboxForm);   

@@ -141,15 +141,15 @@
 
 .label.labelButton{
     -fx-alignment:center;
-    -fx-text-fill: #DDD;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-border-color: #DDD;
-    -fx-border-width: 0 0 0 1;
-    -fx-border-radius: 0px;
-    -fx-background-radius: 0px;
+    -fx-border-color: #333;
+    -fx-border-width: 0;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
     -fx-background-color: #333;
-    -fx-padding: 10 10 10 10;
-    -fx-font-margin: 10 10 10 10;
+    -fx-padding: 20 40 20 40;
+    -fx-font-margin: 10;
 }
 
 .label.lbtnSaveChange{
@@ -168,13 +168,12 @@
 }
 
 #registerVbox {
-    -fx-alignment: center-left;
-    -fx-padding: 0 50 50 50;
+    -fx-alignment: center;
 }
 
 #registerVbox > * {
-    -fx-min-width: 50px;
-    -fx-max-width: 200px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
 }
 
 .signUp_btn , .signIn_btn{
@@ -182,5 +181,5 @@
 }
 
 .forgotPassword_btn{
-        -fx-alignment: center-right;
+    -fx-alignment: center-right;
 }

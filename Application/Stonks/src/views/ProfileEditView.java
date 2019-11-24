@@ -2,6 +2,7 @@ package views;
 
 import gui_components.DialogBox;
 import gui_components.SideMenu;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +33,9 @@ public class ProfileEditView extends HBox implements Constants{
     private TextField txtFN; 
     private TextField txtLN;
     private TextField txtPassword;
+    
+    //Colorpicker Field
+    private ColorPicker cpPickColor;
     
     public ProfileEditView(){
         this.getChildren().add(new SideMenu().getRoot());
@@ -77,7 +81,9 @@ public class ProfileEditView extends HBox implements Constants{
         txtPassword.getStyleClass().add("textFieldInput");
         
         lblColor = new Label("Color");
+        cpPickColor = new ColorPicker();
         lblColor.getStyleClass().add("FormLabel");
+        cpPickColor.setId("colorPickerEdit");
         
         hboxButton = new HBox();
         rightPane = new BorderPane();
@@ -92,7 +98,7 @@ public class ProfileEditView extends HBox implements Constants{
         vboxInput.getChildren().addAll(lblFN,txtFN);
         vboxInput.getChildren().addAll(lblLN,txtLN);
         vboxInput.getChildren().addAll(lblPassword,txtPassword);
-        vboxInput.getChildren().addAll(lblColor);
+        vboxInput.getChildren().addAll(lblColor,cpPickColor);
         profileEditContainer.setCenter(vboxInput);
         
         hboxButton.getChildren().addAll(btnDeleteProfile, btnSave);
