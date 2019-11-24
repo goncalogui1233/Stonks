@@ -69,6 +69,12 @@ public interface Constants {
     /*Profile*/
     public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
     public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_AUTH_WIDTH = APP_WIDTH - SIDEPROFILEBAR_WIDTH;
+    public static final int PROFILE_AUTH_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_AUTH_BOX_WIDTH = 450;
+    public static final int PROFILE_AUTH_BOX_LOGIN_HEIGHT = 300;
+    public static final int PROFILE_AUTH_BOX_REGISTER_HEIGHT = 600;
+    public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 400;
     
     /*Dashboard*/
     
