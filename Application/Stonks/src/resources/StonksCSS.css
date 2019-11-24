@@ -159,6 +159,23 @@
     -fx-border-width: 0;
 }
 
+/*SideProfileBar*/
+#sideProfileBar{
+    -fx-border-color: #333;
+    -fx-border-width: 0px 2px 0px 0px;
+    -fx-alignment:TOP_CENTER;
+}
+
+#sideProfileBar #profileIcon{
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+#sideProfileBar #divider-18{
+    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
 /*Profile*/
 .TitleLabel{
     -fx-font: bold 20pt "Arial";
@@ -166,6 +183,10 @@
 
 .hbTitle{
     -fx-alignment: center; 
+    -fx-padding: 15 0 10 0;
+}
+
+.editTitleLabel{
     -fx-padding: 50 0 0 25;
 }
 
@@ -176,6 +197,28 @@
 .textFieldInput {
     -fx-max-width: 150px;
 }
+
+.labelButton{
+    -fx-alignment:center;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #333;
+    -fx-border-width: 0;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
+    -fx-background-color: #333;
+    -fx-padding: 20 40 20 40;
+    -fx-font-margin: 10;
+}
+
+.lbtnSaveChange{
+    -fx-background-color: grey;
+}
+.lbtnDelete{
+    -fx-background-color: red;
+}
+
+#registerRoot, #loginRoot, #recoverRoot{
 
 .label .labelButton{
     -fx-alignment:center;
@@ -204,6 +247,40 @@
     -fx-border-radius: 5px;
     -fx-text-alignment: center;
 }
+
+#registerVbox, #loginVbox, #recoverVbox{
+    -fx-alignment: center;
+}
+
+#editVbox {
+    -fx-padding: 0 0 0 60;
+}
+
+#registerVbox > * , #loginVbox > *, #recoverVbox > * ,
+#editVbox > *{
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-padding: 8 0 8 0;
+}
+
+.signUp_btn , .signIn_btn{
+    -fx-alignment: center-right;
+}
+
+#registerVbox > .label, #loginVbox > .label, 
+#recoverVbox > .label, #editVbox > .label{
+    -fx-padding: 15  0 5 0;
+}
+
+#editHbox{
+    -fx-spacing: 35;
+    -fx-padding: 0 55 55 0;
+}
+
+.forgotPassword_btn{
+    -fx-padding: 10;
+    -fx-alignment: center-right;
+    -fx-text-fill: blue;
 
 #registerVbox {
     -fx-alignment: center-left;

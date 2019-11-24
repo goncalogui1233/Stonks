@@ -14,6 +14,10 @@ import models.GoalModel;
 import models.ProfileModel;
 import models.WalletModel;
 import views.ProfileEditView;
+import gui_components.LoginBox;
+import gui_components.PasswordRecoveryBox;
+import gui_components.RegisterBox;
+import views.ProfileView;
 
 public class Stonks extends Application implements Constants{
     private Stage window;
@@ -37,7 +41,8 @@ public class Stonks extends Application implements Constants{
         /*DialogBox test - REMOVE LATER*/
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
         
-        window.setScene(new Scene(new ProfileEditView()));
+        //window.setScene(new Scene(new ProfileEditView()));
+        window.setScene(new Scene(new ProfileView().getRoot()));
         
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }
