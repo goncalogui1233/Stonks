@@ -20,7 +20,8 @@ public interface Constants {
         SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         
         /*CONFIRM MESSAGES*/
-        CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently...");
+        CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
+        CONFIRM_DELETE_GOAL("Deleting goal \"{}\"", "This action will delete this goal permanently...");
         
         String subTitle;
         String newSubTitle;

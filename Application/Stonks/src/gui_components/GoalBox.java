@@ -6,6 +6,8 @@
 package gui_components;
 
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -103,6 +105,15 @@ public class GoalBox implements Constants {
         btnDelete = new Button("DELETE");
         btnEdit = new Button("EDIT");
 
+        //Delete behaviour
+        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_GOAL);
+            }
+        });
+
+        //Edit behaviour
         btnDelete.getStyleClass().addAll("btn", "btn-danger");
         btnEdit.getStyleClass().addAll("btn", "btn-primary");
 
