@@ -206,6 +206,11 @@
     -fx-alignment: center-right;
 }
 
+#registerVbox > .label, #loginVbox > .label, 
+#recoverVbox > .label, #editVbox > .label{
+    -fx-padding: 15  0 5 0;
+}
+
 #editHbox{
     -fx-spacing: 35;
     -fx-padding: 0 55 55 0;
