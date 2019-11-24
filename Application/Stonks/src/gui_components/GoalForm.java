@@ -5,8 +5,11 @@
  */
 package gui_components;
 
+import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,7 +17,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -25,10 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.converter.NumberStringConverter;
-import stonks.Constants;
-import static stonks.Constants.DBOX_HEIGHT;
-import static stonks.Constants.DBOX_WIDTH;
+import controllers.GoalController;
 
 /**
  *
@@ -36,9 +35,14 @@ import static stonks.Constants.DBOX_WIDTH;
  */
 public class GoalForm {
 
-    private static Stage goalForm;
+    private Stage goalForm;
+    private GoalController controller;
 
-    public static void display(int goalId) {
+    public GoalForm(GoalController controller) {
+        this.controller = controller;
+    }
+
+    public void display(int goalId) {
         goalForm = new Stage();
 
         goalForm.initStyle(StageStyle.UNDECORATED);
@@ -55,7 +59,7 @@ public class GoalForm {
         goalForm.showAndWait();
     }
 
-    public static void setupForm(int goalId) {
+    public void setupForm(int goalId) {
 
         VBox rootLayout = new VBox();
         rootLayout.setId("goalForm");
@@ -99,6 +103,7 @@ public class GoalForm {
 
         Label errorName = new Label("Name has a maximum of 50 characters");
         errorName.getStyleClass().addAll("fieldError");
+        errorName.setVisible(false);
 
         nameDiv.getChildren().addAll(lblName, txfName, errorName);
 
@@ -130,6 +135,7 @@ public class GoalForm {
 
         Label errorObjective = new Label("Objective value cannot be negative");
         errorObjective.getStyleClass().addAll("fieldError");
+        errorObjective.setVisible(false);
 
         objectiveDiv.getChildren().addAll(lblObjective, objectiveInlineInput, errorObjective);
 
@@ -166,16 +172,83 @@ public class GoalForm {
 
         Label errorDeadline = new Label("Deadline cannot be empty");
         errorDeadline.getStyleClass().addAll("fieldError");
+        errorDeadline.setVisible(false);
 
         deadlineDiv.getChildren().addAll(deadlineInlineInput, dpDeadline, errorDeadline);
 
         form.getChildren().addAll(nameDiv, objectiveDiv, deadlineDiv);
-        
+
         //Submit button
         BorderPane bottomLayout = new BorderPane();
         Button btnSubmit = new Button("Save");
         btnSubmit.getStyleClass().addAll("btn", "btn-default", "submit");
-        
+
+        btnSubmit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                int errors = 0;
+                //Validate name
+                if (txfName.getLength() < 1) {
+                    errorName.setText("Name cannot be empty");
+                    errorName.setVisible(true);
+                    errors++;
+                } else if (txfName.getLength() > 50) {
+                    errorName.setText("Name has a maximum of 50 characters");
+                    errorName.setVisible(true);
+                    errors++;
+                } else {
+                    errors--;
+                    errorName.setVisible(false);
+                }
+
+                //Validate Objective
+                if (txfObjective.getLength() < 1) {
+                    errorObjective.setText("Objective cannot be empty");
+                    errorObjective.setVisible(true);
+                    errors++;
+                } else if (Integer.parseInt(txfObjective.getText()) < 0) {
+                    errorObjective.setText("Objective value cannot be negative");
+                    errorObjective.setVisible(true);
+                    errors++;
+                } else if (Integer.parseInt(txfObjective.getText()) > 9999999) {
+                    errorObjective.setText("Objective has a maximum value 9999999");
+                    errorObjective.setVisible(true);
+                    errors++;
+                } else {
+                    errors--;
+                    errorObjective.setVisible(false);
+                }
+
+                //Validate deadline
+                if (hasDeadline.isSelected()) {
+                    if (dpDeadline.getValue() == null) {
+                        errorDeadline.setText("Deadline cannot be empty");
+                        errorDeadline.setVisible(true);
+                        errors++;
+                    } else if (dpDeadline.getValue().compareTo(LocalDate.now()) <= 0) {
+                        errorDeadline.setText("Deadline has to be, at least, tomorrow");
+                        errorDeadline.setVisible(true);
+                        errors++;
+                    } else {
+                        errors--;
+                        errorDeadline.setVisible(false);
+                    }
+                }
+
+                if (errors < 0) {
+                    if (hasDeadline.isSelected()) {
+                        //System.out.println(controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue()));
+                    }
+                    else{
+                        //controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                    }
+
+                }
+
+            }
+        });
+
         bottomLayout.setRight(btnSubmit);
 
         rootLayout.getChildren().addAll(topLayout, form, bottomLayout);

@@ -1,5 +1,6 @@
 package views;
 
+import controllers.GoalController;
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
@@ -14,6 +15,8 @@ import stonks.Constants;
 
 public class GoalView extends HBox implements Constants {
 
+    private GoalController controller;
+
     //Containers
     private VBox viewContent;
     private BorderPane topContainer;
@@ -25,8 +28,9 @@ public class GoalView extends HBox implements Constants {
     //Buttons
     private Button btnAdd;
 
-    public GoalView() {
+    public GoalView(GoalController controller) {
 
+        this.controller = controller;
         this.setId("goalView");
 
         //Top container
@@ -62,7 +66,8 @@ public class GoalView extends HBox implements Constants {
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                GoalForm.display(0);
+                GoalForm form = new GoalForm(controller);
+                form.display(0);
             }
         });
     }

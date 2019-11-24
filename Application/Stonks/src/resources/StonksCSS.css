@@ -218,7 +218,6 @@
     -fx-background-color: red;
 }
 
-#registerRoot, #loginRoot, #recoverRoot{
 
 .label .labelButton{
     -fx-alignment:center;
@@ -281,6 +280,7 @@
     -fx-padding: 10;
     -fx-alignment: center-right;
     -fx-text-fill: blue;
+}
 
 #registerVbox {
     -fx-alignment: center-left;
