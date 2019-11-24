@@ -49,11 +49,11 @@
 }
 
 .button.btn-default{
-    -fx-background-color:#757575;
+    -fx-background-color:#424242;
 }
 
 .button.btn-default:pressed{
-    -fx-background-color:#424242;
+    -fx-background-color:#212121;
 }
 
 
@@ -235,16 +235,67 @@
 
 #goalView #goalViewContent .goalsTopContainer .button{
     -fx-font-size: 16px;
-    -fx-font-weight: bold;
+
     -fx-text-fill: white;
 }
 
 #goalView #goalsContainer{
-   
+
+}
+
+#goalForm{
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-color:black;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+
+#goalForm .topLayout{
+    -fx-padding:20px;
+}
+
+#goalForm .topLayout .title{
+    -fx-font-size: 16px;
+    -fx-text-fill: #616161;
+    -fx-font-weight: bold;
+}
+
+#goalForm .form{
+    -fx-padding:20px;
+}
+
+#goalForm .fieldDiv{
+    -fx-padding: 0 0 10 0;
+}
+
+#goalForm .form .fieldTitle{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+    -fx-padding: 0 0 10 0;
+}
+
+#goalForm .form .fieldError{
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d32f2f;
+    -fx-padding: 7 0 0 0;
+}
+
+#goalForm .form .currency{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+    -fx-padding: 2 0 0 7;
+}
+
+#goalForm .submit{
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
 }
 
 #goalBox{
-
     -fx-background-color: #f5f5f5;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 1, 1);
     -fx-background-radius: 5px;
