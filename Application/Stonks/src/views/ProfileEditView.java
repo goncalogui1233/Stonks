@@ -59,10 +59,11 @@ public class ProfileEditView extends HBox implements Constants{
     
     private void startUPForm(){
         lblTitle = new Label("My Profile");
-        lblTitle.getStyleClass().add("TitleLabel");
+        lblTitle.getStyleClass().addAll("TitleLabel", "editTitleLabel");
         //add css to label's
         
         vboxInput = new VBox();
+        vboxInput.setId("editVbox");
         
         lblFN = new Label("First Name");
         txtFN = new TextField();
@@ -72,7 +73,7 @@ public class ProfileEditView extends HBox implements Constants{
         
         lblLN = new Label("Last Name");
         txtLN = new TextField();
-        lblFN.getStyleClass().add("FormLabel");
+        lblLN.getStyleClass().add("FormLabel");
         txtLN.getStyleClass().add("textFieldInput");
         
         lblPassword = new Label("Password");
@@ -86,6 +87,7 @@ public class ProfileEditView extends HBox implements Constants{
         cpPickColor.setId("colorPickerEdit");
         
         hboxButton = new HBox();
+        hboxButton.setId("editHbox");
         rightPane = new BorderPane();
         btnDeleteProfile = new Label("Delete Profile");
         btnSave = new Label("Save Changes");

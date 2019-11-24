@@ -148,6 +148,10 @@
     -fx-padding: 15 0 10 0;
 }
 
+.editTitleLabel{
+    -fx-padding: 35;
+}
+
 .FormLabel{
     -fx-font: bold 10pt "Arial";
 }
@@ -187,7 +191,12 @@
     -fx-alignment: center;
 }
 
-#registerVbox > * , #loginVbox > *, #recoverVbox > * {
+#editVbox {
+    -fx-padding: 0 0 0 60;
+}
+
+#registerVbox > * , #loginVbox > *, #recoverVbox > * ,
+#editVbox > *{
     -fx-min-width: 300px;
     -fx-max-width: 300px;
     -fx-padding: 8 0 8 0;
@@ -197,8 +206,14 @@
     -fx-alignment: center-right;
 }
 
+#editHbox{
+    -fx-spacing: 35;
+    -fx-padding: 0 55 55 0;
+}
+
 .forgotPassword_btn{
     -fx-padding: 10;
     -fx-alignment: center-right;
     -fx-text-fill: blue;
 }
+
