@@ -6,6 +6,7 @@
 package views;
 
 import gui_components.SideMenu;
+import gui_components.SideProfileBar;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -61,7 +62,7 @@ public class ProfileRegisterView extends HBox implements Constants
     
     public ProfileRegisterView()
     {
-        this.getChildren().add(new SideMenu().getRoot());
+        this.getChildren().add(new SideProfileBar().getRoot());
         
         setupRegisterForm();
     }
@@ -133,6 +134,9 @@ public class ProfileRegisterView extends HBox implements Constants
         hbTitle.getChildren().add(lblTitle);
         hbTitle.getStyleClass().add("hbTitle");
                 
+        Label lbldivider = new Label();
+        lbldivider.setId("divider-18");
+        
         vboxForm.getChildren().addAll(lblFN,txtFN);
         vboxForm.getChildren().addAll(lblLN,txtLN);
         vboxForm.getChildren().addAll(lblPassword,txtPassword);
