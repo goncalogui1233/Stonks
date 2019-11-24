@@ -35,31 +35,31 @@
     -fx-border-color: #28a745;
 }
 
-#dialogBox#topLayout{
+#dialogBox #topLayout{
     -fx-padding: 10px 10px 0px 10px;
 }
 
-#dialogBox#centerLayout *{
+#dialogBox #centerLayout *{
     -fx-padding: 10px;
 }
 
-#dialogBox#title{
+#dialogBox #title{
     -fx-text-alignment: center;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
     -fx-padding: 0px 0px 10px 0px;
 }
 
-#dialogBox#subTitle{
+#dialogBox #subTitle{
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
 
-#dialogBox#text{
+#dialogBox #text{
     -fx-font-weight: normal;
 }
 
-#dialogBox#button{
+#dialogBox #button{
     -fx-alignment:center;
     -fx-text-fill: #DDD;
     -fx-font-weight: bold;
@@ -70,16 +70,16 @@
     -fx-background-color: #333;
 }
 
-#dialogBox#button:first{
+#dialogBox #button:first{
     -fx-border-width: 0;
     -fx-background-radius: 0px 0px 0px 4px;
 }
 
-#dialogBox#button:last{
+#dialogBox #button:last{
     -fx-background-radius: 0px 0px 4px 0px;
 }
 
-#dialogBox#button:unique{
+#dialogBox #button:unique{
     -fx-border-width: 0;
     -fx-background-radius: 0px 0px 4px 4px;
 }
@@ -89,26 +89,26 @@
     -fx-border-width: 0 2 0 0;
     -fx-border-color: #333;
 }
-#sideMenu#profileDiv{
+#sideMenu #profileDiv{
     -fx-border-width: 0 0 2 0;
     -fx-border-color: #333;
     -fx-padding: 17px;
 }
-#sideMenu#profileDiv#profileIcon{
+#sideMenu #profileDiv #profileIcon{
     -fx-alignment: center;
     -fx-font-weight: bold;
     -fx-font-size: 25px;
 }
-#sideMenu#profileDiv#profileLinkDiv *{
+#sideMenu #profileDiv #profileLinkDiv *{
     -fx-font-weight: bold;
     -fx-font-size: 15px;
     -fx-padding: 10px 10px 10px 20px;
 }
-#sideMenu#linkDiv{
+#sideMenu #linkDiv{
     -fx-border-width: 0 0 2 0;
     -fx-border-color: #333;
 }
-#sideMenu#linkDiv *{
+#sideMenu #linkDiv *{
     -fx-font-weight: bold;
     -fx-font-size: 15px;
     -fx-padding: 0px 17px 0px 17px;
@@ -117,8 +117,25 @@
     -fx-border-color: #DDD;
     -fx-text-alignment: center;
 }
-#sideMenu#linkDiv *:last{
+#sideMenu #linkDiv *:last{
     -fx-border-width: 0;
+}
+
+/*SideProfileBar*/
+#sideProfileBar{
+    -fx-border-color: #333;
+    -fx-border-width: 0px 2px 0px 0px;
+    -fx-alignment:TOP_CENTER;
+}
+
+#sideProfileBar #profileIcon{
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+#sideProfileBar #divider-18{
+    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
 }
 
 /*Profile*/
@@ -139,7 +156,7 @@
     -fx-max-width: 150px;
 }
 
-.label.labelButton{
+.label .labelButton{
     -fx-alignment:center;
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -152,11 +169,11 @@
     -fx-font-margin: 10;
 }
 
-.label.lbtnSaveChange{
+.label .lbtnSaveChange{
     -fx-background-color: grey;
 }
 
-.label.lbtnDelete{
+.label .lbtnDelete{
     -fx-background-color: red;
 }
 
