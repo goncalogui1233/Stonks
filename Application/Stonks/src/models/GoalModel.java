@@ -1,5 +1,6 @@
 package models;
 
+import java.time.LocalDate;
 import java.util.Date;
 import stonks.StonksData;
 
@@ -12,13 +13,15 @@ public class GoalModel {
     private Date achievementDate;
     private String name;
     private int objective;
-    private Date deadlineDate;
+    private LocalDate deadlineDate;
     
     private final WalletModel wallet;
 
-    public GoalModel(String name, int objective) {
+    public GoalModel(String name, int objective, LocalDate deadline) {
         this.name = name;
         this.objective = objective;
+        if(deadline != null)
+            this.deadlineDate = deadline;
         
         id = idCounter++;
         creationDate = new Date();
@@ -62,11 +65,11 @@ public class GoalModel {
         this.objective = objective;
     }
 
-    public Date getDeadlineDate() {
+    public LocalDate getDeadlineDate() {
         return deadlineDate;
     }
 
-    public void setDeadlineDate(Date deadlineDate) {
+    public void setDeadlineDate(LocalDate deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
     
