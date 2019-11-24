@@ -6,6 +6,7 @@
 package views;
 
 import gui_components.SideMenu;
+import gui_components.SideProfileBar;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -45,7 +46,7 @@ public class ProfileRecoverPasswordView extends HBox implements Constants{
     private ChoiceBox cbSecurityQuestion;
 
     public ProfileRecoverPasswordView(){
-        this.getChildren().add(new SideMenu().getRoot());
+        this.getChildren().add(new SideProfileBar().getRoot());
         
         setupRecoverPasswordForm();
     }

@@ -183,11 +183,11 @@
     -fx-text-alignment: center;
 }
 
-#registerVbox, #loginVbox{
+#registerVbox, #loginVbox, #recoverVbox{
     -fx-alignment: center;
 }
 
-#registerVbox > * , #loginVbox > *{
+#registerVbox > * , #loginVbox > *, #recoverVbox > * {
     -fx-min-width: 300px;
     -fx-max-width: 300px;
     -fx-padding: 8 0 8 0;
