@@ -183,11 +183,11 @@
     -fx-text-alignment: center;
 }
 
-#registerVbox {
+#registerVbox, #loginVbox{
     -fx-alignment: center;
 }
 
-#registerVbox > * {
+#registerVbox > * , #loginVbox > *{
     -fx-min-width: 300px;
     -fx-max-width: 300px;
     -fx-padding: 8 0 8 0;
@@ -198,5 +198,7 @@
 }
 
 .forgotPassword_btn{
+    -fx-padding: 10;
     -fx-alignment: center-right;
+    -fx-text-fill: blue;
 }

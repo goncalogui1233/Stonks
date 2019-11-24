@@ -6,6 +6,7 @@
 package views;
 
 import gui_components.SideMenu;
+import gui_components.SideProfileBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +37,7 @@ public class ProfileLoginView extends HBox implements Constants{
     private TextField txtPassword;
 
     public ProfileLoginView()    {
-        this.getChildren().add(new SideMenu().getRoot());
+        this.getChildren().add(new SideProfileBar().getRoot());
         
         setupLoginForm();
     }
@@ -57,7 +58,7 @@ public class ProfileLoginView extends HBox implements Constants{
         bpLoginRoot = new BorderPane();
         bpLoginRoot.setId("loginRoot");
         bpLoginRoot.setMinSize(450,0);
-        bpLoginRoot.setMaxSize(450, 400);
+        bpLoginRoot.setMaxSize(450, 300);
         
         lblTitle = new Label("Login as");
         lblTitle.getStyleClass().add("TitleLabel");

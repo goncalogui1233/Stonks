@@ -133,10 +133,7 @@ public class ProfileRegisterView extends HBox implements Constants
         
         hbTitle.getChildren().add(lblTitle);
         hbTitle.getStyleClass().add("hbTitle");
-                
-        Label lbldivider = new Label();
-        lbldivider.setId("divider-18");
-        
+                        
         vboxForm.getChildren().addAll(lblFN,txtFN);
         vboxForm.getChildren().addAll(lblLN,txtLN);
         vboxForm.getChildren().addAll(lblPassword,txtPassword);
