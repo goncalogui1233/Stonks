@@ -218,6 +218,12 @@
     -fx-background-color: red;
 }
 
+#registerRoot, #loginRoot, #recoverRoot{
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-border-radius: 5px;
+    -fx-text-alignment: center;
+}
 
 .label .labelButton{
     -fx-alignment:center;
