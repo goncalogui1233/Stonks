@@ -80,6 +80,7 @@ public interface Constants {
     /*Dashboard*/
     
     /*Goal*/
+    public static enum GOAL_FIELD {NAME, OBJECTIVE, DEADLINE};
     
     /*Wallet*/
     

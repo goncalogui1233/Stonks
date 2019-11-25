@@ -1,136 +1,97 @@
 package controllers;
 
 import java.time.LocalDate;
-import static java.time.temporal.ChronoUnit.DAYS;
 import stonks.StonksData;
 import models.GoalModel;
-import models.ProfileModel;
+import stonks.Constants;
 
-public class GoalController {
+public class GoalController implements Constants {
     private final StonksData data;
-    
+
     public GoalController(StonksData data) {
         this.data = data;
     }
-    
-    //Gonçalo Guilherme
-    public int createGoal(String name, int objective, LocalDate deadline){
-        boolean verify = verifyInsertData(name, objective);
-        
-        if(verify){
-            data.getCurrentProfile().getGoals().add(new GoalModel(name, objective, deadline));
-            return 1;//goal created
+
+    private GoalModel getGoal(int id) { //Search for a goal with the id passed as argument
+        for (GoalModel goal : data.getCurrentProfile().getGoals()) {
+            if (goal.getId() == id) {
+                return goal;
+            }
         }
-        else
-            return 0; //goal not created
-        
-    }
-    
-    public int editGoal(int id, String name, int objective, LocalDate deadline){
-        boolean verify = verifyInsertData(name, objective);
-        
-        if(verify){
-            get().getGoals().get(id).setName(name);
-            get().getGoals().get(id).setObjective(objective);
-            get().getGoals().get(id).setDeadlineDate(deadline);
-            return 1;
-        }
-        
-        return 0;
-    } 
-    
-    public int removeGoal(int id){
-        int pos;
-        if((pos = existeGoal(id)) > -1){
-            get().getGoals().remove(pos);
-            return 1; //removed succesfully
-        }
-        
-        return 0; //goal not found
-    }
-    
-     
-    private boolean verifyInsertData(String name, int objective){ //verify the data in goal name and objective
-        if(name.isEmpty() || objective < 0)
-            return false; //one of them is empty
-        
-        if(name.length() > 50){
-            return false; //length of name is longer than expected
-        }
-        
-        if(objective > 999999999)
-            return false; //number is too big
-        
-        return true;
-    }
-    
-    private ProfileModel get(){     //function to not keep calling everytime data.getCurrentProfile();
-        return data.getCurrentProfile();
-    }
-    
-    private int existeGoal(int id){ //Search for a goal with the id passed as argument
-        for(int i = 0; i < data.getCurrentProfile().getGoals().size(); i++)
-            if(get().getGoals().get(i).getId() == id)
-                return i; //return position of the goal in the array
-        
-        return -1;
-    }
-    
-    public String showNameGoal(int id){ //receive goal ID
-        int pos;
-        if((pos = existeGoal(id)) > -1 )
-            return get().getGoals().get(pos).getName();
-        
-        return "";
-    }
-    
-    public int progressBarCompleted(int id){
-        int pos;
-        if((pos = existeGoal(id)) > -1 ){ //if goal finded
-            int objective = get().getGoals().get(pos).getObjective();
-            int actual = get().getGoals().get(pos).getWallet().getSavedMoney();
-            
-            return (actual / objective) / 100; //returns percentage value to PBar
-        }
-        
-        return -1; //if not exists, return -1;
-    }
-    
-    public int showActualMoney(int id){
-        int pos;
-        if((pos = existeGoal(id)) > -1 )
-            return get().getGoals().get(pos).getWallet().getSavedMoney(); //returns saved money
-        
-        return -1; //if not exist goal, return -1
-    }
-    
-    public int showObjectiveMoney(int id){
-        int pos;
-        if((pos = existeGoal(id)) > -1 )
-            return get().getGoals().get(pos).getObjective(); //returns objective goal
-        
-        return -1; //if not exist goal, return -1
-    }
-    
-    public long showDaysGoalDeadline(int id){ //returns, i think, the days between 2 dates
-        int pos;
-        if((pos = existeGoal(id)) > -1 ){
-            LocalDate deadline = get().getGoals().get(pos).getDeadlineDate();
-            LocalDate now = LocalDate.now();
-            return DAYS.between(deadline, now);
-        }
-        
-        return -1;
-    }
-    
-    public LocalDate getDeadlineDate(int id){ //return the deadline date
-        int pos;
-        if((pos = existeGoal(id)) > -1 )
-            return get().getGoals().get(pos).getDeadlineDate();
-        
+
         return null;
     }
     
+    public boolean createGoal(String name, int objective, LocalDate deadline) {
+        if (verifyData(GOAL_FIELD.NAME, name)
+                && verifyData(GOAL_FIELD.OBJECTIVE, Integer.toString(objective))) {
+            data.getCurrentProfile().getGoals().add(new GoalModel(name, objective, deadline));
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
+        if (verifyData(GOAL_FIELD.NAME, name)
+                && verifyData(GOAL_FIELD.OBJECTIVE, Integer.toString(objective))) {
+            getGoal(id).setName(name);
+            getGoal(id).setObjective(objective);
+            getGoal(id).setDeadlineDate(deadline);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean removeGoal(int id) {
+        try {
+            data.getCurrentProfile().getGoals().remove(getGoal(id));
+            return true;
+        } catch (NullPointerException ex) {
+            return false;
+        }
+    }
+
+    private <T> boolean verifyData(GOAL_FIELD field, T value) { //verify the data in goal name and objective
+        switch (field) {
+            /*NAME FIELD VALIDATIONS*/
+            case NAME:
+                if (((String) value).isEmpty() //name is empty
+                        || ((String) value).length() > 50) //name is longer than expected
+                {
+                    return false;
+                }
+                break;
+
+            /*OBJECTIVE FIELD VALIDATIONS*/
+            case OBJECTIVE:
+                if (((Integer) value) <= 0 //objective is 0 or less
+                        || ((Integer) value) > 999999999) //objective is too big
+                {
+                    return false;
+                }
+                break;
+
+            /*DEADLINE FIELD VALIDATIONS*/
+            case DEADLINE:
+                break;
+        }
+
+        return true;
+    }
+
+    public int getGoalProgress(int id) {
+        try {
+            int objective = getGoal(id).getObjective();
+            int actual = getGoal(id).getWallet().getSavedMoney();
+
+            return (actual / objective) / 100; //returns percentage value to PBar
+        } catch (NullPointerException ex) {
+            return -1; //if not exists, return -1;
+        }
+    }
+
     /*public Date showEstimateDateOfFinish(int id){
         int pos;
         if((pos = existeGoal(id)) > -1 ){
@@ -150,26 +111,21 @@ public class GoalController {
         
         return null;
     }*/
-
     
-    public int manageFundsWallet(int id, int updateValue){ //manages the money saved of a goal 
-        int pos;
+    public boolean manageGoalFunds(int id, int updateValue) { //manages the money saved of a goal 
         LocalDate date = LocalDate.now();
-        if((pos = existeGoal(id)) > -1 ){
-            get().getGoals().get(pos).getWallet().setSavedMoney(updateValue);
-            if(get().getGoals().get(pos).getWallet().getFirstDepositDate() == null){ //if never made a deposit,
-                get().getGoals().get(pos).getWallet().setFirstDepositDate(date);     //updates first deposit date
-                get().getGoals().get(pos).getWallet().setLastDepositDate(date);      //and last deposit date
+
+        try {
+            getGoal(id).getWallet().setSavedMoney(updateValue);
+            if (getGoal(id).getWallet().getFirstDepositDate() == null) { //if never made a deposit,
+                getGoal(id).getWallet().setFirstDepositDate(date);     //updates first deposit date
+                getGoal(id).getWallet().setLastDepositDate(date);      //and last deposit date
+            } else {
+                getGoal(id).getWallet().setLastDepositDate(date); //updates last deposit date
             }
-            else
-                get().getGoals().get(pos).getWallet().setLastDepositDate(date); //updates last deposit date
-            
-            return 1;
+            return true;
+        } catch (NullPointerException ex) {
+            return false;
         }
-        
-        return 0;
     }
-    
-    
-    
 }
