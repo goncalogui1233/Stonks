@@ -5,86 +5,66 @@ import gui_components.SideMenu;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import stonks.Constants;
 
-public class ProfileEditView extends HBox implements Constants{
+public class ProfileEditView implements Constants{
+    private final HBox root;
     
-    //Containers
-    private BorderPane profileEditContainer;
-    private VBox vboxInput;
-    private HBox hboxButton;
-    private BorderPane rightPane;
-     
-    //Title Labels
-    private Label lblTitle;
-    private Label lblFN;
-    private Label lblLN;
-    private Label lblPassword;
-    private Label lblColor;
-    //Label Buttons
-    private Label btnDeleteProfile;
-    private Label btnSave;
-    
-    //Text Field
-    private TextField txtFN; 
-    private TextField txtLN;
-    private TextField txtPassword;
-    
-    //Colorpicker Field
-    private ColorPicker cpPickColor;
     
     public ProfileEditView(){
-        this.getChildren().add(new SideMenu().getRoot());
+        root = new HBox();
+        root.getChildren().add(new SideMenu().getRoot());
         
         setupEditForm();
     }
 
     private void setupEditForm(){
-        profileEditContainer = new BorderPane();
+        //Containers
+        BorderPane profileEditContainer;
+        VBox formContainer;
+        HBox hboxButton;
+        BorderPane rightPane;
+
+        //Title Labels
+        Label lblTitle;
+        Label lblFN;
+        Label lblLN;
+        Label lblPassword;
+        Label lblColor;
+        //Label Buttons
+        Label btnDeleteProfile;
+        Label btnSave;
+
+        //Text Field
+        TextField txtFN; 
+        TextField txtLN;
+        TextField txtPassword;
+
+        //Colorpicker Field
+        ColorPicker cpPickColor;
         
+        profileEditContainer = new BorderPane();
         profileEditContainer.setMinWidth(PROFILE_EDIT_VIEW_WIDTH);
         profileEditContainer.setMaxSize(PROFILE_EDIT_VIEW_WIDTH, PROFILE_EDIT_VIEW_HEIGHT);
         
-        startUPForm();
-        
-       /* profileEditContainer.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        profileEditContainer.setMinSize(50, 50);*/
-        
-        this.getChildren().add(profileEditContainer);
-    }
-    
-    private void startUPForm(){
         lblTitle = new Label("My Profile");
-        lblTitle.getStyleClass().addAll("TitleLabel", "editTitleLabel");
-        //add css to label's
         
-        vboxInput = new VBox();
-        vboxInput.setId("editVbox");
+        formContainer = new VBox();
         
         lblFN = new Label("First Name");
         txtFN = new TextField();
-        lblFN.getStyleClass().add("FormLabel");       
-        txtFN.getStyleClass().add("textFieldInput");
-        
         
         lblLN = new Label("Last Name");
         txtLN = new TextField();
-        lblLN.getStyleClass().add("FormLabel");
-        txtLN.getStyleClass().add("textFieldInput");
         
         lblPassword = new Label("Password");
         txtPassword = new TextField();
-        lblPassword.getStyleClass().add("FormLabel");
-        txtPassword.getStyleClass().add("textFieldInput");
         
         lblColor = new Label("Color");
         cpPickColor = new ColorPicker();
-        lblColor.getStyleClass().add("FormLabel");
-        cpPickColor.setId("colorPickerEdit");
         
         hboxButton = new HBox();
         hboxButton.setId("editHbox");
@@ -92,32 +72,54 @@ public class ProfileEditView extends HBox implements Constants{
         btnDeleteProfile = new Label("Delete Profile");
         btnSave = new Label("Save Changes");
         
-        btnDeleteProfile.getStyleClass().addAll("labelButton","lbtnDelete");
-        btnSave.getStyleClass().addAll("labelButton", "lbtnSaveChange");
+        /*Add all labels and inputs to the form box*/
+        formContainer.getChildren().addAll(lblFN, txtFN,
+                lblLN, txtLN,
+                lblPassword, txtPassword,
+                lblColor, cpPickColor);
         
-        profileEditContainer.setTop(lblTitle);        
-                
-        vboxInput.getChildren().addAll(lblFN,txtFN);
-        vboxInput.getChildren().addAll(lblLN,txtLN);
-        vboxInput.getChildren().addAll(lblPassword,txtPassword);
-        vboxInput.getChildren().addAll(lblColor,cpPickColor);
-        profileEditContainer.setCenter(vboxInput);
-        
+        /*Add delete and save buttons to the button container*/
         hboxButton.getChildren().addAll(btnDeleteProfile, btnSave);
         
-        btnDeleteProfile.setOnMouseClicked((event) ->
-        {
+        /*Delete button on click listener*/
+        btnDeleteProfile.setOnMouseClicked((event) -> {
             DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE);
         });
         
-        btnSave.setOnMouseClicked((event) ->
-        {
+        /*Save button on click listener*/
+        btnSave.setOnMouseClicked((event) -> {
             DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_PROFILE);
         });
         
+        /*Add the button container to the right of the border pane*/
         rightPane.setRight(hboxButton);
         
-        profileEditContainer.setBottom(rightPane);        
+        /*Add title on top, formContainer on center, button on bottom*/
+        profileEditContainer.setTop(lblTitle);    
+        profileEditContainer.setCenter(formContainer);
+        profileEditContainer.setBottom(rightPane); 
+        
+        /*Set CSS ID's to nodes*/
+        formContainer.setId("editVbox");
+        cpPickColor.setId("colorPickerEdit");
+        
+        /*Set CSS Classes to nodes*/
+        lblTitle.getStyleClass().addAll("TitleLabel", "editTitleLabel");
+        lblFN.getStyleClass().add("FormLabel");       
+        txtFN.getStyleClass().add("textFieldInput");
+        lblLN.getStyleClass().add("FormLabel");
+        txtLN.getStyleClass().add("textFieldInput");
+        lblPassword.getStyleClass().add("FormLabel");
+        txtPassword.getStyleClass().add("textFieldInput");
+        lblColor.getStyleClass().add("FormLabel");
+        btnDeleteProfile.getStyleClass().addAll("labelButton","lbtnDelete");
+        btnSave.getStyleClass().addAll("labelButton", "lbtnSaveChange");
+        
+        /*Add profile edit container into the root pane*/
+        root.getChildren().add(profileEditContainer);
     }
-    
+
+    public HBox getRoot() {
+        return root;
+    }
 }

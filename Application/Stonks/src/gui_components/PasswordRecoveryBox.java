@@ -62,8 +62,8 @@ public class PasswordRecoveryBox implements Constants{
         vbTitle.getChildren().addAll(lblTitle, lblUserName);
         
         /*Add all labels and inputs to the form box*/
-        formContainer.getChildren().addAll(lblSecurityQuestion, lvSecurityQuestion);
-        formContainer.getChildren().addAll(lblSecurityAnswer, txtSecurityAnswer);
+        formContainer.getChildren().addAll(lblSecurityQuestion, lvSecurityQuestion,
+                lblSecurityAnswer, txtSecurityAnswer);
         
         /*Add the button to the button box*/
         bpOption.setRight(btnRecover);
