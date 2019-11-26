@@ -12,7 +12,7 @@ public class TestsMain {
         data = data.loadDatabase();
         
         ProfileController pc = new ProfileController(data);
-        pc.createProfile("Maria", "Leal", "question", "answer", "Kappa123", "#f1f1f1");
+        pc.createProfile("Maria", "Leal", Constants.SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(), "answer", "Kappa123", "#f1f1f1");
         data.updateDatabase();
         
         pc.loginProfile(6, "Kappa123");

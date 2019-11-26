@@ -42,7 +42,7 @@ public class Stonks extends Application implements Constants{
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
         
         //window.setScene(new Scene(new ProfileEditView()));
-        window.setScene(new Scene(new ProfileView().getRoot()));
+        window.setScene(new Scene(new ProfileView(cProfile).getRoot()));
         
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }

@@ -70,6 +70,7 @@ public interface Constants {
         MAX_NUMBER,
         MIN_DATE,
         FORMAT,
+        INVALID_QUESTION,
         UNDEFINED;
     };
     

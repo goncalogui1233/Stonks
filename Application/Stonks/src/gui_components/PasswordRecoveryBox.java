@@ -1,5 +1,6 @@
 package gui_components;
 
+import controllers.ProfileController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -8,8 +9,10 @@ import stonks.Constants;
 
 public class PasswordRecoveryBox implements Constants{
     private final BorderPane root;
+    private final ProfileController cProfile;
     
-    public PasswordRecoveryBox(){
+    public PasswordRecoveryBox(ProfileController cProfile){
+        this.cProfile = cProfile;
         root = new BorderPane();
         
         root.setMinSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);

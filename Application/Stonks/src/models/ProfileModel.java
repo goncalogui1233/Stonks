@@ -103,4 +103,9 @@ public class ProfileModel implements Serializable{
     public void setGoals(ArrayList<GoalModel> goals) {
         this.goals = goals;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileModel{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", password=" + password + ", color=" + color + ", goals=" + goals + '}';
+    }
 }
