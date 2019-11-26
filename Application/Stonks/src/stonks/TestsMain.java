@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package stonks;
 
 import controllers.ProfileController;
-import java.util.HashMap;
 import java.util.Map;
 import models.ProfileModel;
 
-/**
- *
- * @author Tiago
- */
 public class TestsMain {
 
     public static void main(String args[]) {
@@ -22,15 +12,15 @@ public class TestsMain {
         data = data.loadDatabase();
         
         ProfileController pc = new ProfileController(data);
-        pc.registerProfile("Maria", "Leal", "question", "answer", "Kappa123", "#f1f1f1");
+        pc.createProfile("Maria", "Leal", "question", "answer", "Kappa123", "#f1f1f1");
         data.updateDatabase();
         
         pc.loginProfile(6, "Kappa123");
         pc.logoutProfile();
         System.out.println(pc.recoverPassword(6, "answer"));
         
-        if (data.getCurrentProfile() != null) {
-            System.out.println("Loged in: " + data.getCurrentProfile().getFirstName() + " " + data.getCurrentProfile().getLastName());
+        if (data.getAuthProfile() != null) {
+            System.out.println("Loged in: " + data.getAuthProfile().getFirstName() + " " + data.getAuthProfile().getLastName());
         }
         if (data.getListProfiles() != null) {
             if (data.getListProfiles().size() > 0) {

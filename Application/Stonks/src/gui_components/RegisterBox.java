@@ -72,7 +72,7 @@ public class RegisterBox implements Constants{
         txtPassword = new TextField();
                 
         lblSecurtyQuestion = new Label("Security Question");
-        cbSecurityQuestion = new ChoiceBox(FXCollections.observableArrayList(SECURITY_QUESTIONS_LIST));
+        cbSecurityQuestion = new ChoiceBox(FXCollections.observableArrayList(SECURITY_QUESTIONS.values()));
         cbSecurityQuestion.setValue("Select One");
         
         lblSecurtyAnswer = new Label("Security Answer");

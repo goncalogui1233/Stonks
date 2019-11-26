@@ -6,6 +6,7 @@ import models.GoalModel;
 import stonks.Constants;
 
 public class GoalController implements Constants {
+
     private final StonksData data;
 
     public GoalController(StonksData data) {
@@ -13,7 +14,7 @@ public class GoalController implements Constants {
     }
 
     private GoalModel getGoal(int id) { //Search for a goal with the id passed as argument
-        for (GoalModel goal : data.getCurrentProfile().getGoals()) {
+        for (GoalModel goal : data.getAuthProfile().getGoals()) {
             if (goal.getId() == id) {
                 return goal;
             }
@@ -21,11 +22,13 @@ public class GoalController implements Constants {
 
         return null;
     }
-    
+
     public boolean createGoal(String name, int objective, LocalDate deadline) {
         if (verifyData(GOAL_FIELD.NAME, name)
                 && verifyData(GOAL_FIELD.OBJECTIVE, Integer.toString(objective))) {
-            data.getCurrentProfile().getGoals().add(new GoalModel(name, objective, deadline));
+            data.getAuthProfile().getGoals().add(new GoalModel(name, objective, deadline));
+
+            /*UPDATE DATABASE*/
             return true;
         }
 
@@ -38,6 +41,8 @@ public class GoalController implements Constants {
             getGoal(id).setName(name);
             getGoal(id).setObjective(objective);
             getGoal(id).setDeadlineDate(deadline);
+
+            /*UPDATE DATABASE*/
             return true;
         }
 
@@ -46,7 +51,9 @@ public class GoalController implements Constants {
 
     public boolean removeGoal(int id) {
         try {
-            data.getCurrentProfile().getGoals().remove(getGoal(id));
+            data.getAuthProfile().getGoals().remove(getGoal(id));
+
+            /*UPDATE DATABASE*/
             return true;
         } catch (NullPointerException ex) {
             return false;
@@ -54,31 +61,33 @@ public class GoalController implements Constants {
     }
 
     private <T> boolean verifyData(GOAL_FIELD field, T value) { //verify the data in goal name and objective
-        switch (field) {
-            /*NAME FIELD VALIDATIONS*/
-            case NAME:
-                if (((String) value).isEmpty() //name is empty
-                        || ((String) value).length() > 50) //name is longer than expected
-                {
-                    return false;
-                }
-                break;
+        try {
+            switch (field) {
+                /*NAME FIELD VALIDATIONS*/
+                case NAME:
+                    return !(((String) value).length() < 1/*CONSTANT*/
+                            || ((String) value).length() > 50/*CONSTANT*/);
 
-            /*OBJECTIVE FIELD VALIDATIONS*/
-            case OBJECTIVE:
-                if (((Integer) value) <= 0 //objective is 0 or less
-                        || ((Integer) value) > 999999999) //objective is too big
-                {
-                    return false;
-                }
-                break;
+                /*OBJECTIVE FIELD VALIDATIONS*/
+                case OBJECTIVE:
+                    return !(((Integer) value) <= 0/*CONSTANT*/
+                            || ((Integer) value) > 999999999/*CONSTANT*/);
 
-            /*DEADLINE FIELD VALIDATIONS*/
-            case DEADLINE:
-                break;
+                /*DEADLINE FIELD VALIDATIONS*/
+                case DEADLINE:
+                    /*TODO VALIDATION*/
+                    return false;
+
+                default:
+                    return false;
+            }
+        } catch (ClassCastException ex) {
+            return false;
+        } catch (Exception ex) {
+            System.out.println(ex);
+
+            return false;
         }
-
-        return true;
     }
 
     public int getGoalProgress(int id) {
@@ -111,7 +120,6 @@ public class GoalController implements Constants {
         
         return null;
     }*/
-    
     public boolean manageGoalFunds(int id, int updateValue) { //manages the money saved of a goal 
         LocalDate date = LocalDate.now();
 

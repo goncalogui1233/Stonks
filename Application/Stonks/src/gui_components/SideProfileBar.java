@@ -34,7 +34,7 @@ public class SideProfileBar implements Constants{
                 (int)( Color.rgb(20*i, 20*i, 20*i).getRed() * 255 ),
                 (int)( Color.rgb(20*i, 20*i, 20*i).getGreen() * 255 ),
                 (int)( Color.rgb(20*i, 20*i, 20*i).getBlue() * 255 ) );
-                tempProfile = new ProfileModel("U", ""+i, SECURITY_QUESTIONS_LIST[0], "a", "123", hex);
+                tempProfile = new ProfileModel("U", ""+i, SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(), "a", "123", hex);
                 listProfiles.put(tempProfile.getId(), tempProfile);
             }
         }

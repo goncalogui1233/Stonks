@@ -5,9 +5,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import models.ProfileModel;
+import stonks.Constants;
 import stonks.StonksData;
 
-public class ProfileController {
+public class ProfileController implements Constants {
 
     private StonksData data;
 
@@ -15,262 +16,262 @@ public class ProfileController {
         this.data = data;
     }
 
-    public boolean stonksHasProfiles() {
+    public ProfileModel getProfile(int id) {
+        try {
+            return data.getListProfiles().get(id);
+        } catch (NullPointerException ex) {
+            return null;
+        }
 
-        if (data != null) {
-            if (data.getListProfiles() != null) {
-                if (data.getListProfiles().size() > 0) {
-                    return true;
+    }
+
+    public boolean createProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
+        if (hasMaxProfiles())
+            return false;
+
+        if (verifyData(PROFILE_FIELD.FIRST_NAME, firstName)
+                && verifyData(PROFILE_FIELD.LAST_NAME, lastName)
+                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityQuestion)
+                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer)
+                && verifyData(PROFILE_FIELD.COLOR, color)) {
+
+            ProfileModel newProfile;
+            if (password != null) {
+                if (verifyData(PROFILE_FIELD.PASSWORD, password)) {
+                    newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, password, color);
+                } else {
+                    return false;
                 }
+            } else {
+                newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, color);
             }
+
+//            newProfile.setId(this.getNextId());
+            data.getListProfiles().put(newProfile.getId(), newProfile);
+
+            /*UPDATE DATABASE*/
+            return true;
         }
 
         return false;
     }
 
-    public boolean profileIsLogedIn() {
+    public boolean editProfile(int profileId, HashMap<String, String> fields) {
+        if (fields == null || fields.size() < 1)
+            return false;
 
-        if (stonksHasProfiles()) {
-            if (data.getCurrentProfile() == null) {
-                return false;
-            }
-        }
+        if (hasAuthProfile()) {
+            if (data.getAuthProfile().getId() == profileId) {
+                String field;
+                String newValue;
 
-        return true;
-    }
+                for (Map.Entry<String, String> entry : fields.entrySet()) {
+                    field = entry.getKey();
+                    newValue = entry.getValue();
 
-    public int getNextId() {
-
-        if (stonksHasProfiles()) {
-            int biggest = 1;
-
-            for (Integer id : data.getListProfiles().keySet()) {
-                if (id > biggest) {
-                    biggest = id;
+                    if (field.equalsIgnoreCase("firstname")) {
+                        if (!verifyData(PROFILE_FIELD.FIRST_NAME, newValue)) {
+                            return false;
+                        }
+                    }else if (field.equalsIgnoreCase("lastname")) {
+                        if (!verifyData(PROFILE_FIELD.LAST_NAME, newValue)) {
+                            return false;
+                        }
+                    }else if (field.equalsIgnoreCase("password")) {
+                        if (!verifyData(PROFILE_FIELD.PASSWORD, newValue)) {
+                            return false;
+                        }
+                    }else if (field.equalsIgnoreCase("color")) {
+                        if (!verifyData(PROFILE_FIELD.COLOR, newValue)) {
+                            return false;
+                        }
+                    }
                 }
+
+                for (Map.Entry<String, String> entry : fields.entrySet()) {
+                    field = entry.getKey();
+                    newValue = entry.getValue();
+                    if (field.equalsIgnoreCase("firstname")) {
+                            data.getListProfiles().get(profileId).setFirstName(newValue);
+                    }else if (field.equalsIgnoreCase("lastname")) {
+                            data.getListProfiles().get(profileId).setLastName(newValue);
+                    }else if (field.equalsIgnoreCase("password")) {
+                            data.getListProfiles().get(profileId).setPassword(newValue);
+                    }else if (field.equalsIgnoreCase("color")) {
+                            data.getListProfiles().get(profileId).setColor(newValue);
+                    }
+                }
+                
+                /*UPDATE DATABASE*/
+                return true;
             }
-
-            return ++biggest;
         }
 
-        return 1;
+        return false;
     }
+    
+    public boolean removeProfile(int profileId){
+        try {
+            data.getListProfiles().remove(profileId);
 
-    public ProfileModel getProfileById(int id) {
-
-        if (stonksHasProfiles()) {
-            return data.getListProfiles().get(id);
-        }
-
-        return null;
-    }
-
-    //Inputs validation
-    public boolean isFirstNameValid(String value) {
-        if (value == null) {
+            /*UPDATE DATABASE*/
+            return true;
+        } catch (NullPointerException ex) {
             return false;
         }
-
-        return !(value.length() < 1 || value.length() > 50); //Constant
     }
 
-    public boolean isLastNameValid(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        return !(value.length() < 1 || value.length() > 50); //Constant
-    }
-
-    public boolean isSecurityQuestionValid(String value) {
-        return true;
-    }
-
-    public boolean isSecurityAnswerValid(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        return !(value.length() < 1 || value.length() > 50); //Constant
-    }
-
-    public boolean isPasswordValid(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        return !(value.length() < 6 || value.length() > 50); //Constant
-    }
-
-    public boolean isColorValid(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
-        Matcher matcher = pattern.matcher(value);
-
-        return matcher.matches();
-    }
-
-    public int registerProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
-
-        if (data == null || data.getListProfiles() == null) {
+    public int getListProfilesSize() {
+        try {
+            return data.getListProfiles().size();
+        } catch (NullPointerException ex) {
             return 0;
         }
-
-        if (data.getListProfiles() != null) {
-            if (data.getListProfiles().size() == 6) { //Constante
-                return 0;
-            }
-        }
-
-        if (isFirstNameValid(firstName) && isLastNameValid(lastName) && isSecurityQuestionValid(securityQuestion)
-                && isSecurityAnswerValid(securityAnswer) && isColorValid(color)) {
-
-            ProfileModel newProfile;
-
-            if (password != null) {
-                if (isPasswordValid(password)) {
-                    newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, password, color);
-                } else {
-                    return 0;
-                }
-
-            } else {
-                newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, color);
-            }
-
-            newProfile.setId(this.getNextId());
-            data.getListProfiles().put(newProfile.getId(), newProfile);
-
-            return 1;
-
-        }
-
-        return 0;
     }
 
-    public int loginProfile(int id, String password) {
+    public boolean hasMaxProfiles() {
+        try {
+            return (data.getListProfiles().size() == MAX_PROFILES);
+        } catch (NullPointerException ex) {
+            return true;
+        }
+    }
 
+    public boolean hasNoProfiles() {
+        try {
+            return data.getListProfiles().isEmpty();
+        } catch (NullPointerException ex) {
+            return true;
+        }
+    }
+
+    public boolean hasAuthProfile() {
+        if (!hasNoProfiles()) {
+            if (data.getAuthProfile() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    public int getNextId() {
+//        if (!hasNoProfiles()) {
+//            int biggest = 1;
+//
+//            for (Integer id : data.getListProfiles().keySet()) {
+//                if (id > biggest) {
+//                    biggest = id;
+//                }
+//            }
+//
+//            return ++biggest;
+//        }
+//
+//        return 1;
+//    }
+    //Inputs validation
+    private <T> boolean verifyData(PROFILE_FIELD field, T value) { //verify the data in goal name and objective
+        try {
+            switch (field) {
+                /*FIRST_NAME FIELD VALIDATIONS*/
+                case FIRST_NAME:
+                    return !(((String) value).length() < 1/*CONSTANT*/
+                            || ((String) value).length() > 50/*CONSTANT*/);
+
+                /*LAST_NAME FIELD VALIDATIONS*/
+                case LAST_NAME:
+                    return !(((String) value).length() < 1/*CONSTANT*/
+                            || ((String) value).length() > 50/*CONSTANT*/);
+
+                /*SECURITY_QUESTION FIELD VALIDATIONS*/
+                case SECURITY_QUESTION:
+                    /*TODO VALIDATION*/
+                    return false;
+
+                /*SECURITY_ANSWER FIELD VALIDATIONS*/
+                case SECURITY_ANSWER:
+                    return !(((String) value).length() < 1/*CONSTANT*/
+                            || ((String) value).length() > 50/*CONSTANT*/);
+
+                /*PASSWORD FIELD VALIDATIONS*/
+                case PASSWORD:
+                    return !(((String) value).length() < 6/*CONSTANT*/
+                            || ((String) value).length() > 50/*CONSTANT*/);
+
+                /*COLOR FIELD VALIDATIONS*/
+                case COLOR:
+                    Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+                    Matcher matcher = pattern.matcher(((String) value));
+
+                    return matcher.matches();
+
+                default:
+                    return false;
+            }
+        } catch (ClassCastException ex) {
+            return false;
+        } catch (Exception ex) {
+            System.out.println(ex);
+
+            return false;
+        }
+    }
+
+    public boolean loginProfile(int id, String password) {
         //Profile can only login if there isnt any other loged profile
-        if (!this.profileIsLogedIn()) {
-
-            ProfileModel profile = this.getProfileById(id);
+        if (!hasAuthProfile()) {
+            ProfileModel profile = this.getProfile(id);
 
             if (profile != null) {
 
                 //If the profile doesnt have a password, logs in the profile.
                 if (password == null && profile.getPassword() == null) {
                     data.setCurrentProfile(profile);
-                    return 1;
+                    return true;
                 }
 
                 //If the password input is correct
-                if (this.isPasswordValid(password)) {
+                if (verifyData(PROFILE_FIELD.PASSWORD, password)) {
                     //If the password input matches the profile password, logs in the profile
                     if (profile.getPassword().equals(password)) {
                         data.setCurrentProfile(profile);
-                        return 1;
+                        return true;
                     }
                 }
 
             }
         }
-        return 0;
+        return false;
     }
 
-    public int logoutProfile() {
-        if (this.profileIsLogedIn()) {
+    public boolean logoutProfile() {
+        if (hasAuthProfile()) {
             data.setCurrentProfile(null);
-            return 1;
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     public String recoverPassword(int id, String securityAnswer) {
-
         //There can't be any loged in profile to recover a password
-        if (!this.profileIsLogedIn()) {
-            ProfileModel profile = getProfileById(id);
+        if (hasAuthProfile())
+            return null;
+        
+        ProfileModel profile = getProfile(id);
 
-            if (profile != null) {
-                //The profile must be associated with a password
-                if (profile.getPassword() != null) {
-                    //Checks if the security asnwer input is valid
-                    if (this.isSecurityAnswerValid(securityAnswer)) {
-                        //If the security answer input matches the profile security answer, returns the profile password
-                        if (securityAnswer.equals(profile.getSecurityAnswer())) {
-                            return profile.getPassword();
-                        }
-                    }
+        try{
+            //Checks if the security asnwer input is valid
+            if (verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer)) {
+                //If the security answer input matches the profile security answer, returns the profile password
+                if (securityAnswer.equals(profile.getSecurityAnswer())) {
+                    return profile.getPassword();
                 }
             }
+        }catch(NullPointerException ex){
+            return null;
         }
-
+        
         return null;
-    }
-
-    public int editProfile(int profileId, HashMap<String, String> fields) {
-
-        if (fields == null || fields.size() < 1) {
-            return 0;
-        }
-
-        if (this.stonksHasProfiles()) {
-            if (this.profileIsLogedIn()) {
-                if (data.getCurrentProfile().getId() == profileId) {
-
-                    String field;
-                    String newValue;
-
-                    for (Map.Entry<String, String> entry : fields.entrySet()) {
-                        field = entry.getKey();
-                        newValue = entry.getValue();
-
-                        if (field.equalsIgnoreCase("firstname")) {
-                            if (this.isFirstNameValid(newValue)) {
-                                data.getListProfiles().get(profileId).setFirstName(newValue);
-                                data.getCurrentProfile().setFirstName(newValue);
-                            } else {
-                                return 0;
-                            }
-                        }
-
-                        if (field.equalsIgnoreCase("lastname")) {
-                            if (this.isLastNameValid(newValue)) {
-                                data.getListProfiles().get(profileId).setLastName(newValue);
-                                data.getCurrentProfile().setLastName(newValue);
-                            } else {
-                                return 0;
-                            }
-                        }
-
-                        if (field.equalsIgnoreCase("password")) {
-                            if (this.isPasswordValid(newValue)) {
-                                data.getListProfiles().get(profileId).setPassword(newValue);
-                                data.getCurrentProfile().setPassword(newValue);
-                            } else {
-                                return 0;
-                            }
-                        }
-
-                        if (field.equalsIgnoreCase("color")) {
-                            if (this.isColorValid(newValue)) {
-                                data.getListProfiles().get(profileId).setColor(newValue);
-                                data.getCurrentProfile().setColor(newValue);
-                            } else {
-                                return 0;
-                            }
-                        }
-                    }
-
-                    return 1;
-                }
-            }
-        }
-
-        return 0;
     }
 }

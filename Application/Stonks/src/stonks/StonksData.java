@@ -18,7 +18,7 @@ public class StonksData implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private HashMap<Integer, ProfileModel> listProfiles;
-    private ProfileModel currentProfile;
+    private ProfileModel authProfile;
 
     public HashMap<Integer, ProfileModel> getListProfiles() {
         return listProfiles;
@@ -28,12 +28,12 @@ public class StonksData implements Serializable {
         this.listProfiles = listProfiles;
     }
 
-    public ProfileModel getCurrentProfile() {
-        return currentProfile;
+    public ProfileModel getAuthProfile() {
+        return authProfile;
     }
 
-    public void setCurrentProfile(ProfileModel currentProfile) {
-        this.currentProfile = currentProfile;
+    public void setCurrentProfile(ProfileModel authProfile) {
+        this.authProfile = authProfile;
     }
 
     public StonksData() {
@@ -68,7 +68,7 @@ public class StonksData implements Serializable {
                         data.listProfiles = new HashMap<>();
                     }
                     
-                    data.currentProfile = null;
+                    data.authProfile = null;
 
                     return data;
                 }

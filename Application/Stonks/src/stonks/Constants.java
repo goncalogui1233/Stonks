@@ -23,9 +23,9 @@ public interface Constants {
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
         CONFIRM_DELETE_GOAL("Deleting goal \"{}\"", "This action will delete this goal permanently...");
         
-        String subTitle;
-        String newSubTitle;
-        String text;
+        private final String subTitle;
+        private String newSubTitle;
+        private final String text;
         
         DBOX_CONTENT(String subTitle, String text){
             this.subTitle = newSubTitle = subTitle;
@@ -59,15 +59,31 @@ public interface Constants {
     public static final int SIDEPROFILEBAR_HEIGHT = APP_HEIGHT;
     
     /*General*/
-    public static final String[] SECURITY_QUESTIONS_LIST = new String[]{
-        "Select One",
-        "What was your childhood nickname?",
-        "What is the first name of your first grade teacher?",
-        "What was the name of the town where you were born?",
-        "What was the name of your first pet?",
-        "Who is your favorite fictional character?"};
+    public static final int MAX_PROFILES = 6;
+    public static enum SECURITY_QUESTIONS {
+        /*Empty*/
+        PROTOTYPE("Select One"),
+        
+        /*Possible security questions*/
+        CHILDHOOD_NICKNAME("What was your childhood nickname?"),
+        TEACHER_NAME("What is the first name of your first grade teacher?"),
+        TOWN_BORN("What was the name of the town where you were born?"),
+        FIRST_PET("What was the name of your first pet?"),
+        FICTIONAL_CHAR("Who is your favorite fictional character?");
+        
+        private final String question;
+        
+        SECURITY_QUESTIONS(String question){
+            this.question = question;
+        }
+        
+        public String getQuestion(){
+            return question;
+        }
+    }
     
     /*Profile*/
+    public static enum PROFILE_FIELD {FIRST_NAME, LAST_NAME, SECURITY_QUESTION, SECURITY_ANSWER, PASSWORD, COLOR};
     public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
     public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_HEIGHT;
     public static final int PROFILE_AUTH_WIDTH = APP_WIDTH - SIDEPROFILEBAR_WIDTH;
