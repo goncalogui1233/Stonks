@@ -29,15 +29,15 @@ public class ProfileController implements Constants {
         if (hasMaxProfiles())
             return false;
 
-        if (verifyData(PROFILE_FIELD.FIRST_NAME, firstName)
-                && verifyData(PROFILE_FIELD.LAST_NAME, lastName)
-                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityQuestion)
-                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer)
-                && verifyData(PROFILE_FIELD.COLOR, color)) {
+        if (verifyData(PROFILE_FIELD.FIRST_NAME, firstName) == VALIDATE.OK
+                && verifyData(PROFILE_FIELD.LAST_NAME, lastName) == VALIDATE.OK
+                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityQuestion) == VALIDATE.OK
+                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer) == VALIDATE.OK
+                && verifyData(PROFILE_FIELD.COLOR, color) == VALIDATE.OK) {
 
             ProfileModel newProfile;
             if (password != null) {
-                if (verifyData(PROFILE_FIELD.PASSWORD, password)) {
+                if (verifyData(PROFILE_FIELD.PASSWORD, password) == VALIDATE.OK) {
                     newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, password, color);
                 } else {
                     return false;
@@ -70,19 +70,19 @@ public class ProfileController implements Constants {
                     newValue = entry.getValue();
 
                     if (field.equalsIgnoreCase("firstname")) {
-                        if (!verifyData(PROFILE_FIELD.FIRST_NAME, newValue)) {
+                        if (verifyData(PROFILE_FIELD.FIRST_NAME, newValue) != VALIDATE.OK) {
                             return false;
                         }
                     }else if (field.equalsIgnoreCase("lastname")) {
-                        if (!verifyData(PROFILE_FIELD.LAST_NAME, newValue)) {
+                        if (verifyData(PROFILE_FIELD.LAST_NAME, newValue) != VALIDATE.OK) {
                             return false;
                         }
                     }else if (field.equalsIgnoreCase("password")) {
-                        if (!verifyData(PROFILE_FIELD.PASSWORD, newValue)) {
+                        if (verifyData(PROFILE_FIELD.PASSWORD, newValue) != VALIDATE.OK) {
                             return false;
                         }
                     }else if (field.equalsIgnoreCase("color")) {
-                        if (!verifyData(PROFILE_FIELD.COLOR, newValue)) {
+                        if (verifyData(PROFILE_FIELD.COLOR, newValue) != VALIDATE.OK) {
                             return false;
                         }
                     }
@@ -170,50 +170,69 @@ public class ProfileController implements Constants {
 //        return 1;
 //    }
     //Inputs validation
-    private <T> boolean verifyData(PROFILE_FIELD field, T value) { //verify the data in goal name and objective
+    public <T> VALIDATE verifyData(PROFILE_FIELD field, T value) { //verify the data in goal name and objective
         try {
             switch (field) {
                 /*FIRST_NAME FIELD VALIDATIONS*/
                 case FIRST_NAME:
-                    return !(((String) value).length() < 1/*CONSTANT*/
-                            || ((String) value).length() > 50/*CONSTANT*/);
+                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                        return VALIDATE.MIN_CHAR;
+                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
 
                 /*LAST_NAME FIELD VALIDATIONS*/
                 case LAST_NAME:
-                    return !(((String) value).length() < 1/*CONSTANT*/
-                            || ((String) value).length() > 50/*CONSTANT*/);
+                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                        return VALIDATE.MIN_CHAR;
+                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
 
                 /*SECURITY_QUESTION FIELD VALIDATIONS*/
                 case SECURITY_QUESTION:
                     /*TODO VALIDATION*/
-                    return false;
+                    return VALIDATE.UNDEFINED;
 
                 /*SECURITY_ANSWER FIELD VALIDATIONS*/
                 case SECURITY_ANSWER:
-                    return !(((String) value).length() < 1/*CONSTANT*/
-                            || ((String) value).length() > 50/*CONSTANT*/);
+                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                        return VALIDATE.MIN_CHAR;
+                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
 
                 /*PASSWORD FIELD VALIDATIONS*/
                 case PASSWORD:
-                    return !(((String) value).length() < 6/*CONSTANT*/
-                            || ((String) value).length() > 50/*CONSTANT*/);
-
+                    if (!(((String) value).length() < 6))/*CONSTANT*/
+                        return VALIDATE.MIN_CHAR;
+                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
+                    
                 /*COLOR FIELD VALIDATIONS*/
                 case COLOR:
                     Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
                     Matcher matcher = pattern.matcher(((String) value));
 
-                    return matcher.matches();
+                    if(matcher.matches())
+                        return VALIDATE.FORMAT;
+                    
+                    return VALIDATE.OK;
 
                 default:
-                    return false;
+                    return VALIDATE.UNDEFINED;
             }
         } catch (ClassCastException ex) {
-            return false;
+            return VALIDATE.UNDEFINED;
         } catch (Exception ex) {
             System.out.println(ex);
 
-            return false;
+            return VALIDATE.UNDEFINED;
         }
     }
 
@@ -231,7 +250,7 @@ public class ProfileController implements Constants {
                 }
 
                 //If the password input is correct
-                if (verifyData(PROFILE_FIELD.PASSWORD, password)) {
+                if (verifyData(PROFILE_FIELD.PASSWORD, password) == VALIDATE.OK) {
                     //If the password input matches the profile password, logs in the profile
                     if (profile.getPassword().equals(password)) {
                         data.setCurrentProfile(profile);
@@ -262,7 +281,7 @@ public class ProfileController implements Constants {
 
         try{
             //Checks if the security asnwer input is valid
-            if (verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer)) {
+            if (verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer) == VALIDATE.OK) {
                 //If the security answer input matches the profile security answer, returns the profile password
                 if (securityAnswer.equals(profile.getSecurityAnswer())) {
                     return profile.getPassword();

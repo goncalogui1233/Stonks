@@ -60,6 +60,19 @@ public interface Constants {
     
     /*General*/
     public static final int MAX_PROFILES = 6;
+    public static enum VALIDATE {
+        OK,/*Everything other than this is an error*/
+        MIN_CHAR,
+        MAX_CHAR,
+        NEGATIVE_OR_ZERO,
+        EMPTY,
+        MIN_NUMBER,
+        MAX_NUMBER,
+        MIN_DATE,
+        FORMAT,
+        UNDEFINED;
+    };
+    
     public static enum SECURITY_QUESTIONS {
         /*Empty*/
         PROTOTYPE("Select One"),
