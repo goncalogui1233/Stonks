@@ -5,47 +5,49 @@ import java.util.Date;
 import stonks.StonksData;
 
 public class GoalModel {
+
     private static int idCounter = 0;
     private static StonksData data;
-    
+
     private final int id;
-    private final Date creationDate;
-    private Date achievementDate;
+    private final LocalDate creationDate;
+    private LocalDate achievementDate;
     private String name;
     private int objective;
     private LocalDate deadlineDate;
-    
+
     private final WalletModel wallet;
 
     public GoalModel(String name, int objective, LocalDate deadline) {
         this.name = name;
         this.objective = objective;
-        if(deadline != null)
+        if (deadline != null) {
             this.deadlineDate = deadline;
-        
+        }
+
         id = idCounter++;
-        creationDate = new Date();
-        
+        creationDate = LocalDate.now();
+
         wallet = new WalletModel();
     }
-    
-    public static void setData(StonksData data){
+
+    public static void setData(StonksData data) {
         GoalModel.data = data;
     }
-    
-    public int getId(){
+
+    public int getId() {
         return id;
     }
-    
-    public Date getCreationDate() {
+
+    public LocalDate getCreationDate() {
         return creationDate;
     }
-    
-    public Date getAchievementDate() {
+
+    public LocalDate getAchievementDate() {
         return achievementDate;
     }
 
-    public void setAchievementDate(Date achievementDate) {
+    public void setAchievementDate(LocalDate achievementDate) {
         this.achievementDate = achievementDate;
     }
 
@@ -72,8 +74,16 @@ public class GoalModel {
     public void setDeadlineDate(LocalDate deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
-    
-    public WalletModel getWallet(){
+
+    public WalletModel getWallet() {
         return wallet;
+    }
+
+    public boolean hasDeadline() {
+        if (this.deadlineDate != null && !deadlineDate.toString().isEmpty()) {
+            return true;
+        }
+
+        return false;
     }
 }

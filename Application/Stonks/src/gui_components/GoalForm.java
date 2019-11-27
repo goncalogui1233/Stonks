@@ -28,12 +28,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import controllers.GoalController;
+import stonks.Constants;
 
 /**
  *
  * @author Tiago
  */
-public class GoalForm {
+public class GoalForm implements Constants {
 
     private Stage goalForm;
     private GoalController controller;
@@ -123,9 +124,16 @@ public class GoalForm {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
+
                 if (!newValue.matches("\\d*")) {
                     txfObjective.setText(newValue.replaceAll("[^\\d]", ""));
                 }
+
+                if (txfObjective.getText().length() >= 9) {
+                    txfObjective.setText(txfObjective.getText().substring(0, 9));
+
+                }
+
             }
         });
 
@@ -157,6 +165,10 @@ public class GoalForm {
         DatePicker dpDeadline = new DatePicker();
         dpDeadline.setVisible(false);
 
+        Label errorDeadline = new Label("Deadline cannot be empty");
+        errorDeadline.getStyleClass().addAll("fieldError");
+        errorDeadline.setVisible(false);
+
         hasDeadline.selectedProperty().addListener(new ChangeListener<Boolean>() {
             public void changed(ObservableValue<? extends Boolean> ov,
                     Boolean old_val, Boolean new_val) {
@@ -165,14 +177,11 @@ public class GoalForm {
                     dpDeadline.setVisible(true);
                 } else {
                     dpDeadline.setVisible(false);
+                    errorDeadline.setVisible(false);
                 }
 
             }
         });
-
-        Label errorDeadline = new Label("Deadline cannot be empty");
-        errorDeadline.getStyleClass().addAll("fieldError");
-        errorDeadline.setVisible(false);
 
         deadlineDiv.getChildren().addAll(deadlineInlineInput, dpDeadline, errorDeadline);
 
@@ -188,60 +197,66 @@ public class GoalForm {
             public void handle(ActionEvent e) {
 
                 int errors = 0;
-                //Validate name
-                if (txfName.getLength() < 1) {
-                    errorName.setText("Name cannot be empty");
-                    errorName.setVisible(true);
-                    errors++;
-                } else if (txfName.getLength() > 50) {
-                    errorName.setText("Name has a maximum of 50 characters");
-                    errorName.setVisible(true);
-                    errors++;
-                } else {
-                    errors--;
-                    errorName.setVisible(false);
-                }
+                try {
+                    //Validate name
+                    if (controller.verifyData(GOAL_FIELD.NAME, txfName.getText()) == VALIDATE.MIN_CHAR) {
+                        errorName.setText("Name canot be empty");
+                        errorName.setVisible(true);
+                        errors++;
+                    } else if (txfName.getLength() > 50) {
+                        errorName.setText("Name has a maximum of 50 characters");
+                        errorName.setVisible(true);
+                        errors++;
+                    } else {
+                        errors--;
+                        errorName.setVisible(false);
+                    }
 
-                //Validate Objective
-                if (txfObjective.getLength() < 1) {
-                    errorObjective.setText("Objective cannot be empty");
-                    errorObjective.setVisible(true);
-                    errors++;
-                } else if (Integer.parseInt(txfObjective.getText()) < 0) {
-                    errorObjective.setText("Objective value cannot be negative");
-                    errorObjective.setVisible(true);
-                    errors++;
-                } else if (Integer.parseInt(txfObjective.getText()) > 9999999) {
-                    errorObjective.setText("Objective has a maximum value 9999999");
-                    errorObjective.setVisible(true);
-                    errors++;
-                } else {
-                    errors--;
-                    errorObjective.setVisible(false);
+                    //Validate Objective
+                    if (txfObjective.getLength() < 1) {
+                        errorObjective.setText("Objective cannot be empty");
+                        errorObjective.setVisible(true);
+                        errors++;
+                    } else if (controller.verifyData(GOAL_FIELD.OBJECTIVE, Integer.parseInt(txfObjective.getText())) == VALIDATE.MIN_NUMBER) {
+                        errorObjective.setText("Objective value cannot be negative");
+                        errorObjective.setVisible(true);
+                        errors++;
+                    } else if (controller.verifyData(GOAL_FIELD.OBJECTIVE, Integer.parseInt(txfObjective.getText())) == VALIDATE.MAX_NUMBER) {
+                        errorObjective.setText("Objective has a maximum value 999999999");
+                        errorObjective.setVisible(true);
+                        errors++;
+                    } else {
+                        errors--;
+                        errorObjective.setVisible(false);
+                    }
+                } catch (Exception ex) {
+
                 }
 
                 //Validate deadline
                 if (hasDeadline.isSelected()) {
-                    if (dpDeadline.getValue() == null) {
+                    if (controller.verifyData(GOAL_FIELD.DEADLINE, dpDeadline.getValue()) == VALIDATE.EMPTY) {
                         errorDeadline.setText("Deadline cannot be empty");
                         errorDeadline.setVisible(true);
                         errors++;
-                    } else if (dpDeadline.getValue().compareTo(LocalDate.now()) <= 0) {
-                        errorDeadline.setText("Deadline has to be, at least, tomorrow");
+                    } else if (controller.verifyData(GOAL_FIELD.DEADLINE, dpDeadline.getValue()) == VALIDATE.MIN_DATE) {
+                        errorDeadline.setText("Deadline has to be later then today");
                         errorDeadline.setVisible(true);
                         errors++;
                     } else {
                         errors--;
                         errorDeadline.setVisible(false);
                     }
+                } else {
+                    errors--;
+                    errorDeadline.setVisible(false);
                 }
 
                 if (errors < 0) {
                     if (hasDeadline.isSelected()) {
-                        //System.out.println(controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue()));
-                    }
-                    else{
-                        //controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                        System.out.println(controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue()));
+                    } else {
+                        System.out.println(controller.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null));
                     }
 
                 }
