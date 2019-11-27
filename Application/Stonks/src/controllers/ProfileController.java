@@ -28,7 +28,7 @@ public class ProfileController implements Constants {
     public boolean createProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
         if (hasMaxProfiles())
             return false;
-
+        
         if (verifyData(PROFILE_FIELD.FIRST_NAME, firstName) == VALIDATE.OK
                 && verifyData(PROFILE_FIELD.LAST_NAME, lastName) == VALIDATE.OK
                 && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityQuestion) == VALIDATE.OK
@@ -36,7 +36,7 @@ public class ProfileController implements Constants {
                 && verifyData(PROFILE_FIELD.COLOR, color) == VALIDATE.OK) {
 
             ProfileModel newProfile;
-            if (password != null) {
+            if (!password.isEmpty()) {
                 if (verifyData(PROFILE_FIELD.PASSWORD, password) == VALIDATE.OK) {
                     newProfile = new ProfileModel(firstName, lastName, securityQuestion, securityAnswer, password, color);
                 } else {
@@ -47,6 +47,7 @@ public class ProfileController implements Constants {
             }
 
 //            newProfile.setId(this.getNextId());
+                    System.out.println(newProfile.toString());
             data.getListProfiles().put(newProfile.getId(), newProfile);
 
             /*UPDATE DATABASE*/
@@ -175,41 +176,44 @@ public class ProfileController implements Constants {
             switch (field) {
                 /*FIRST_NAME FIELD VALIDATIONS*/
                 case FIRST_NAME:
-                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                    if ((((String) value).length() < 1))/*CONSTANT*/
                         return VALIDATE.MIN_CHAR;
-                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                    if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
                     return VALIDATE.OK;
 
                 /*LAST_NAME FIELD VALIDATIONS*/
                 case LAST_NAME:
-                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
                         return VALIDATE.MIN_CHAR;
-                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                    if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
                     return VALIDATE.OK;
 
                 /*SECURITY_QUESTION FIELD VALIDATIONS*/
                 case SECURITY_QUESTION:
-                    /*TODO VALIDATION*/
-                    return VALIDATE.UNDEFINED;
+                    if(((String) value).equals(SECURITY_QUESTIONS.PROTOTYPE.getQuestion()))
+                        return VALIDATE.INVALID_QUESTION;
+                    return VALIDATE.OK;
 
                 /*SECURITY_ANSWER FIELD VALIDATIONS*/
                 case SECURITY_ANSWER:
-                    if (!(((String) value).length() < 1))/*CONSTANT*/
+                    if ((((String) value).length() < 1))/*CONSTANT*/
                         return VALIDATE.MIN_CHAR;
-                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                    if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
                     return VALIDATE.OK;
 
                 /*PASSWORD FIELD VALIDATIONS*/
                 case PASSWORD:
-                    if (!(((String) value).length() < 6))/*CONSTANT*/
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.OK;
+                    if ((((String) value).length() < 6))/*CONSTANT*/
                         return VALIDATE.MIN_CHAR;
-                    if (!(((String) value).length() > 50))/*CONSTANT*/
+                    if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
                     return VALIDATE.OK;
@@ -219,7 +223,7 @@ public class ProfileController implements Constants {
                     Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
                     Matcher matcher = pattern.matcher(((String) value));
 
-                    if(matcher.matches())
+                    if(!matcher.matches())
                         return VALIDATE.FORMAT;
                     
                     return VALIDATE.OK;

@@ -63,6 +63,7 @@
     -fx-border-color: #333;
     -fx-border-width: 2;
     -fx-border-radius: 5px;
+    -fx-background-radius: 6px;
 }
 
 #dialogBox:error{
