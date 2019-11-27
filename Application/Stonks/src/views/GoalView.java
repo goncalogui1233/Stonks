@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import models.GoalModel;
 import stonks.Constants;
 
 public class GoalView implements Constants {
@@ -57,7 +58,8 @@ public class GoalView implements Constants {
         goalsContainer.setId("goalsContainer");
         goalsContainer.setMinSize(APP_WIDTH - SIDEMENU_WIDTH, APP_HEIGHT);
         goalsContainer.setMaxSize(APP_WIDTH - SIDEMENU_WIDTH, APP_HEIGHT);
-        goalsContainer.getChildren().addAll(new GoalBox().getRoot());
+   
+        goalsContainer.getChildren().addAll(new GoalBox(new GoalModel("New bike", 100, null)).getRoot(), new GoalBox(new GoalModel("New car", 10000, null)).getRoot());
 
         //View container
         viewContent = new VBox();

@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import models.GoalModel;
 import stonks.Constants;
 
 /**
@@ -22,6 +23,8 @@ import stonks.Constants;
  * @author Utilizador
  */
 public class GoalBox implements Constants {
+
+    GoalModel goal;
 
     //Containers
     private VBox root;
@@ -58,7 +61,10 @@ public class GoalBox implements Constants {
     private Button btnEdit;
     private Button btnFunds;
 
-    public GoalBox() {
+    public GoalBox(GoalModel goal) {
+
+        this.goal = goal;
+
         root = new VBox();
         root.setId("goalBox");
 
@@ -70,7 +76,7 @@ public class GoalBox implements Constants {
 
     public void setupGoalBox() {
 
-        this.name = new Label("01234567890123456789012345678901234567890123456789"); //01234567890123456789012345678901234567890123456789
+        this.name = new Label(goal.getName()); //01234567890123456789012345678901234567890123456789
         name.getStyleClass().addAll("title");
         topContainer = new BorderPane();
         topContainer.setId("topContainer");
@@ -91,15 +97,21 @@ public class GoalBox implements Constants {
         estimation.getStyleClass().addAll("lblValue");
 
         createdTitle = new Label("CREATED: ");
-        created = new Label("22/11/2019");
+        created = new Label(goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getYear());
         created.getStyleClass().addAll("lblValue");
 
-        deadlineTitle = new Label("DEADLINE: ");
-        deadline = new Label("22/11/2019");
-        deadline.getStyleClass().addAll("lblValue");
+        if (goal.hasDeadline()) {
+            deadlineTitle = new Label("DEADLINE: ");
+            deadline = new Label(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getYear());
+            deadline.getStyleClass().addAll("lblValue");
+        }
 
         datesContainer = new HBox();
-        datesContainer.getChildren().addAll(createdTitle, created, estimationTitle, estimation, deadlineTitle, deadline);
+        datesContainer.getChildren().addAll(createdTitle, created, estimationTitle, estimation);
+
+        if (goal.hasDeadline()) {
+            datesContainer.getChildren().addAll(deadlineTitle, deadline);
+        }
 
         //First row buttons
         btnDelete = new Button("DELETE");
@@ -131,11 +143,11 @@ public class GoalBox implements Constants {
 
         //Second row money
         objectiveTitle = new Label("Goal: ");
-        objective = new Label("200" + "€");
+        objective = new Label(goal.getObjective() + "€");
         objective.getStyleClass().addAll("lblValue");
 
         accomplishedTitle = new Label("Accomplished: ");
-        accomplished = new Label("100" + "€");
+        accomplished = new Label(goal.getWallet().getSavedMoney() + "€");
         accomplished.getStyleClass().addAll("lblValue");
 
         moneyContainer = new HBox();

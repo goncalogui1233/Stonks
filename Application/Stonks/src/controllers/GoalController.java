@@ -24,8 +24,8 @@ public class GoalController implements Constants {
     }
 
     public boolean createGoal(String name, int objective, LocalDate deadline) {
-        if (verifyData(GOAL_FIELD.NAME, name)
-                && verifyData(GOAL_FIELD.OBJECTIVE, Integer.toString(objective))) {
+        if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
+                && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
             data.getAuthProfile().getGoals().add(new GoalModel(name, objective, deadline));
 
             /*UPDATE DATABASE*/
@@ -36,8 +36,8 @@ public class GoalController implements Constants {
     }
 
     public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
-        if (verifyData(GOAL_FIELD.NAME, name)
-                && verifyData(GOAL_FIELD.OBJECTIVE, Integer.toString(objective))) {
+        if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
+                && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
             getGoal(id).setName(name);
             getGoal(id).setObjective(objective);
             getGoal(id).setDeadlineDate(deadline);
@@ -60,33 +60,50 @@ public class GoalController implements Constants {
         }
     }
 
-    private <T> boolean verifyData(GOAL_FIELD field, T value) { //verify the data in goal name and objective
+    public <T> VALIDATE verifyData(GOAL_FIELD field, T value) { //verify the data in goal name and objective
         try {
             switch (field) {
                 /*NAME FIELD VALIDATIONS*/
                 case NAME:
-                    return !(((String) value).length() < 1/*CONSTANT*/
-                            || ((String) value).length() > 50/*CONSTANT*/);
+                    if (((String) value).length() < 1/*CONSTANT*/) {
+                        return VALIDATE.MIN_CHAR;
+                    }
+                    if (((String) value).length() > 50/*CONSTANT*/) {
+                        return VALIDATE.MAX_CHAR;
+                    }
+
+                    return VALIDATE.OK;
 
                 /*OBJECTIVE FIELD VALIDATIONS*/
                 case OBJECTIVE:
-                    return !(((Integer) value) <= 0/*CONSTANT*/
-                            || ((Integer) value) > 999999999/*CONSTANT*/);
+                    if (((Integer) value) <= 0/*CONSTANT*/) {
+                        return VALIDATE.MIN_NUMBER;
+                    }
+                    if (((Integer) value) > 999999999/*CONSTANT*/) {
+                        return VALIDATE.MAX_NUMBER;
+                    }
 
+                    return VALIDATE.OK;
                 /*DEADLINE FIELD VALIDATIONS*/
                 case DEADLINE:
-                    /*TODO VALIDATION*/
-                    return false;
+                    if (value == null) {
+                        return VALIDATE.EMPTY;
+                    }
+                    if (((LocalDate) value).compareTo(LocalDate.now()) <= 0) {
+                        return VALIDATE.MIN_DATE;
+                    }
+
+                    return VALIDATE.OK;
 
                 default:
-                    return false;
+                    return VALIDATE.UNDEFINED;
             }
         } catch (ClassCastException ex) {
-            return false;
+            return VALIDATE.UNDEFINED;
+        } catch (NullPointerException ex) {
+            return VALIDATE.EMPTY;
         } catch (Exception ex) {
-            System.out.println(ex);
-
-            return false;
+            return VALIDATE.UNDEFINED;
         }
     }
 
