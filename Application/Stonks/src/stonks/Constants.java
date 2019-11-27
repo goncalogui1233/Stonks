@@ -105,7 +105,7 @@ public interface Constants {
     public static final int PROFILE_AUTH_BOX_WIDTH = 450;
     public static final int PROFILE_AUTH_BOX_LOGIN_HEIGHT = 300;
     public static final int PROFILE_AUTH_BOX_REGISTER_HEIGHT = 600;
-    public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 400;
+    public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 300;
     
     /*Dashboard*/
     
@@ -115,7 +115,7 @@ public interface Constants {
     /*Wallet*/
     
     /*Property Change Events*/
-    public static enum AUTH_EVENT {CREATE_PROFILE};
+    public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {};
     public static enum PROFILE_EVENT {};
     public static enum DASHBOARD_EVENT {};

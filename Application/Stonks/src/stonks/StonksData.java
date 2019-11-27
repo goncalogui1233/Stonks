@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import models.ProfileModel;
 
 public class StonksData implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private HashMap<Integer, ProfileModel> listProfiles;

@@ -1,5 +1,7 @@
 package gui_components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
@@ -9,13 +11,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import observables.AuthenticationObservable;
 import stonks.Constants;
 
-public class RegisterBox implements Constants {
+public class RegisterBox implements Constants, PropertyChangeListener{
 
     private final BorderPane root;
-    private AuthenticationObservable authObs;
+    private final AuthenticationObservable authObs;
 
     //Containers
     private BorderPane registerRoot;
@@ -57,6 +60,15 @@ public class RegisterBox implements Constants {
 
         setupRegisterForm();
         setupEventListeners();
+        setupPropertyChangeListeners();
+    }
+
+    public BorderPane getRoot() {
+        return root;
+    }
+
+    private void setupPropertyChangeListeners() {
+        authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_REGISTER.name(), this);
     }
 
     private void setupRegisterForm() {
@@ -87,7 +99,7 @@ public class RegisterBox implements Constants {
         }
 
         cbSecurityQuestion = new ChoiceBox(questions);
-        cbSecurityQuestion.setValue("Select One");
+        cbSecurityQuestion.setValue(SECURITY_QUESTIONS.PROTOTYPE.getQuestion());
 
         lblSecurtyAnswer = new Label("Security Answer");
         txfSecurityAnswer = new TextField();
@@ -140,10 +152,6 @@ public class RegisterBox implements Constants {
 
         /*Add register container into the root pane*/
         root.setCenter(registerRoot);
-    }
-
-    public BorderPane getRoot() {
-        return root;
     }
 
     private void setupEventListeners() {
@@ -222,8 +230,25 @@ public class RegisterBox implements Constants {
                         String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255))
                 )) {
                     DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_PROFILE);
+                    resetFields();
                 }
             }
         });
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_REGISTER.name())){
+            resetFields();
+        }
+    }
+
+    private void resetFields() {
+        txfFirstName.setText("");
+        txfLastName.setText("");
+        cbSecurityQuestion.setValue(SECURITY_QUESTIONS.PROTOTYPE.getQuestion());
+        txfPassword.setText("");
+        txfSecurityAnswer.setText("");
+        cpPickColor.setValue(Color.WHITE);
     }
 }

@@ -41,9 +41,14 @@ public class SideProfileBar implements Constants, PropertyChangeListener{
         setupPropertyChangeListeners();
         setupProfileIcons(authObs.getListProfiles());
     }
+    
+    public VBox getRoot() {
+        return root;
+    }
 
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.CREATE_PROFILE.name(), this);
+        authObs.addPropertyChangeListener(AUTH_EVENT.UPDATE_SELECTION.name(), this);
     }
 
     private void setupProfileIcons(HashMap<Integer, ProfileModel> listProfiles){
@@ -84,6 +89,11 @@ public class SideProfileBar implements Constants, PropertyChangeListener{
             divider.setId("divider-18");
             root.getChildren().add(divider);
             
+            /*Add onClick event*/
+            profileIcon.setOnMouseClicked(e -> {
+                authObs.profileClicked(profile.getId());
+            });
+            
             /*Add node to the root*/
             root.getChildren().add(profileIcon);
         }
@@ -99,6 +109,11 @@ public class SideProfileBar implements Constants, PropertyChangeListener{
         registerButton.setTextFill(Color.valueOf("#333"));
         registerButton.setBackground(new Background(new BackgroundFill(Color.valueOf("#bbb"), new CornerRadii(100), new Insets(0))));
         
+        /*Add onClick event*/
+        registerButton.setOnMouseClicked(e -> {
+            authObs.addProfileClicked();
+        });
+        
         /*Set CSS ID's*/
         registerButton.setId("profileIcon");
         
@@ -109,17 +124,13 @@ public class SideProfileBar implements Constants, PropertyChangeListener{
         
         root.getChildren().add(registerButton);
     }
-    
-    public VBox getRoot() {
-        return root;
-    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getPropertyName().equals(AUTH_EVENT.CREATE_PROFILE.name())){
-            System.out.println("[SideProfileBar] - propertyChange");
-            System.out.println(authObs.getListProfiles().size());
             setupProfileIcons(authObs.getListProfiles());
+        }else if(evt.getPropertyName().equals(AUTH_EVENT.UPDATE_SELECTION.name())){
+            
         }
     }
 }

@@ -179,7 +179,14 @@
 
 /*Profile*/
 .TitleLabel{
-    -fx-font: bold 20pt "Arial";
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.UsernameLabel{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
 }
 
 .hbTitle{

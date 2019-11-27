@@ -17,7 +17,19 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         this.stonksObs = stonksObs;
     }
     
-    /*Methods*/
+    /*Bridge Methods*/
+    public HashMap<Integer, ProfileModel> getListProfiles() {
+        return stonksObs.getListProfiles();
+    }
+    
+    public ProfileModel getProfile(int id) {
+        return cProfile.getProfile(id);
+    }
+    
+    public int getViewSelectedProfileId(){
+        return cProfile.getViewSelectedProfileId();
+    }
+    
     public boolean hasMaxProfiles(){
         return cProfile.hasMaxProfiles();
     }
@@ -29,8 +41,6 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     public boolean createProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color){
         boolean resp = cProfile.createProfile(firstName, lastName, securityQuestion, securityAnswer, password, color);
         
-        System.out.println(resp);
-        
         if(resp){
             firePropertyChange(AUTH_EVENT.CREATE_PROFILE.name(), null, null);
         }
@@ -38,7 +48,22 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         return resp;
     }
     
-    public HashMap<Integer, ProfileModel> getListProfiles() {
-        return stonksObs.getListProfiles();
+    /*Clicked Methods*/
+    public void profileClicked(int id){
+        cProfile.setViewSelectedProfileId(id);
+        if(cProfile.getProfile(id).hasPassword()){
+            firePropertyChange(AUTH_EVENT.UPDATE_SELECTION.name(), null, null);
+            firePropertyChange(AUTH_EVENT.GOTO_LOGIN.name(), null, null);
+        }
+    }
+    
+    public void recoverPasswordClicked(){
+        if(cProfile.getProfile(cProfile.getViewSelectedProfileId()).hasPassword()){
+            firePropertyChange(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), null, null);
+        }
+    }
+    
+    public void addProfileClicked(){
+        firePropertyChange(AUTH_EVENT.GOTO_REGISTER.name(), null, null);
     }
 }
