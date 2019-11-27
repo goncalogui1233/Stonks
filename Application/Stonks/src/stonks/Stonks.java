@@ -4,24 +4,21 @@ import com.sun.javafx.css.StyleManager;
 import controllers.DashboardController;
 import controllers.GoalController;
 import controllers.ProfileController;
-import gui_components.DialogBox;
-import gui_components.SideMenu;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import models.GoalModel;
 import models.ProfileModel;
 import models.WalletModel;
-import views.ProfileEditView;
-import gui_components.LoginBox;
-import gui_components.PasswordRecoveryBox;
-import gui_components.RegisterBox;
-import views.ProfileView;
+import observables.AuthenticationObservable;
+import observables.StonksObservable;
+import views.AuthenticationView;
 
 public class Stonks extends Application implements Constants{
     private Stage window;
-    private StonksData data;    
+    private StonksData data;  
+    private StonksObservable stonksObs;
+    private AuthenticationObservable authObs;
     
     private ProfileController cProfile;
     private DashboardController cDashboard;
@@ -41,8 +38,11 @@ public class Stonks extends Application implements Constants{
         /*DialogBox test - REMOVE LATER*/
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
         
-        //window.setScene(new Scene(new ProfileEditView()));
-        window.setScene(new Scene(new ProfileView(cProfile).getRoot()));
+        stonksObs = new StonksObservable(data);
+        authObs = new AuthenticationObservable(cProfile, stonksObs);
+        
+        //window.setScene(new Scene(new ProfileView()));
+        window.setScene(new Scene(new AuthenticationView(authObs).getRoot()));
         
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }

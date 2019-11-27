@@ -1,18 +1,39 @@
 package gui_components;
 
-import controllers.ProfileController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import observables.AuthenticationObservable;
 import stonks.Constants;
 
 public class PasswordRecoveryBox implements Constants{
     private final BorderPane root;
-    private final ProfileController cProfile;
+    private AuthenticationObservable authObs;
     
-    public PasswordRecoveryBox(ProfileController cProfile){
-        this.cProfile = cProfile;
+    //Containers
+    private VBox formContainer;
+    private BorderPane bpRecoverRoot;
+    private VBox vbTitle;
+    private BorderPane bpOption;
+
+    //Title Labels
+    private Label lblTitle;
+    private Label lblUserName;
+    private Label lblSecurityQuestion;
+    private Label lvSecurityQuestion;
+
+    //Label Buttons
+    private Label lblSecurityAnswer;   
+    private Label btnRecover;
+
+    //Text Field
+    private TextField txtSecurityAnswer;
+    
+    public PasswordRecoveryBox(AuthenticationObservable authObs) {
+        this.authObs = authObs;
+        
+        
         root = new BorderPane();
         
         root.setMinSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);
@@ -22,25 +43,6 @@ public class PasswordRecoveryBox implements Constants{
     }
     
     private void setupRecoverPasswordForm(){
-        //Containers
-        VBox formContainer;
-        BorderPane bpRecoverRoot;
-        VBox vbTitle;
-        BorderPane bpOption;
-
-        //Title Labels
-        Label lblTitle;
-        Label lblUserName;
-        Label lblSecurityQuestion;
-        Label lvSecurityQuestion;
-
-        //Label Buttons
-        Label lblSecurityAnswer;   
-        Label btnRecover;
-
-        //Text Field
-        TextField txtSecurityAnswer;
-
         bpRecoverRoot = new BorderPane();
         bpRecoverRoot.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
         bpRecoverRoot.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT);

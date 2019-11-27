@@ -1,5 +1,7 @@
 package gui_components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -13,47 +15,39 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import models.ProfileModel;
+import observables.AuthenticationObservable;
 import stonks.Constants;
 
-public class SideProfileBar implements Constants{
-    VBox root;
-
-    /*REMOVE LATER*/
-    public SideProfileBar(){
-        this(null);
-    }
+public class SideProfileBar implements Constants, PropertyChangeListener{
+    private final VBox root;
+    private final AuthenticationObservable authObs;
     
-    public SideProfileBar(HashMap<Integer, ProfileModel> listProfiles) {
-        /*REMOVE LATER*/
-        if(listProfiles == null){
-            listProfiles = new HashMap();
-            ProfileModel tempProfile;
-            
-            for(int i = 1; i <= 6; i++){
-                String hex = String.format( "#%02X%02X%02X",
-                (int)( Color.rgb(20*i, 20*i, 20*i).getRed() * 255 ),
-                (int)( Color.rgb(20*i, 20*i, 20*i).getGreen() * 255 ),
-                (int)( Color.rgb(20*i, 20*i, 20*i).getBlue() * 255 ) );
-                tempProfile = new ProfileModel("U", ""+i, SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(), "a", "123", hex);
-                listProfiles.put(tempProfile.getId(), tempProfile);
-            }
-        }
+    private Label profileIcon;
+    private String profileInitials;
+    private Color textColor;
+    private Color profileColor;
+    private Label divider;
+    
+    private Label registerButton;
+    
+    public SideProfileBar(AuthenticationObservable authObs) {
+        this.authObs = authObs;
         
         root = new VBox();
         root.setMinSize(SIDEPROFILEBAR_WIDTH, SIDEPROFILEBAR_HEIGHT);
         root.setMaxSize(SIDEPROFILEBAR_WIDTH, SIDEPROFILEBAR_HEIGHT);
         root.setId("sideProfileBar");
+        
+        setupPropertyChangeListeners();
+        setupProfileIcons(authObs.getListProfiles());
+    }
 
-        setupProfileIcons(listProfiles);
-        setupRegisterButton();
+    private void setupPropertyChangeListeners() {
+        authObs.addPropertyChangeListener(AUTH_EVENT.CREATE_PROFILE.name(), this);
     }
 
     private void setupProfileIcons(HashMap<Integer, ProfileModel> listProfiles){
-        Label profileIcon;
-        String profileInitials;
-        Color textColor;
-        Color profileColor;
-        Label divider;
+        root.getChildren().removeAll(root.getChildren());
         
         for(ProfileModel profile:listProfiles.values()){
             profileInitials = "" 
@@ -79,8 +73,8 @@ public class SideProfileBar implements Constants{
             profileIcon.setTextFill(textColor);
             profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), new Insets(-5))));
             
-            if(profile.equals(listProfiles.get(0)))
-                profileIcon.setBorder(new Border(new BorderStroke(textColor, BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(5))));
+//            if(profile.equals(listProfiles.get(0)))
+//                profileIcon.setBorder(new Border(new BorderStroke(textColor, BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(5))));
         
             /*Set CSS ID's*/
             profileIcon.setId("profileIcon");
@@ -93,10 +87,12 @@ public class SideProfileBar implements Constants{
             /*Add node to the root*/
             root.getChildren().add(profileIcon);
         }
+        
+        setupRegisterButton();
     }
 
     private void setupRegisterButton() {
-        Label registerButton = new Label("+");
+        registerButton = new Label("+");
         registerButton.setMinSize(70, 70);
 
         /*Set node properties*/
@@ -107,7 +103,7 @@ public class SideProfileBar implements Constants{
         registerButton.setId("profileIcon");
         
         /*Add a 10px padding to the root*/
-        Label divider = new Label();
+        divider = new Label();
         divider.setId("divider-18");
         root.getChildren().add(divider);
         
@@ -116,5 +112,14 @@ public class SideProfileBar implements Constants{
     
     public VBox getRoot() {
         return root;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName().equals(AUTH_EVENT.CREATE_PROFILE.name())){
+            System.out.println("[SideProfileBar] - propertyChange");
+            System.out.println(authObs.getListProfiles().size());
+            setupProfileIcons(authObs.getListProfiles());
+        }
     }
 }

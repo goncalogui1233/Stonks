@@ -1,19 +1,20 @@
 package gui_components;
 
-import controllers.ProfileController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import observables.AuthenticationObservable;
 import stonks.Constants;
 
 public class LoginBox implements Constants{
     private final BorderPane root;
-    private final ProfileController cProfile;
+    private AuthenticationObservable authObs;
 
-    public LoginBox(ProfileController cProfile){
-        this.cProfile = cProfile;
+    public LoginBox(AuthenticationObservable authObs) {
+        this.authObs = authObs;
+        
         root = new BorderPane();
         
         root.setMinSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);

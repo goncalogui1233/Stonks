@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,13 +25,15 @@ public class DialogBox implements Constants{
     public static DBOX_RETURN display(DBOX_TYPE type, DBOX_CONTENT content){
         dialogBox = new Stage();
         
-        dialogBox.initStyle(StageStyle.UNDECORATED); /*Remove window default border and buttons (minimize, close, etc...)*/
+        dialogBox.initStyle(StageStyle.TRANSPARENT); /*Remove window default border and buttons (minimize, close, etc...)*/
         dialogBox.initModality(Modality.APPLICATION_MODAL); /*Unables clicks outside of this window*/
         dialogBox.setWidth(DBOX_WIDTH);
         dialogBox.setHeight(DBOX_HEIGHT);
         dialogBox.setAlwaysOnTop(true); /*Cant be onfocused (application wise)*/
         
         setupDialogBox(type, content.getSubTitle(), content.getText());
+        
+        dialogBox.getScene().setFill(Color.TRANSPARENT);
         
         dialogBox.showAndWait();
         
