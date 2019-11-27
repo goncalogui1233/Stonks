@@ -68,8 +68,8 @@ public class GoalBox implements Constants {
         root = new VBox();
         root.setId("goalBox");
 
-        root.setMinSize(600, 125);
-        root.setMaxSize(600, 125);
+        root.setMinSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT);
+        root.setMaxSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT);
 
         setupGoalBox();
     }

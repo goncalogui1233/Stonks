@@ -24,12 +24,25 @@ public class GoalController implements Constants {
     }
 
     public boolean createGoal(String name, int objective, LocalDate deadline) {
-        if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
-                && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
-            data.getAuthProfile().getGoals().add(new GoalModel(name, objective, deadline));
 
-            /*UPDATE DATABASE*/
-            return true;
+        if (data.getAuthProfile() != null) {
+            if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
+                    && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
+
+                if (deadline != null) {
+                    if (verifyData(GOAL_FIELD.DEADLINE, deadline) == VALIDATE.OK) {
+                        data.getAuthProfile().getGoals().add(new GoalModel(name, objective, deadline));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                data.getAuthProfile().getGoals().add(new GoalModel(name, objective, null));
+
+                /*UPDATE DATABASE*/
+                return true;
+            }
         }
 
         return false;

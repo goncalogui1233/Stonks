@@ -303,6 +303,7 @@
     -fx-alignment: center-right;
 }
 
+/*Goals*/
 #goalView #goalViewContent{
     -fx-padding: 50 0 0 150;
 }
@@ -319,12 +320,16 @@
 
 #goalView #goalViewContent .goalsTopContainer .button{
     -fx-font-size: 16px;
-
     -fx-text-fill: white;
 }
 
-#goalView #goalsContainer{
+#goalView #goalViewContent #goalsContainer divider{
+    -fx-padding: 0 0 20 0;
+}
 
+#goalView #noGoalsMsg{
+    -fx-font-size: 24px;
+    -fx-text-fill: #757575;
 }
 
 #goalForm{

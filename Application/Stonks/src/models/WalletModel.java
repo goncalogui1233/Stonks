@@ -1,10 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import stonks.StonksData;
 
-public class WalletModel {
+public class WalletModel implements Serializable{
     private static int idCounter = 0;
     private static StonksData data;
     

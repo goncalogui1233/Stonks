@@ -15,9 +15,11 @@ public interface Constants {
     public static enum DBOX_CONTENT {
         /*ERROR MESSAGES*/
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while trying to create the goal. The goal wasn't created."),
         
         /*SUCCESS MESSAGES*/
         /*To be changed*/SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_CREATE_GOAL("Goal Created", "Your goal was successfully created!"),
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
@@ -111,12 +113,14 @@ public interface Constants {
     
     /*Goal*/
     public static enum GOAL_FIELD {NAME, OBJECTIVE, DEADLINE};
+    public static final int GOAL_BOX_WIDTH = 600;
+    public static final int GOAL_BOX_HEIGHT = 125;
     
     /*Wallet*/
     
     /*Property Change Events*/
     public static enum AUTH_EVENT {CREATE_PROFILE};
-    public static enum GOAL_EVENT {};
+    public static enum GOAL_EVENT {CREATE_GOAL};
     public static enum PROFILE_EVENT {};
     public static enum DASHBOARD_EVENT {};
 }
