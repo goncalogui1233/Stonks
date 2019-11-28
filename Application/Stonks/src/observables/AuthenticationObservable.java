@@ -48,6 +48,10 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         return resp;
     }
     
+    public String recoverPassword(String securityAnswer){
+        return cProfile.recoverPassword(getViewSelectedProfileId(), securityAnswer);
+    }
+    
     /*Clicked Methods*/
     public void profileClicked(int id){
         cProfile.setViewSelectedProfileId(id);

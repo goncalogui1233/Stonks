@@ -40,11 +40,25 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
         root.setMaxSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);
         
         setupRecoverPasswordForm();
+        setupEventListeners();
         setupPropertyChangeListeners();
     }
 
     public BorderPane getRoot() {
         return root;
+    }
+    
+    private void setupEventListeners(){
+        btnRecover.setOnMouseClicked(e -> {
+            String password = authObs.recoverPassword(txtSecurityAnswer.getText());
+            
+            if(password != null){
+                DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD.setTextExtra(password);
+                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD);
+            }else{
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_RECOVER_PASSWORD);
+            }
+        });
     }
 
     private void setupPropertyChangeListeners() {

@@ -36,7 +36,7 @@ public class Stonks extends Application implements Constants{
         setupWindow();
         
         /*DialogBox test - REMOVE LATER*/
-        DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
+        DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
         
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
