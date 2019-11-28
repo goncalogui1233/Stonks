@@ -16,6 +16,7 @@ public interface Constants {
         /*ERROR MESSAGES*/
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
+        ERROR_LOGIN("Invalid password", "Try again"),
         
         /*SUCCESS MESSAGES*/
         /*To be changed*/SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
@@ -127,6 +128,7 @@ public interface Constants {
     /*Wallet*/
     
     /*Property Change Events*/
+    public static enum STONKS_EVENT {GOTO_GOAL_VIEW};
     public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {};
     public static enum PROFILE_EVENT {};

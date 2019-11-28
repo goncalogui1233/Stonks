@@ -65,7 +65,6 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
 
             profileIcon = new Label(profileInitials);
             profileIcon.setMinSize(60, 60);
-            profileIcon.getStyleClass().add("BACKGROUND_RED");
 
             profileColor = Color.valueOf(profile.getColor());
 

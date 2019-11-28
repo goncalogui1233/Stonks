@@ -52,6 +52,16 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         return cProfile.recoverPassword(getViewSelectedProfileId(), securityAnswer);
     }
     
+    public boolean loginProfile(int id, String password){
+        boolean resp = cProfile.loginProfile(id, password);
+        
+        if(resp){
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW);
+        }
+        
+        return resp;
+    }
+    
     /*Clicked Methods*/
     public void profileClicked(int id){
         cProfile.setViewSelectedProfileId(id);
@@ -59,6 +69,8 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         if(cProfile.getProfile(id).hasPassword()){
             firePropertyChange(AUTH_EVENT.UPDATE_SELECTION.name(), null, null);
             firePropertyChange(AUTH_EVENT.GOTO_LOGIN.name(), null, null);
+        }else{
+            loginProfile(id, null);
         }
     }
     

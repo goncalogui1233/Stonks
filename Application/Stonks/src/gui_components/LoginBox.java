@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import observables.AuthenticationObservable;
 import stonks.Constants;
 
@@ -42,6 +41,7 @@ public class LoginBox implements Constants, PropertyChangeListener{
         
         setupLoginForm();
         setupPropertyChangeListeners();
+        setupEventListeners();
     }
 
     public BorderPane getRoot() {
@@ -50,6 +50,14 @@ public class LoginBox implements Constants, PropertyChangeListener{
 
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_LOGIN.name(), this);
+    }
+    
+    private void setupEventListeners(){
+        btnSignIn.setOnMouseClicked(e -> {
+            if(!authObs.loginProfile(authObs.getViewSelectedProfileId(), txtPassword.getText())){
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_LOGIN);
+            }
+        });
     }
 
     private void setupLoginForm(){
