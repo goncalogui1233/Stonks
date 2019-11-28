@@ -6,10 +6,12 @@ import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,12 +39,17 @@ public class GoalView implements Constants, PropertyChangeListener {
 
     private GoalsObservable goalsObs;
     private final HBox root;
+    private GoalForm form;
 
     public GoalView(GoalsObservable goalsObs) {
         this.goalsObs = goalsObs;
 
         root = new HBox();
         root.setId("goalView");
+        root.setMinSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
+        root.setMaxSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
+        
+        form = new GoalForm(goalsObs);
 
         setupPropertyChangeListeners();
         setupGoalView();
@@ -92,8 +99,9 @@ public class GoalView implements Constants, PropertyChangeListener {
         //Goals container
         goalsContainer = new VBox();
         goalsContainer.setId("goalsContainer");
-        //goalsContainer.setMinSize(APP_WIDTH - SIDEMENU_WIDTH, APP_HEIGHT);
-        //goalsContainer.setMaxSize(APP_WIDTH - SIDEMENU_WIDTH, APP_HEIGHT);
+        goalsContainer.setMinWidth(GOALS_CONTAINER_WIDTH);
+        goalsContainer.setMaxWidth(GOALS_CONTAINER_WIDTH);
+ 
 
         this.displayProfileGoals();
 
@@ -104,19 +112,29 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsScrollPane.setMinHeight(500);
         goalsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         goalsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        goalsScrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>(){
+            @Override
+            public void handle(ScrollEvent t) {
+                if(t.getDeltaX() != 0){
+                    t.consume();
+                }
+            }
+            
+        });
 
         goalsScrollPane.setContent(goalsContainer);
 
         //middleContainer.getChildren().addAll(lblNoGoalsMsg);
         //View container
         viewContent = new VBox();
+        viewContent.setMinSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
+        viewContent.setMaxSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
         viewContent.getChildren().addAll(topContainer, middleContainer);
         viewContent.setId("goalViewContent");
 
         root.getChildren().addAll(new SideMenu().getRoot(), viewContent);
 
         btnAdd.setOnAction(e -> {
-            GoalForm form = new GoalForm(goalsObs);
             form.display(0);
         });
     }

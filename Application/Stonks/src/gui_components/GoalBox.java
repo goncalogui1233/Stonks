@@ -120,30 +120,6 @@ public class GoalBox implements Constants {
         btnDelete = new Button("DELETE");
         btnEdit = new Button("EDIT");
 
-        //Delete behaviour
-        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-
-                DBOX_CONTENT content;
-                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
-                content.setExtra(goal.getName());
-
-                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                    boolean isGoalDeleted = false;
-
-                    isGoalDeleted = goalsObs.removeGoal(goal.getId());
-
-                    if (isGoalDeleted) {
-                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
-                    } else {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
-                    }
-                }
-            }
-        });
-
-        //Edit behaviour
         btnDelete.getStyleClass().addAll("btn", "btn-danger");
         btnEdit.getStyleClass().addAll("btn", "btn-primary");
 
@@ -180,6 +156,43 @@ public class GoalBox implements Constants {
         secondRow.setRight(btnFunds);
 
         root.getChildren().addAll(topContainer, firstRow, secondRow);
+
+        //Delete behaviour
+        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                DBOX_CONTENT content;
+                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
+                content.setExtra(goal.getName());
+
+                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                    boolean isGoalDeleted = false;
+
+                    isGoalDeleted = goalsObs.removeGoal(goal.getId());
+
+                    if (isGoalDeleted) {
+                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
+                    } else {
+                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
+                    }
+                }
+            }
+        });
+
+        //Edit behaviour
+        btnEdit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                DBOX_CONTENT content;
+                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
+                content.setExtra(goal.getName());
+
+                GoalForm form = new GoalForm(goalsObs);
+                form.display(goal.getId());
+            }
+        });
     }
 
     public VBox getRoot() {

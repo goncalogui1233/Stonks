@@ -29,7 +29,7 @@ public class GoalController implements Constants {
         return 1;
     }
 
-    private GoalModel getGoal(int id) { //Search for a goal with the id passed as argument
+    public GoalModel getGoal(int id) { //Search for a goal with the id passed as argument
         for (GoalModel goal : data.getAuthProfile().getGoals()) {
             if (goal.getId() == id) {
                 return goal;

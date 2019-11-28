@@ -95,6 +95,11 @@ public class GoalForm implements Constants {
 
         //Title
         title = new Label("Adding Goal");
+        if (goalId > 0) {
+            title.setText("Editting " + goalsObs.getGoal(goalId).getName());
+            title.wrapTextProperty().set(true);
+
+        }
         title.getStyleClass().addAll("title");
 
         //Close button
@@ -125,6 +130,20 @@ public class GoalForm implements Constants {
 
         txfName = new TextField();
 
+        txfName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfName.setText(txfName.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+
+        });
+
+        if (goalId > 0) {
+            txfName.setText(goalsObs.getGoal(goalId).getName());
+        }
+
         errorName = new Label("Name has a maximum of 50 characters");
         errorName.getStyleClass().addAll("fieldError");
         errorName.setVisible(false);
@@ -141,6 +160,10 @@ public class GoalForm implements Constants {
         objectiveInlineInput = new HBox();
         txfObjective = new TextField();
         txfObjective.setMinWidth(250);
+
+        if (goalId > 0) {
+            txfObjective.setText(Integer.toString(goalsObs.getGoal(goalId).getObjective()));
+        }
 
         //Only accept number
         txfObjective.textProperty().addListener(new ChangeListener<String>() {
@@ -187,6 +210,14 @@ public class GoalForm implements Constants {
 
         dpDeadline = new DatePicker();
         dpDeadline.setVisible(false);
+
+        if (goalId > 0) {
+            if (goalsObs.getGoal(goalId).hasDeadline()) {
+                hasDeadline.setSelected(true);
+                dpDeadline.setValue(goalsObs.getGoal(goalId).getDeadlineDate());
+                dpDeadline.setVisible(true);
+            }
+        }
 
         errorDeadline = new Label("Deadline cannot be empty");
         errorDeadline.getStyleClass().addAll("fieldError");
@@ -320,5 +351,4 @@ public class GoalForm implements Constants {
             }
         });
     }
-
 }

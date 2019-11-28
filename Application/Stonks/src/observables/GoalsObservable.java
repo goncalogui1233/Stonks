@@ -9,6 +9,7 @@ import controllers.GoalController;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
 import java.util.HashMap;
+import models.GoalModel;
 import models.ProfileModel;
 import stonks.Constants;
 
@@ -56,8 +57,13 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
+    /*Getters*/
     public ProfileModel getAuthProfile() {
         return stonksObs.getAuthProfile();
+    }
+
+    public GoalModel getGoal(int id) {
+        return cGoal.getGoal(id);
     }
 
 }
