@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,14 +22,18 @@ public class GoalView implements Constants, PropertyChangeListener {
     //Containers
     private VBox viewContent;
     private BorderPane topContainer;
+    private HBox topContainerButtons;
     private VBox goalsContainer;
     private ScrollPane goalsScrollPane;
+    private VBox middleContainer;
 
     //Labels
     private Label viewTitle;
+    private Label lblNoGoalsMsg;
 
     //Buttons
     private Button btnAdd;
+    private ToggleButton tbtnFilter;
 
     private GoalsObservable goalsObs;
     private final HBox root;
@@ -49,6 +54,7 @@ public class GoalView implements Constants, PropertyChangeListener {
 
     private void setupPropertyChangeListeners() {
         goalsObs.addPropertyChangeListener(GOAL_EVENT.CREATE_GOAL.name(), this);
+        goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
     }
 
     private void setupGoalView() {
@@ -56,18 +62,32 @@ public class GoalView implements Constants, PropertyChangeListener {
         //Top container
         topContainer = new BorderPane();
         topContainer.getStyleClass().addAll("goalsTopContainer");
-        topContainer.setMaxSize(APP_WIDTH - SIDEMENU_WIDTH - 420, 100);
+        //topContainer.setMaxSize(APP_WIDTH - SIDEMENU_WIDTH - 420, 100);
 
         //Top container Title
         viewTitle = new Label("My Goals");
         viewTitle.getStyleClass().addAll("title");
 
-        //Top container Button
+        //Top container Buttons
+        topContainerButtons = new HBox(5);
         btnAdd = new Button("Add goal");
-        btnAdd.getStyleClass().addAll("btn", "btn-default");
+        btnAdd.getStyleClass().addAll("btn-default");
+
+        tbtnFilter = new ToggleButton("Show Completed");
+        tbtnFilter.getStyleClass().addAll("lala");
+
+        topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
 
         topContainer.setLeft(viewTitle);
-        topContainer.setRight(btnAdd);
+        topContainer.setRight(topContainerButtons);
+
+        //Middle container
+        middleContainer = new VBox();
+        middleContainer.setId("goalsMiddleContainer");
+
+        //No goals message
+        lblNoGoalsMsg = new Label("This profile doesn’t have any goals. Add a new goal and let us help you achieve it!");
+        lblNoGoalsMsg.setId("noGoalsMsg");
 
         //Goals container
         goalsContainer = new VBox();
@@ -80,15 +100,17 @@ public class GoalView implements Constants, PropertyChangeListener {
         //Scrollpane
         goalsScrollPane = new ScrollPane();
         goalsScrollPane.setStyle("-fx-background-color:transparent;");
-        goalsScrollPane.setMinWidth(GOAL_BOX_WIDTH + 30);
+        //goalsScrollPane.setMinWidth(GOAL_BOX_WIDTH);
+        goalsScrollPane.setMinHeight(500);
         goalsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         goalsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         goalsScrollPane.setContent(goalsContainer);
 
+        //middleContainer.getChildren().addAll(lblNoGoalsMsg);
         //View container
         viewContent = new VBox();
-        viewContent.getChildren().addAll(topContainer, goalsScrollPane);
+        viewContent.getChildren().addAll(topContainer, middleContainer);
         viewContent.setId("goalViewContent");
 
         root.getChildren().addAll(new SideMenu().getRoot(), viewContent);
@@ -102,16 +124,16 @@ public class GoalView implements Constants, PropertyChangeListener {
     public void displayProfileGoals() {
 
         goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
+        middleContainer.getChildren().removeAll(middleContainer.getChildren());
 
         if (goalsObs.getAuthProfile().getGoals().size() < 1) {
-            Label lblNoGoalsMsg = new Label("This profile doesn’t have any goals. Add a new goal and let us help achieve it!");
-            lblNoGoalsMsg.setId("noGoalsMsg");
-            goalsContainer.getChildren().add(lblNoGoalsMsg);
+            middleContainer.getChildren().add(lblNoGoalsMsg);
         } else {
+            middleContainer.getChildren().add(goalsScrollPane);
             for (GoalModel goal : goalsObs.getAuthProfile().getGoals()) {
                 Label divider = new Label();
                 divider.getStyleClass().addAll("divider");
-                goalsContainer.getChildren().addAll(new GoalBox(goal).getRoot(), divider);
+                goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
             }
         }
 
@@ -120,6 +142,9 @@ public class GoalView implements Constants, PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(GOAL_EVENT.CREATE_GOAL.name())) {
+            displayProfileGoals();
+        }
+        if (evt.getPropertyName().equals(GOAL_EVENT.DELETE_GOAL.name())) {
             displayProfileGoals();
         }
     }

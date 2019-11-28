@@ -2,14 +2,17 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import stonks.StonksData;
 
-public class ProfileModel implements Serializable{
-    
+public class ProfileModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private static int idCounter = 0;
     private static StonksData data;
-    
+
     private int id;
     private String firstName;
     private String lastName;
@@ -17,7 +20,7 @@ public class ProfileModel implements Serializable{
     private final String securityAnswer;
     private String password;
     private String color;
-    private ArrayList<GoalModel> goals;
+    private HashMap<Integer, GoalModel> goals;
 
     /*ProfileModel constructor WITH Password*/
     public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
@@ -27,11 +30,11 @@ public class ProfileModel implements Serializable{
         this.securityAnswer = securityAnswer;
         this.password = password;
         this.color = color;
-        this.goals = new ArrayList();
-        
+        this.goals = new HashMap<>();
+
         id = idCounter++;
     }
-    
+
     /*ProfileModel constructor WITHOUT Password*/
     public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String color) {
         this.firstName = firstName;
@@ -39,12 +42,12 @@ public class ProfileModel implements Serializable{
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.color = color;
-        this.goals = new ArrayList();
-        
+        this.goals = new HashMap<>();
+
         id = idCounter++;
     }
-    
-    public static void setData(StonksData data){
+
+    public static void setData(StonksData data) {
         ProfileModel.data = data;
     }
 
@@ -55,7 +58,7 @@ public class ProfileModel implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getFirstName() {
         return firstName;
     }
@@ -96,12 +99,30 @@ public class ProfileModel implements Serializable{
         this.color = color;
     }
 
-    public ArrayList<GoalModel> getGoals() {
+    public HashMap<Integer, GoalModel> getGoalsMap() {
         return goals;
     }
+    
+    public Collection<GoalModel> getGoals(){
+        return goals.values();
+    }
+    
+    public Collection<Integer> getGoalsIds(){
+        return goals.keySet();
+    }
 
-    public void setGoals(ArrayList<GoalModel> goals) {
+    public void setGoals(HashMap<Integer, GoalModel> goals) {
         this.goals = goals;
+    }
+
+    public boolean hasGoals() {
+        if (goals != null) {
+            if (goals.size() > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

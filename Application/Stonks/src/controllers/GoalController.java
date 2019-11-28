@@ -13,6 +13,22 @@ public class GoalController implements Constants {
         this.data = data;
     }
 
+    public int getNextId() {
+        if (data.getAuthProfile().hasGoals()) {
+            int biggest = 1;
+
+            for (Integer id : data.getAuthProfile().getGoalsIds()) {
+                if (id > biggest) {
+                    biggest = id;
+                }
+            }
+
+            return ++biggest;
+        }
+
+        return 1;
+    }
+
     private GoalModel getGoal(int id) { //Search for a goal with the id passed as argument
         for (GoalModel goal : data.getAuthProfile().getGoals()) {
             if (goal.getId() == id) {
@@ -30,15 +46,15 @@ public class GoalController implements Constants {
                     && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
 
                 if (deadline != null) {
-                    if (verifyData(GOAL_FIELD.DEADLINE, deadline) == VALIDATE.OK) {
-                        data.getAuthProfile().getGoals().add(new GoalModel(name, objective, deadline));
-                        return true;
-                    } else {
+                    if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
                         return false;
                     }
                 }
 
-                data.getAuthProfile().getGoals().add(new GoalModel(name, objective, null));
+                GoalModel newGoal = new GoalModel(name, objective, deadline);
+                newGoal.setId(this.getNextId());
+
+                data.getAuthProfile().getGoalsMap().put(newGoal.getId(), newGoal);
 
                 /*UPDATE DATABASE*/
                 return true;
@@ -64,7 +80,7 @@ public class GoalController implements Constants {
 
     public boolean removeGoal(int id) {
         try {
-            data.getAuthProfile().getGoals().remove(getGoal(id));
+            data.getAuthProfile().getGoalsMap().remove(id);
 
             /*UPDATE DATABASE*/
             return true;

@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import models.GoalModel;
+import observables.GoalsObservable;
 import stonks.Constants;
 
 /**
@@ -25,6 +26,7 @@ import stonks.Constants;
 public class GoalBox implements Constants {
 
     GoalModel goal;
+    GoalsObservable goalsObs;
 
     //Containers
     private VBox root;
@@ -61,9 +63,10 @@ public class GoalBox implements Constants {
     private Button btnEdit;
     private Button btnFunds;
 
-    public GoalBox(GoalModel goal) {
+    public GoalBox(GoalModel goal, GoalsObservable goalsObs) {
 
         this.goal = goal;
+        this.goalsObs = goalsObs;
 
         root = new VBox();
         root.setId("goalBox");
@@ -97,12 +100,12 @@ public class GoalBox implements Constants {
         estimation.getStyleClass().addAll("lblValue");
 
         createdTitle = new Label("CREATED: ");
-        created = new Label(goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getYear());
+        created = new Label(goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getMonthValue() + "/" + goal.getCreationDate().getYear());
         created.getStyleClass().addAll("lblValue");
 
         if (goal.hasDeadline()) {
             deadlineTitle = new Label("DEADLINE: ");
-            deadline = new Label(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getYear());
+            deadline = new Label(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getMonthValue() + "/" + goal.getDeadlineDate().getYear());
             deadline.getStyleClass().addAll("lblValue");
         }
 
@@ -121,7 +124,22 @@ public class GoalBox implements Constants {
         btnDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_GOAL);
+
+                DBOX_CONTENT content;
+                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
+                content.setExtra(goal.getName());
+
+                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                    boolean isGoalDeleted = false;
+
+                    isGoalDeleted = goalsObs.removeGoal(goal.getId());
+
+                    if (isGoalDeleted) {
+                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
+                    } else {
+                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
+                    }
+                }
             }
         });
 

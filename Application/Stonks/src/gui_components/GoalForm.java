@@ -5,11 +5,9 @@
  */
 package gui_components;
 
-import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,7 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import controllers.GoalController;
 import observables.GoalsObservable;
 import stonks.Constants;
 
@@ -302,20 +299,20 @@ public class GoalForm implements Constants {
             }
 
             if (errors == 0) {
-                boolean canCreate = false;
+                boolean isGoalCreated = false;
 
                 try {
                     if (hasDeadline.isSelected()) {
-                        System.out.println(canCreate = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue()));
+                        System.out.println(isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue()));
                     } else {
-                        System.out.println(canCreate = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null));
+                        System.out.println(isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null));
                     }
                 } catch (Exception ex) {
                     System.out.println("Goal form - " + ex);
                 }
 
-                if (canCreate) {
-                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_GOAL);
+                if (isGoalCreated) {
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
                     goalForm.close();
                 } else {
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);

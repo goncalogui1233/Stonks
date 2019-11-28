@@ -46,6 +46,16 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
+    public boolean removeGoal(int id) {
+        boolean ans = cGoal.removeGoal(id);
+
+        if (ans) {
+            firePropertyChange(GOAL_EVENT.DELETE_GOAL.name(), null, null);
+        }
+
+        return ans;
+    }
+
     public ProfileModel getAuthProfile() {
         return stonksObs.getAuthProfile();
     }
