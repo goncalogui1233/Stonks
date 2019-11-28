@@ -2,6 +2,8 @@ package controllers;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import models.GoalModel;
 import stonks.StonksData;
 
@@ -24,10 +26,10 @@ public class DashboardController {
         return sum;
     }
     
-    public HashMap<String, String> getGoalsWithDeadline()
+    public Map<String, String> getGoalsWithDeadline()
     {
         boolean created = false;
-        HashMap<String, String> returnData = null;
+        Map<String, String> returnData = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
         for (GoalModel obj : data.getAuthProfile().getGoals())
@@ -40,14 +42,16 @@ public class DashboardController {
                 }
                 returnData.put(obj.getName(), obj.getDeadlineDate().format(formatter));
             }
-        }
-        
+        }       
+         
         return returnData;
     }
     
-    public HashMap<Integer, String> getListOfUncomplichedGoals()
+    public Map<Integer, String> getListOfUncomplichedGoals()
     {
-        HashMap<Integer, String> returnData = null;
+        Map<Integer, String> allData = null;
+        Map<Integer, String> returnData = null;
+        Map<Integer, String>  orderData= null;
         boolean created = false;
         
         for (GoalModel obj : data.getAuthProfile().getGoals())
@@ -56,13 +60,32 @@ public class DashboardController {
             {
                 if (!created)
                 {
-                    returnData = new HashMap<>();
+                    allData = new HashMap<>();
                 }
                 
                 String data = Integer.toString(obj.getObjective())+ "%-" + obj.getName();
-                returnData.put(obj.getGoalProgress(), data);
+                allData.put(obj.getGoalProgress(), data);
             }
         }
+        
+        if (allData != null)
+        {
+            orderData = new TreeMap<>(returnData);
+            return putFirstEntries(4, orderData);
+        }
+        
         return null;    
+    }
+    
+    private static Map<Integer,String> putFirstEntries(int max, Map<Integer,String> source) {
+        int count = 0;
+        Map<Integer,String> target =  new HashMap<>();;
+        for (Map.Entry<Integer,String> entry : source.entrySet()) {
+            if (count >= max) break;
+
+        target.put(entry.getKey(), entry.getValue());
+        count++;
+        }
+        return target;
     }
 }
