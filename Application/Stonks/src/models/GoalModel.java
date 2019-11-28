@@ -86,4 +86,13 @@ public class GoalModel {
 
         return false;
     }
+    
+    public int getGoalProgress()
+    {
+        if (getObjective() <= 0)
+        {
+            return 0;
+        }
+       return (getWallet().getSavedMoney()/getObjective())*100;
+    }
 }
