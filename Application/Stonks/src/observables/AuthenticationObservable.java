@@ -55,6 +55,7 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     /*Clicked Methods*/
     public void profileClicked(int id){
         cProfile.setViewSelectedProfileId(id);
+        
         if(cProfile.getProfile(id).hasPassword()){
             firePropertyChange(AUTH_EVENT.UPDATE_SELECTION.name(), null, null);
             firePropertyChange(AUTH_EVENT.GOTO_LOGIN.name(), null, null);
@@ -68,6 +69,9 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     }
     
     public void addProfileClicked(){
+        cProfile.setViewSelectedProfileId(-1);
+        
+        firePropertyChange(AUTH_EVENT.UPDATE_SELECTION.name(), null, null);
         firePropertyChange(AUTH_EVENT.GOTO_REGISTER.name(), null, null);
     }
 }

@@ -173,6 +173,20 @@
     -fx-font-size: 20px;
 }
 
+#sideProfileBar #profileIcon:selected_black{
+    -fx-border-color: #333;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 2px;
+}
+
+#sideProfileBar #profileIcon:selected_white{
+    -fx-border-color: #eee;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 2px;
+}
+
 #sideProfileBar #divider-18{
     -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
 }
