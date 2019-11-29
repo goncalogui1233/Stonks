@@ -148,7 +148,7 @@ public class GoalView implements Constants, PropertyChangeListener {
             middleContainer.getChildren().add(lblNoGoalsMsg);
         } else {
             middleContainer.getChildren().add(goalsScrollPane);
-            for (GoalModel goal : goalsObs.getAuthProfile().getGoals()) {
+            for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
                 Label divider = new Label();
                 divider.getStyleClass().addAll("divider");
                 goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);

@@ -36,30 +36,38 @@ public class GoalForm implements Constants {
 
     private final GoalsObservable goalsObs;
     private Stage goalForm;
+
+    //Containers
     private VBox rootLayout;
     private BorderPane topLayout;
-    private Label title;
     private Pane imageContainer;
     private ImageView closeBtn;
     private VBox form;
     private VBox nameDiv;
-    private Label lblName;
-    private TextField txfName;
-    private Label errorName;
     private VBox objectiveDiv;
-    private Label lblObjective;
     private HBox objectiveInlineInput;
-    private TextField txfObjective;
-    private Label lblCurrency;
-    private Label errorObjective;
     private VBox deadlineDiv;
     private HBox deadlineInlineInput;
-    private Label lblDeadline;
-    private CheckBox hasDeadline;
     private BorderPane bottomLayout;
-    private Button btnSubmit;
-    private DatePicker dpDeadline;
+
+    //Labels
+    private Label title;
+    private Label lblName;
+    private Label errorName;
+    private Label lblObjective;
+    private Label lblCurrency;
+    private Label errorObjective;
+    private Label lblDeadline;
     private Label errorDeadline;
+
+    //Inputs
+    private TextField txfName;
+    private TextField txfObjective;
+    private CheckBox hasDeadline;
+    private DatePicker dpDeadline;
+
+    //Buttons
+    private Button btnSubmit;
 
     public GoalForm(GoalsObservable goalsObs) {
         this.goalsObs = goalsObs;

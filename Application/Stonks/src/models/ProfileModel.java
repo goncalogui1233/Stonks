@@ -99,16 +99,8 @@ public class ProfileModel implements Serializable {
         this.color = color;
     }
 
-    public HashMap<Integer, GoalModel> getGoalsMap() {
+    public HashMap<Integer, GoalModel> getGoals() {
         return goals;
-    }
-    
-    public Collection<GoalModel> getGoals(){
-        return goals.values();
-    }
-    
-    public Collection<Integer> getGoalsIds(){
-        return goals.keySet();
     }
 
     public void setGoals(HashMap<Integer, GoalModel> goals) {

@@ -121,10 +121,16 @@ public interface Constants {
     public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 400;
 
     /*Dashboard*/
- /*Goal*/
+    /*Goal*/
     public static enum GOAL_FIELD {
         NAME, OBJECTIVE, DEADLINE
     };
+    
+    public static final int GOAL_NAME_MAXCHARS = 50;
+    public static final int GOAL_NAME_MINCHARS = 1;
+    public static final int GOAL_OBJECTIVE_MINVALUE = 1;
+    public static final int GOAL_OBJECTIVE_MAXVALUE = 999999999;
+    
     public static final int GOAL_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
     public static final int GOAL_VIEW_HEIGHT = APP_HEIGHT;
     public static final int GOALS_CONTAINER_WIDTH = GOAL_VIEW_WIDTH - 160 - 10;
