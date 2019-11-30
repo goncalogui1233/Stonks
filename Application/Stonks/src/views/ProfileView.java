@@ -8,7 +8,6 @@ import stonks.Constants;
 public class ProfileView implements Constants{
     private final HBox root;
     
-    
     public ProfileView(){
         root = new HBox();
         root.getChildren().add(new SideMenu().getRoot());

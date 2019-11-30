@@ -117,6 +117,10 @@ public class ProfileModel implements Serializable {
         return false;
     }
 
+    public boolean hasPassword(){
+        return !(password == null || password.isEmpty());
+    }
+    
     @Override
     public String toString() {
         return "ProfileModel{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", password=" + password + ", color=" + color + ", goals=" + goals + '}';

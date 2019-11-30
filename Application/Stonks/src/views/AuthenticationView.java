@@ -4,17 +4,20 @@ import gui_components.LoginBox;
 import gui_components.PasswordRecoveryBox;
 import gui_components.RegisterBox;
 import gui_components.SideProfileBar;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.scene.layout.HBox;
 import observables.AuthenticationObservable;
 import stonks.Constants;
 
-public class AuthenticationView implements Constants{
-    private HBox root;
-    private AuthenticationObservable authObs;
+public class AuthenticationView implements Constants, PropertyChangeListener{
+    private final HBox root;
+    private final AuthenticationObservable authObs;
     
-    private final RegisterBox registerContainer;
-    private final LoginBox loginContainer;
-    private final PasswordRecoveryBox recoverPasswordContainer;
+    private SideProfileBar sideProfileBarContainer;
+    private RegisterBox registerContainer;
+    private LoginBox loginContainer;
+    private PasswordRecoveryBox recoverPasswordContainer;
     
     public AuthenticationView(AuthenticationObservable authObs) {
         this.authObs = authObs;
@@ -24,15 +27,42 @@ public class AuthenticationView implements Constants{
         root.setMinSize(APP_WIDTH, APP_HEIGHT);
         root.setMaxSize(APP_WIDTH, APP_HEIGHT);
         
-        registerContainer = new RegisterBox(authObs);
-        loginContainer = new LoginBox(authObs);
-        recoverPasswordContainer = new PasswordRecoveryBox(authObs);
-        
-        root.getChildren().add(new SideProfileBar(authObs).getRoot());
-        root.getChildren().add(registerContainer.getRoot());
+        setupContainers();
+        setupPropertyChangeListeners();
     }
 
     public HBox getRoot() {
         return root;
+    }
+    
+    private void setupContainers(){
+        sideProfileBarContainer = new SideProfileBar(authObs);
+        registerContainer = new RegisterBox(authObs);
+        loginContainer = new LoginBox(authObs);
+        recoverPasswordContainer = new PasswordRecoveryBox(authObs);
+        
+        root.getChildren().add(sideProfileBarContainer.getRoot());
+        root.getChildren().add(registerContainer.getRoot());
+    }
+    
+    private void setupPropertyChangeListeners() {
+        authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_LOGIN.name(), this);
+        authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_REGISTER.name(), this);
+        authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), this);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        /*Since this method is only called when a GOTO event is thrown, this is allowed*/
+        root.getChildren().removeAll(root.getChildren());
+        root.getChildren().add(sideProfileBarContainer.getRoot());
+        
+        if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_LOGIN.name())){
+            root.getChildren().add(loginContainer.getRoot());
+        }else if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_REGISTER.name())){
+            root.getChildren().add(registerContainer.getRoot());
+        }else if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name())){
+            root.getChildren().add(recoverPasswordContainer.getRoot());
+        }
     }
 }
