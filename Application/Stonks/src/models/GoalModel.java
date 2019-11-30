@@ -93,6 +93,8 @@ public class GoalModel {
         {
             return 0;
         }
-       return (getWallet().getSavedMoney()/getObjective())*100;
+        //To remove Trunc of integer
+       return (int) ((getWallet().getSavedMoney() * 1.0 / getObjective())*100); 
     }
+    
 }

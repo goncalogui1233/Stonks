@@ -1,6 +1,8 @@
 package controllers;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -8,83 +10,77 @@ import models.GoalModel;
 import stonks.StonksData;
 
 public class DashboardController {
+
     private final StonksData data;
-    
+
     public DashboardController(StonksData data) {
         this.data = data;
     }
-    
-    public int getCurrentySaved()
-    {
+
+    public int getCurrentySaved() {
         int sum = 0;
-        
-        for (GoalModel obj : data.getAuthProfile().getGoals())
-        {
-            sum += obj.getWallet().getSavedMoney();
+
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.getGoalProgress() < 100 //dont count progress of goals achived
+                    && obj.getWallet().getSavedMoney() >= 0) // dont add negative values
+            {
+                if (obj.hasDeadline()) { //verify if deadline already passed
+                    if (LocalDate.now().compareTo(obj.getDeadlineDate()) < 0) {
+                        sum += obj.getWallet().getSavedMoney();
+                    }
+                } else {
+                    sum += obj.getWallet().getSavedMoney();
+                }
+            }
         }
-        
+
         return sum;
     }
-    
-    public Map<String, String> getGoalsWithDeadline()
-    {
-        boolean created = false;
-        Map<String, String> returnData = null;
+
+    public Map<String, String> getGoalsWithDeadline() {
+        Map<String, String> returnData = new HashMap<>();;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        
-        for (GoalModel obj : data.getAuthProfile().getGoals())
-        {
-            if (obj.hasDeadline())
-            {
-                if (!created)
-                {
-                    returnData = new HashMap<>();
-                }
+
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.hasDeadline()
+                    && obj.getGoalProgress() < 100) //dont count goals already accomplished
+            { //goals 
                 returnData.put(obj.getName(), obj.getDeadlineDate().format(formatter));
             }
-        }       
-         
-        return returnData;
+        }
+
+        return returnData.isEmpty() ? null : returnData;
     }
-    
-    public Map<Integer, String> getListOfUncomplichedGoals()
-    {
-        Map<Integer, String> allData = null;
-        Map<Integer, String> returnData = null;
-        Map<Integer, String>  orderData= null;
-        boolean created = false;
+
+    //Know issue when the NAME OF A GOAL AND TTHE GOAL PROGRESS IS DUPLICATED
+    //THE LAST ONE WILL OVERRIDE DE LASTONE
+    public Map<String, Integer> getListOfUncomplichedGoals() {
+        Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
         
-        for (GoalModel obj : data.getAuthProfile().getGoals())
-        {
-            if (obj.getWallet().getSavedMoney() >= obj.getObjective())
-            {
-                if (!created)
-                {
-                    allData = new HashMap<>();
-                }
-                
-                String data = Integer.toString(obj.getObjective())+ "%-" + obj.getName();
-                allData.put(obj.getGoalProgress(), data);
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.getGoalProgress() < 100) {
+                String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
+                allData.put( text, obj.getGoalProgress());
             }
         }
-        
-        if (allData != null)
-        {
-            orderData = new TreeMap<>(returnData);
-            return putFirstEntries(4, orderData);
-        }
-        
-        return null;    
-    }
-    
-    private static Map<Integer,String> putFirstEntries(int max, Map<Integer,String> source) {
-        int count = 0;
-        Map<Integer,String> target =  new HashMap<>();;
-        for (Map.Entry<Integer,String> entry : source.entrySet()) {
-            if (count >= max) break;
 
-        target.put(entry.getKey(), entry.getValue());
-        count++;
+        if (!allData.isEmpty()) {
+            return putFirstEntries(4, allData);
+        }
+
+        return null;
+    }
+
+    private static Map<String, Integer> putFirstEntries(int max, Map<String, Integer> source) {
+        int count = 0;
+        Map<String, Integer> target = new TreeMap<>();
+        for (Map.Entry<String, Integer> entry : source.entrySet()) {
+            if (count >= max) {
+                break;
+            }
+
+            target.put(entry.getKey(), entry.getValue());
+            count++;
         }
         return target;
     }
