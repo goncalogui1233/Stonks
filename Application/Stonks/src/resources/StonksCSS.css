@@ -97,13 +97,14 @@
     -fx-background-color:#43a047;
 }
 
-.button.btn-default{
+.button.btn-default, toggle-button.btn-default{
     -fx-background-color:#424242;
 }
 
-.button.btn-default:pressed{
+.button.btn-default:pressed, toggle-button.btn-default:pressed{
     -fx-background-color:#212121;
 }
+
 
 .btn-form{
     -fx-font-size: 12px;
@@ -399,28 +400,56 @@
     -fx-alignment: center-right;
 }*/
 
+/*Goals*/
 #goalView #goalViewContent{
-    -fx-padding: 50 0 0 150;
+    -fx-padding: 50 50 50 50;
+    -fx-display: inline-block;
+    -fx-text-align: center;
 }
 
 #goalView #goalViewContent .goalsTopContainer{
-    -fx-padding: 0 0 50 0;
+    -fx-text-align: center;
+    -fx-alignment: center;
+    -fx-padding: 0 0 30 0;
 }
 
 #goalView #goalViewContent .goalsTopContainer .title{
-    -fx-font-size: 16px;
+    -fx-font-size: 25px;
     -fx-font-weight: bold;
     -fx-text-fill: #424242;
+    -fx-padding: 6 0 0 0;
+
 }
 
-#goalView #goalViewContent .goalsTopContainer .button{
+#goalView #goalViewContent .goalsTopContainer .button, *.toggle-button{
     -fx-font-size: 16px;
-
     -fx-text-fill: white;
 }
 
-#goalView #goalsContainer{
+#goalView #goalViewContent #goalsMiddleContainer{
+    -fx-background-color: #f5f5f5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 1, 1);
+    -fx-background-radius: 5px;
+    -fx-padding: 20 30 20 30;
+    -fx-min-height: 500;
+}
 
+#goalView #goalViewContent #goalsMiddleContainer #noGoalsMsg{
+    -fx-font-size: 24px;
+    -fx-text-fill: #757575;
+    -fx-text-alignment: center; 
+    -fx-alignment: center; 
+    -fx-wrap-text:true;
+    -fx-padding: 200 0 0 0;
+}
+
+#goalView #goalViewContent #goalsContainer{
+    -fx-padding: 15 20 0 20;
+
+}
+
+#goalView #goalViewContent #goalsContainer divider{
+    -fx-padding: 0 0 50 0;
 }
 
 #goalForm{
