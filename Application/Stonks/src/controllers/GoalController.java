@@ -233,38 +233,35 @@ public class GoalController implements Constants {
         }
     }
 
-    public LocalDate showEstimateDateOfFinish(int id) {
+    public LocalDate getEstimatedDate(int id) {
         try {
             GoalModel goal = getGoal(id);
-            if (goal != null) {
-                /*Saving Rate*/
-                LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
-                LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
-                int savedMoney = goal.getWallet().getSavedMoney();
+            
+            /*Saving Rate*/
+            LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
+            LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
+            int savedMoney = goal.getWallet().getSavedMoney();
 
-                long rate = ChronoUnit.DAYS.between(firstDeposit, lastDeposit) / savedMoney;
+            long rate = ChronoUnit.DAYS.between(firstDeposit, lastDeposit) / savedMoney;
 
-                /*Date Estimation*/
-                int savedIncrement = savedMoney;
-                int objective = goal.getObjective();
-                long countDays = 0;
+            /*Date Estimation*/
+            int savedIncrement = savedMoney;
+            int objective = goal.getObjective();
+            long countDays = 0;
 
-                /*Cycle to increment number of days until the value of objective*/
-                while (savedIncrement <= objective) {
-                    savedIncrement += rate;
-                    countDays++;
-                }
-
-                /*Add the estimated days to today's date in order to get the estimated date*/
-                LocalDate today = LocalDate.now();
-
-                today.plusDays(countDays);
-
-                return today;
+            /*Cycle to increment number of days until the value of objective*/
+            while (savedIncrement <= objective) {
+                savedIncrement += rate;
+                countDays++;
             }
-        } catch (Exception ex) {
-            return null;
-        }
+
+            /*Add the estimated days to today's date in order to get the estimated date*/
+            LocalDate today = LocalDate.now();
+
+            today.plusDays(countDays);
+
+            return today;
+        } catch (NullPointerException ex) { }
 
         return null;
     }
