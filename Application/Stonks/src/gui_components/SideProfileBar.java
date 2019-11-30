@@ -56,7 +56,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
     }
 
     private void setupProfileIcons(HashMap<Integer, ProfileModel> listProfiles) {
-        root.getChildren().removeAll(root.getChildren());
+        root.getChildren().clear();
 
         for (ProfileModel profile : listProfiles.values()) {
             profileInitials = ""

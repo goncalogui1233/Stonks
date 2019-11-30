@@ -5,6 +5,7 @@ public interface Constants {
     public static final String APP_TITLE = "Stonks";
     public static final int APP_WIDTH = 1280;
     public static final int APP_HEIGHT = 720;
+    public static final int APP_REAL_HEIGHT = APP_HEIGHT - 25/*Height of windows bar*/;
     
     /*DialogBox window properties*/
     public static final int DBOX_WIDTH = 400;
@@ -65,11 +66,11 @@ public interface Constants {
     
     /*SideMenu properties*/
     public static final int SIDEMENU_WIDTH = 256;
-    public static final int SIDEMENU_HEIGHT = APP_HEIGHT;
+    public static final int SIDEMENU_HEIGHT = APP_REAL_HEIGHT;
     
     /*SideProfileBar properties*/
     public static final int SIDEPROFILEBAR_WIDTH = 115;
-    public static final int SIDEPROFILEBAR_HEIGHT = APP_HEIGHT;
+    public static final int SIDEPROFILEBAR_HEIGHT = APP_REAL_HEIGHT;
     
     /*General*/
     public static final int MAX_PROFILES = 6;
@@ -112,9 +113,9 @@ public interface Constants {
     /*Profile*/
     public static enum PROFILE_FIELD {FIRST_NAME, LAST_NAME, SECURITY_QUESTION, SECURITY_ANSWER, PASSWORD, COLOR};
     public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
-    public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_REAL_HEIGHT;
     public static final int PROFILE_AUTH_WIDTH = APP_WIDTH - SIDEPROFILEBAR_WIDTH;
-    public static final int PROFILE_AUTH_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_AUTH_HEIGHT = APP_REAL_HEIGHT;
     public static final int PROFILE_AUTH_BOX_WIDTH = 450;
     public static final int PROFILE_AUTH_BOX_LOGIN_HEIGHT = 300;
     public static final int PROFILE_AUTH_BOX_REGISTER_HEIGHT = 600;

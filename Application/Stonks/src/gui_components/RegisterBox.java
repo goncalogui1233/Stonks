@@ -4,57 +4,70 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import observables.AuthenticationObservable;
 import stonks.Constants;
 
 public class RegisterBox implements Constants, PropertyChangeListener{
-
     private final BorderPane root;
     private final AuthenticationObservable authObs;
 
     //Containers
-    private BorderPane registerRoot;
+    private BorderPane authBox;
     private VBox formContainer;
-    private HBox hbSignUp;
+    private BorderPane hbSignUp;
     private HBox hbTitle;
 
+    //Input divs
+    private VBox firstNameDiv;
+    private VBox lastNameDiv;      
+    private VBox passwordDiv;
+    private VBox securityQuestionDiv;
+    private VBox securityAnswerDiv;
+    private VBox colorDiv;
+    
     //Title Labels
     private Label lblTitle;
-    private Label lblFN;
-    private Label lblLN;
+    private Label lblFirstName;
+    private Label lblLastName;
     private Label lblPassword;
     private Label lblSecurtyQuestion;
     private Label lblSecurtyAnswer;
     private Label lblColor;
 
-    //Label Buttons
-    private Label btnSignUp;
-
-    //Text Field
+    //Field Inputs
     private TextField txfFirstName;
     private TextField txfLastName;
     private TextField txfPassword;
     private TextField txfSecurityAnswer;
-
-    //Choice Field
     private ChoiceBox cbSecurityQuestion;
-
-    //Colorpicker Field
     private ColorPicker cpPickColor;
+    
+    //Error Labels
+    private Label errorFirstName;
+    private Label errorLastName;
+    private Label errorPassword;
+    private Label errorSecurityQuestion;
+    private Label errorSecurityAnswer;
+    private Label errorColor;
+
+    //Label Buttons
+    private Button btnSignUp;
 
     public RegisterBox(AuthenticationObservable authObs) {
         this.authObs = authObs;
 
         root = new BorderPane();
-
         root.setMinSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);
         root.setMaxSize(PROFILE_AUTH_WIDTH, PROFILE_AUTH_HEIGHT);
 
@@ -63,7 +76,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         setupPropertyChangeListeners();
     }
 
-    public BorderPane getRoot() {
+    public Pane getRoot() {
         return root;
     }
 
@@ -72,19 +85,19 @@ public class RegisterBox implements Constants, PropertyChangeListener{
     }
 
     private void setupRegisterForm() {
-        registerRoot = new BorderPane();
-        registerRoot.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
-        registerRoot.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_REGISTER_HEIGHT);
+        authBox = new BorderPane();
+        authBox.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
+        authBox.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_REGISTER_HEIGHT);
 
         lblTitle = new Label("Register");
         hbTitle = new HBox();
 
         formContainer = new VBox();
 
-        lblFN = new Label("First Name");
+        lblFirstName = new Label("First Name");
         txfFirstName = new TextField();
 
-        lblLN = new Label("Last Name");
+        lblLastName = new Label("Last Name");
         txfLastName = new TextField();
 
         lblPassword = new Label("Password");
@@ -100,58 +113,106 @@ public class RegisterBox implements Constants, PropertyChangeListener{
 
         cbSecurityQuestion = new ChoiceBox(questions);
         cbSecurityQuestion.setValue(SECURITY_QUESTIONS.PROTOTYPE.getQuestion());
+        cbSecurityQuestion.setMinWidth(PROFILE_AUTH_BOX_WIDTH - 40);
+        cbSecurityQuestion.setMaxWidth(PROFILE_AUTH_BOX_WIDTH - 40);
 
         lblSecurtyAnswer = new Label("Security Answer");
         txfSecurityAnswer = new TextField();
 
         lblColor = new Label("Color");
         cpPickColor = new ColorPicker();
+        cpPickColor.setMinWidth(PROFILE_AUTH_BOX_WIDTH - 40);
+        cpPickColor.setMaxWidth(PROFILE_AUTH_BOX_WIDTH - 40);
 
-        hbSignUp = new HBox();
-        btnSignUp = new Label("Sign Up");
+        hbSignUp = new BorderPane();
+        btnSignUp = new Button("Sign Up");
 
+        /*Initialize error labels*/
+        errorFirstName = new Label("errorFirstName");
+        errorFirstName.setVisible(true);
+        errorLastName = new Label("errorLastName");
+        errorLastName.setVisible(true);
+        errorPassword = new Label("errorPassword");
+        errorPassword.setVisible(true);
+        errorSecurityQuestion = new Label("errorSecurityQuestion");
+        errorSecurityQuestion.setVisible(true);
+        errorSecurityAnswer = new Label("errorSecurityAnswer");
+        errorSecurityAnswer.setVisible(true);
+        errorColor = new Label("errorColor");
+        errorColor.setVisible(true);
+        
+
+        /*Initialize divs*/
+        firstNameDiv = new VBox();
+        lastNameDiv = new VBox();
+        passwordDiv = new VBox();
+        securityQuestionDiv = new VBox();
+        securityAnswerDiv = new VBox();
+        colorDiv = new VBox();
+        
         /*Add the title to the title box*/
         hbTitle.getChildren().add(lblTitle);
-
+        
         /*Add all labels and inputs to the form box*/
-        formContainer.getChildren().addAll(lblFN, txfFirstName,
-                lblLN, txfLastName,
-                lblPassword, txfPassword,
-                lblSecurtyQuestion, cbSecurityQuestion,
-                lblSecurtyAnswer, txfSecurityAnswer,
-                lblColor, cpPickColor);
-
+        firstNameDiv.getChildren().addAll(lblFirstName, txfFirstName, errorFirstName);
+        lastNameDiv.getChildren().addAll(lblLastName, txfLastName, errorLastName);
+        passwordDiv.getChildren().addAll(lblPassword, txfPassword, errorPassword);
+        securityQuestionDiv.getChildren().addAll(lblSecurtyQuestion, cbSecurityQuestion, errorSecurityQuestion);
+        securityAnswerDiv.getChildren().addAll(lblSecurtyAnswer, txfSecurityAnswer, errorSecurityAnswer);
+        colorDiv.getChildren().addAll(lblColor, cpPickColor, errorColor);
+        formContainer.getChildren().addAll(firstNameDiv, lastNameDiv, passwordDiv, securityQuestionDiv, securityAnswerDiv, colorDiv);
+        
         /*Add the button to the button box*/
-        hbSignUp.getChildren().add(btnSignUp);
+        hbSignUp.setRight(btnSignUp);
 
         /*Add title on top, formContainer on center, sign-up button on bottom*/
-        registerRoot.setTop(hbTitle);
-        registerRoot.setCenter(formContainer);
-        registerRoot.setBottom(hbSignUp);
+        authBox.setTop(hbTitle);
+        authBox.setCenter(formContainer);
+        authBox.setBottom(hbSignUp);
 
         /*Set CSS ID's to nodes*/
-        registerRoot.setId("registerRoot");
-        formContainer.setId("registerVbox");
-        cpPickColor.setId("colorPickerLogin");
+        authBox.setId("authBox");
+        cbSecurityQuestion.setId("securityQuestion");
+        cpPickColor.setId("colorPicker");
 
         /*Set CSS Classes to nodes*/
-        lblTitle.getStyleClass().add("TitleLabel");
-        lblFN.getStyleClass().add("FormLabel");
-        txfFirstName.getStyleClass().add("textFieldInput");
-        lblLN.getStyleClass().add("FormLabel");
-        txfLastName.getStyleClass().add("textFieldInput");
-        lblPassword.getStyleClass().add("FormLabel");
-        txfPassword.getStyleClass().add("textFieldInput");
-        lblSecurtyQuestion.getStyleClass().add("FormLabel");
-        lblSecurtyAnswer.getStyleClass().add("FormLabel");
-        txfSecurityAnswer.getStyleClass().add("textFieldInput");
-        lblColor.getStyleClass().add("FormLabel");
-        btnSignUp.getStyleClass().add("labelButton");
-        hbSignUp.getStyleClass().add("signUp_btn");
-        hbTitle.getStyleClass().add("hbTitle");
+        authBox.getStyleClass().add("box");
+        formContainer.getStyleClass().add("form");
+        hbTitle.getStyleClass().add("titleBox");
+        
+        firstNameDiv.getStyleClass().addAll("fieldDiv");
+        lastNameDiv.getStyleClass().addAll("fieldDiv");
+        passwordDiv.getStyleClass().addAll("fieldDiv");
+        securityQuestionDiv.getStyleClass().addAll("fieldDiv");
+        securityAnswerDiv.getStyleClass().addAll("fieldDiv");
+        colorDiv.getStyleClass().addAll("fieldDiv");
+        
+        lblFirstName.getStyleClass().add("fieldTitle");
+        lblLastName.getStyleClass().add("fieldTitle");
+        lblPassword.getStyleClass().add("fieldTitle");
+        lblSecurtyQuestion.getStyleClass().add("fieldTitle");
+        lblSecurtyAnswer.getStyleClass().add("fieldTitle");
+        lblColor.getStyleClass().add("fieldTitle");
+        
+        txfFirstName.getStyleClass().add("fieldInput");
+        txfLastName.getStyleClass().add("fieldInput");
+        txfPassword.getStyleClass().add("fieldInput");
+        cbSecurityQuestion.getStyleClass().add("fieldInput");
+        txfSecurityAnswer.getStyleClass().add("fieldInput");
+        cpPickColor.getStyleClass().add("fieldInput");
+        
+        errorFirstName.getStyleClass().addAll("fieldError");
+        errorLastName.getStyleClass().addAll("fieldError");
+        errorPassword.getStyleClass().addAll("fieldError");
+        errorSecurityQuestion.getStyleClass().addAll("fieldError");
+        errorSecurityAnswer.getStyleClass().addAll("fieldError");
+        errorColor.getStyleClass().addAll("fieldError");
+        
+        btnSignUp.getStyleClass().addAll("button", "btn-default", "btn-form");
 
         /*Add register container into the root pane*/
-        root.setCenter(registerRoot);
+        root.setCenter(authBox);
+        BorderPane.setAlignment(authBox, Pos.CENTER);
     }
 
     private void setupEventListeners() {
