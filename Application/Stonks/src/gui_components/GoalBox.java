@@ -164,7 +164,7 @@ public class GoalBox implements Constants {
 
                 DBOX_CONTENT content;
                 content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
-                content.setExtra(goal.getName());
+                content.setSubExtra(goal.getName());
 
                 if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
                     boolean isGoalDeleted = false;
@@ -187,7 +187,7 @@ public class GoalBox implements Constants {
 
                 DBOX_CONTENT content;
                 content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
-                content.setExtra(goal.getName());
+                content.setSubExtra(goal.getName());
 
                 GoalForm form = new GoalForm(goalsObs);
                 form.display(goal.getId());

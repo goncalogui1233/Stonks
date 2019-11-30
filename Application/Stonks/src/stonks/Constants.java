@@ -58,7 +58,7 @@ public interface Constants {
         }
         
         public String setSubExtra(String extra){
-            if(!subTitle.contains("{}"))
+            if(!subTitle.contains("{}")){
                 return null;
             }
 

@@ -103,7 +103,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsContainer.setMaxWidth(GOALS_CONTAINER_WIDTH);
  
 
-        this.displayProfileGoals();
+//        this.displayProfileGoals();
 
         //Scrollpane
         goalsScrollPane = new ScrollPane();
@@ -140,21 +140,21 @@ public class GoalView implements Constants, PropertyChangeListener {
     }
 
     public void displayProfileGoals() {
+        try{
+            goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
+            middleContainer.getChildren().removeAll(middleContainer.getChildren());
 
-        goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
-        middleContainer.getChildren().removeAll(middleContainer.getChildren());
-
-        if (goalsObs.getAuthProfile().getGoals().size() < 1) {
-            middleContainer.getChildren().add(lblNoGoalsMsg);
-        } else {
-            middleContainer.getChildren().add(goalsScrollPane);
-            for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
-                Label divider = new Label();
-                divider.getStyleClass().addAll("divider");
-                goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+            if (goalsObs.getAuthProfile().getGoals().size() < 1) {
+                middleContainer.getChildren().add(lblNoGoalsMsg);
+            } else {
+                middleContainer.getChildren().add(goalsScrollPane);
+                for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
+                    Label divider = new Label();
+                    divider.getStyleClass().addAll("divider");
+                    goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                }
             }
-        }
-
+        }catch(NullPointerException ex){ }
     }
 
     @Override

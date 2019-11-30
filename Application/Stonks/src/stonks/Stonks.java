@@ -43,19 +43,6 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         setupApp();
         setupWindow();
-
-        /*DialogBox test - REMOVE LATER*/
-        DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
-
-        data.setCurrentProfile(new ProfileModel("ads", "asd", "sd", "asd", "asd"));
-        stonksObs = new StonksObservable(data);
-        authObs = new AuthenticationObservable(cProfile, stonksObs);
-        goalsObs = new GoalsObservable(cGoal, stonksObs);
-
-        //window.setScene(new Scene(new ProfileView()));
-        //window.setScene(new Scene(new AuthenticationView(authObs).getRoot()));
-        window.setScene(new Scene(new GoalView(goalsObs).getRoot()));
-
         setupPropertyChangeListeners();
         
         /*DialogBox test - REMOVE LATER*/
@@ -76,9 +63,10 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
+        goalsObs = new GoalsObservable(cGoal, stonksObs);
         
         authenticationView = new AuthenticationView(authObs);
-        goalView = new GoalView(cGoal);
+        goalView = new GoalView(goalsObs);
     }
 
     public void setupWindow() {
