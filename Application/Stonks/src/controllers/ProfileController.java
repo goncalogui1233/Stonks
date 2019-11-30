@@ -9,8 +9,8 @@ import stonks.Constants;
 import stonks.StonksData;
 
 public class ProfileController implements Constants {
-
-    private StonksData data;
+    private final StonksData data;
+    private int viewSelectedProfileId;
 
     public ProfileController(StonksData data) {
         this.data = data;
@@ -25,13 +25,21 @@ public class ProfileController implements Constants {
 
     }
 
+    public int getViewSelectedProfileId() {
+        return viewSelectedProfileId;
+    }
+
+    public void setViewSelectedProfileId(int viewSelectedProfileId) {
+        this.viewSelectedProfileId = viewSelectedProfileId;
+    }
+    
     public boolean createProfile(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
         if (hasMaxProfiles())
             return false;
         
         if (verifyData(PROFILE_FIELD.FIRST_NAME, firstName) == VALIDATE.OK
                 && verifyData(PROFILE_FIELD.LAST_NAME, lastName) == VALIDATE.OK
-                && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityQuestion) == VALIDATE.OK
+                && verifyData(PROFILE_FIELD.SECURITY_QUESTION, securityQuestion) == VALIDATE.OK
                 && verifyData(PROFILE_FIELD.SECURITY_ANSWER, securityAnswer) == VALIDATE.OK
                 && verifyData(PROFILE_FIELD.COLOR, color) == VALIDATE.OK) {
 
@@ -47,7 +55,7 @@ public class ProfileController implements Constants {
             }
 
 //            newProfile.setId(this.getNextId());
-                    System.out.println(newProfile.toString());
+//            System.out.println(newProfile.toString());
             data.getListProfiles().put(newProfile.getId(), newProfile);
 
             /*UPDATE DATABASE*/

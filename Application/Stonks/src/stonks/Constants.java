@@ -5,6 +5,7 @@ public interface Constants {
     public static final String APP_TITLE = "Stonks";
     public static final int APP_WIDTH = 1280;
     public static final int APP_HEIGHT = 720;
+    public static final int APP_REAL_HEIGHT = APP_HEIGHT - 25/*Height of windows bar*/;
     
     /*DialogBox window properties*/
     public static final int DBOX_WIDTH = 400;
@@ -15,9 +16,12 @@ public interface Constants {
     public static enum DBOX_CONTENT {
         /*ERROR MESSAGES*/
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
+        ERROR_LOGIN("Invalid password", "Try again"),
         
         /*SUCCESS MESSAGES*/
         /*To be changed*/SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
@@ -26,10 +30,11 @@ public interface Constants {
         private final String subTitle;
         private String newSubTitle;
         private final String text;
+        private String newText;
         
         DBOX_CONTENT(String subTitle, String text){
             this.subTitle = newSubTitle = subTitle;
-            this.text = text;
+            this.text = newText = text;
         }
         
         public String getSubTitle(){
@@ -37,10 +42,10 @@ public interface Constants {
         }
         
         public String getText(){
-            return text;
+            return newText;
         }
         
-        public String setExtra(String extra){
+        public String setSubExtra(String extra){
             if(!subTitle.contains("{}"))
                 return null;
             
@@ -48,15 +53,24 @@ public interface Constants {
             
             return newSubTitle;
         }
+        
+        public String setTextExtra(String extra){
+            if(!text.contains("{}"))
+                return null;
+            
+            newText = text.replace("{}", extra);
+            
+            return newText;
+        }
     }
     
     /*SideMenu properties*/
     public static final int SIDEMENU_WIDTH = 256;
-    public static final int SIDEMENU_HEIGHT = APP_HEIGHT;
+    public static final int SIDEMENU_HEIGHT = APP_REAL_HEIGHT;
     
     /*SideProfileBar properties*/
     public static final int SIDEPROFILEBAR_WIDTH = 115;
-    public static final int SIDEPROFILEBAR_HEIGHT = APP_HEIGHT;
+    public static final int SIDEPROFILEBAR_HEIGHT = APP_REAL_HEIGHT;
     
     /*General*/
     public static final int MAX_PROFILES = 6;
@@ -99,13 +113,13 @@ public interface Constants {
     /*Profile*/
     public static enum PROFILE_FIELD {FIRST_NAME, LAST_NAME, SECURITY_QUESTION, SECURITY_ANSWER, PASSWORD, COLOR};
     public static final int PROFILE_EDIT_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
-    public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_EDIT_VIEW_HEIGHT = APP_REAL_HEIGHT;
     public static final int PROFILE_AUTH_WIDTH = APP_WIDTH - SIDEPROFILEBAR_WIDTH;
-    public static final int PROFILE_AUTH_HEIGHT = APP_HEIGHT;
+    public static final int PROFILE_AUTH_HEIGHT = APP_REAL_HEIGHT;
     public static final int PROFILE_AUTH_BOX_WIDTH = 450;
     public static final int PROFILE_AUTH_BOX_LOGIN_HEIGHT = 300;
     public static final int PROFILE_AUTH_BOX_REGISTER_HEIGHT = 600;
-    public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 400;
+    public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 300;
     
     /*Dashboard*/
     
@@ -115,7 +129,8 @@ public interface Constants {
     /*Wallet*/
     
     /*Property Change Events*/
-    public static enum AUTH_EVENT {CREATE_PROFILE};
+    public static enum STONKS_EVENT {GOTO_GOAL_VIEW};
+    public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {};
     public static enum PROFILE_EVENT {};
     public static enum DASHBOARD_EVENT {};
