@@ -64,6 +64,17 @@
     -fx-padding: 3px 2px 2px 0px;
 }
 
+.link{
+    -fx-font-size: 12px;
+    -fx-text-fill: #1976d2;
+    -fx-padding: 10px;
+}
+
+.link:hover{
+    -fx-text-fill: #2196f3;
+    -fx-underline: true;
+}
+
 /*BUTTONS*/
 .button{
     -fx-text-fill: #fff;
@@ -256,11 +267,13 @@
 #authBox .titleBox{
     -fx-alignment: center; 
     -fx-padding: 15 0 10 0;
-}
-
-#authBox .titleBox *{
     -fx-font-weight: bold;
     -fx-font-size: 20px;
+}
+
+#authBox .titleBox #titleProfile{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-size: 12px;
 }
 
 #authBox .formBox{

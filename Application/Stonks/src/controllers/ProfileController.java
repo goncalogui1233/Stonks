@@ -184,8 +184,8 @@ public class ProfileController implements Constants {
             switch (field) {
                 /*FIRST_NAME FIELD VALIDATIONS*/
                 case FIRST_NAME:
-                    if ((((String) value).length() < 1))/*CONSTANT*/
-                        return VALIDATE.MIN_CHAR;
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
                     if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
@@ -194,7 +194,7 @@ public class ProfileController implements Constants {
                 /*LAST_NAME FIELD VALIDATIONS*/
                 case LAST_NAME:
                     if ((((String) value).isEmpty()))/*CONSTANT*/
-                        return VALIDATE.MIN_CHAR;
+                        return VALIDATE.EMPTY;
                     if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
@@ -208,8 +208,8 @@ public class ProfileController implements Constants {
 
                 /*SECURITY_ANSWER FIELD VALIDATIONS*/
                 case SECURITY_ANSWER:
-                    if ((((String) value).length() < 1))/*CONSTANT*/
-                        return VALIDATE.MIN_CHAR;
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
                     if ((((String) value).length() > 50))/*CONSTANT*/
                         return VALIDATE.MAX_CHAR;
                     
@@ -218,7 +218,7 @@ public class ProfileController implements Constants {
                 /*PASSWORD FIELD VALIDATIONS*/
                 case PASSWORD:
                     if ((((String) value).isEmpty()))/*CONSTANT*/
-                        return VALIDATE.OK;
+                        return VALIDATE.EMPTY;
                     if ((((String) value).length() < 6))/*CONSTANT*/
                         return VALIDATE.MIN_CHAR;
                     if ((((String) value).length() > 50))/*CONSTANT*/

@@ -56,7 +56,9 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
         cGoal = new GoalController(data);
-
+        
+        populateApp(); /*Remove later*/
+        
         ProfileModel.setData(data);
         GoalModel.setData(data);
         WalletModel.setData(data);
@@ -93,5 +95,15 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
             window.setScene(new Scene(goalView.getRoot()));
         }
+    }
+
+    /*Remove later*/
+    private void populateApp() {
+        cProfile.createProfile("Ricardo", 
+                "Pereira", 
+                SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(), 
+                "kekkek", 
+                "kekkek", 
+                "#d3d9f1");
     }
 }

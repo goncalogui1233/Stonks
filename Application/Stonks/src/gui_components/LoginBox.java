@@ -2,6 +2,8 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -14,22 +16,30 @@ public class LoginBox implements Constants, PropertyChangeListener{
     private final AuthenticationObservable authObs;
     
     //Containers
-    private VBox formContainer;
-    private BorderPane bpLoginRoot;
+    private BorderPane authBox;
     private VBox hbTitle;
+    private VBox formContainer;
     private BorderPane bpOption;
+    
+    //Input Divs
+    private VBox passwordDiv;
 
     //Title Labels
     private Label lblTitle;
     private Label lblUserName;
     private Label lblPassword;
 
-    //Label Buttons
-    private Label btnForgotPassword;
-    private Label btnSignIn;   
-
-    //Text Field
+    //Field Inputs
     private TextField txtPassword;
+    
+    //Error Labels
+    private Label errorPassword;
+
+    //Buttons
+    private Button btnSignIn;   
+    
+    //Links
+    private Label linkForgotPassword;
 
     public LoginBox(AuthenticationObservable authObs) {
         this.authObs = authObs;
@@ -54,20 +64,37 @@ public class LoginBox implements Constants, PropertyChangeListener{
     
     private void setupEventListeners(){
         btnSignIn.setOnMouseClicked(e -> {
-            if(!authObs.loginProfile(authObs.getViewSelectedProfileId(), txtPassword.getText())){
-                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_LOGIN);
+            
+            int errorCounter = 0;
+            
+            switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txtPassword.getText())){
+                case EMPTY:
+                    errorPassword.setText("Password cannot be empty");
+                    errorPassword.setVisible(true);
+                    errorCounter++;
+                    break;
+                default:
+                    errorPassword.setVisible(false);
+                    break;
+            }
+            
+            if(errorCounter == 0){
+                if(!authObs.loginProfile(authObs.getViewSelectedProfileId(), txtPassword.getText())){
+                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_LOGIN);
+                }
             }
         });
     }
 
     private void setupLoginForm(){
-        bpLoginRoot = new BorderPane();
-        bpLoginRoot.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
-        bpLoginRoot.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_LOGIN_HEIGHT);
+        authBox = new BorderPane();
+        authBox.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
+        authBox.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_LOGIN_HEIGHT);
         
         lblTitle = new Label("Login as ");
         lblUserName = new Label();
         lblUserName.setWrapText(true);
+        lblUserName.setAlignment(Pos.CENTER);//CHECK
         hbTitle = new VBox();
         
         formContainer = new VBox();
@@ -75,52 +102,60 @@ public class LoginBox implements Constants, PropertyChangeListener{
         lblPassword = new Label("Password");
         txtPassword = new TextField();
         
-        btnForgotPassword = new Label("I forgot my password");
-        btnForgotPassword.setOnMouseClicked(e -> {
+        linkForgotPassword = new Label("I forgot my password");
+        linkForgotPassword.setOnMouseClicked(e -> {
             authObs.recoverPasswordClicked();
         });
-        btnSignIn = new Label("Sign in");
-        
+        btnSignIn = new Button("Sign in");
         bpOption = new BorderPane();
+
+        /*Initialize error labels*/
+        errorPassword = new Label("errorPassword");
+        errorPassword.setVisible(false);
+        
+        /*Initialize divs*/
+        passwordDiv = new VBox();
         
         /*Add the title to the title box*/
         hbTitle.getChildren().addAll(lblTitle, lblUserName);
         
-        /*Add label and input to the form box*/
-        formContainer.getChildren().addAll(lblPassword,txtPassword);      
+        /*Add all labels and inputs to the form box*/
+        passwordDiv.getChildren().addAll(lblPassword, txtPassword, errorPassword);
+        formContainer.getChildren().addAll(passwordDiv);      
         
         /*Add recover password label and button to the button box*/
-        bpOption.setLeft(btnForgotPassword);
+        bpOption.setLeft(linkForgotPassword);
         bpOption.setRight(btnSignIn);
         
         /*Add title on top, formContainer on center, label and sign-in button on bottom*/
-        bpLoginRoot.setTop(hbTitle);
-        bpLoginRoot.setCenter(formContainer);
-        bpLoginRoot.setBottom(bpOption);
+        authBox.setTop(hbTitle);
+        authBox.setCenter(formContainer);
+        authBox.setBottom(bpOption);
         
         /*Set CSS ID's to nodes*/
-        bpLoginRoot.setId("loginRoot");
-        formContainer.setId("loginVbox");
+        authBox.setId("authBox");
+        lblUserName.setId("titleProfile");
         
         /*Set CSS Classes to nodes*/
-        lblTitle.getStyleClass().add("TitleLabel");
-        lblUserName.getStyleClass().add("UsernameLabel");
-        lblPassword.getStyleClass().add("FormLabel");
-        txtPassword.getStyleClass().add("textFieldInput");
-        btnForgotPassword.getStyleClass().add("forgotPassword_btn");
-        btnSignIn.getStyleClass().add("signIn_btn");
-        btnForgotPassword.getStyleClass().add("forgotPassword_btn");
-        btnSignIn.getStyleClass().add("labelButton");
-        hbTitle.getStyleClass().add("hbTitle");
+        authBox.getStyleClass().add("box");
+        formContainer.getStyleClass().add("form");
+        hbTitle.getStyleClass().add("titleBox");
+        
+        passwordDiv.getStyleClass().addAll("fieldDiv");
+        lblPassword.getStyleClass().add("fieldTitle");
+        txtPassword.getStyleClass().add("fieldInput");
+        errorPassword.getStyleClass().addAll("fieldError");
+        
+        linkForgotPassword.getStyleClass().add("link");
+        btnSignIn.getStyleClass().addAll("button", "btn-default", "btn-form");
         
         /*Add login container into the root pane*/
-        root.setCenter(bpLoginRoot);
+        root.setCenter(authBox);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_LOGIN.name())){
-            lblUserName.setText(
+        if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_LOGIN.name())){lblUserName.setText(
                     authObs.getProfile(authObs.getViewSelectedProfileId()).getFirstName() 
                     + " "
                     + authObs.getProfile(authObs.getViewSelectedProfileId()).getLastName());
@@ -130,5 +165,6 @@ public class LoginBox implements Constants, PropertyChangeListener{
 
     private void resetFields() {
         txtPassword.setText("");
+        errorPassword.setVisible(false);
     }
 }
