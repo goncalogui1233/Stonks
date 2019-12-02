@@ -20,7 +20,8 @@ import views.AuthenticationView;
 import views.GoalView;
 import views.ProfileView;
 
-public class Stonks extends Application implements Constants, PropertyChangeListener{
+public class Stonks extends Application implements Constants, PropertyChangeListener {
+
     private Stage window;
     private StonksData data;  
     
@@ -44,7 +45,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private AuthenticationView authenticationView;
     private ProfileView profileView;
     private GoalView goalView;
-    
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -56,6 +57,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         setupApp();
         setupWindow();
         setupPropertyChangeListeners();
+
         /*DialogBox test - REMOVE LATER*/
         //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
@@ -63,6 +65,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
     public void setupApp() {
         data = new StonksData();
+        data = data.loadDatabase();
 
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
@@ -78,7 +81,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
-        
+    
         authenticationView = new AuthenticationView(authObs);
         profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
@@ -103,14 +106,15 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         window.show();
     }
 
-    public void setupPropertyChangeListeners(){
+    public void setupPropertyChangeListeners() {
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            goalView.displayProfileGoals();/*CHECK LATER - GOAL VIEW CAN BE NOTIFIED BY STONKS OBS*/
             window.setScene(goalScene);
         }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
             profileObs.firePropertyChange(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), null, null);

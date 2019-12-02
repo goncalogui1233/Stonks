@@ -174,7 +174,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         cpPickColor.setId("colorPicker");
 
         /*Set CSS Classes to nodes*/
-        authBox.getStyleClass().add("box");
+        authBox.getStyleClass().add("stonks-box");
         formContainer.getStyleClass().add("form");
         hbTitle.getStyleClass().add("titleBox");
         
@@ -206,7 +206,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         errorSecurityAnswer.getStyleClass().addAll("fieldError");
         errorColor.getStyleClass().addAll("fieldError");
         
-        btnSignUp.getStyleClass().addAll("button", "btn-default", "btn-form");
+        btnSignUp.getStyleClass().addAll("btn-default", "btn-form");
 
         /*Add register container into the root pane*/
         root.setCenter(authBox);

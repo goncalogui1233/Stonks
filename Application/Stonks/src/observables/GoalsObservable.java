@@ -61,6 +61,19 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
+    public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
+
+        boolean ans = cGoal.editGoal(id, name, objective, deadline);
+
+        System.out.println(ans);
+
+        if (ans) {
+            firePropertyChange(GOAL_EVENT.EDIT_GOAL.name(), null, null);
+        }
+
+        return ans;
+    }
+
     /*Getters*/
     public ProfileModel getAuthProfile() {
         return stonksObs.getAuthProfile();
@@ -68,6 +81,10 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
 
     public GoalModel getGoal(int id) {
         return cGoal.getGoal(id);
+    }
+
+    public LocalDate getEstimatedDate(int id) {
+        return cGoal.getEstimatedDate(id);
     }
 
 }

@@ -26,6 +26,7 @@ public interface Constants {
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while processing your request. The goal wasn't created."),
         ERROR_GOAL_DELETE("Unable to delete the goal", "An error occurred while processing your request. The goal wasn't deleted."),
+        ERROR_GOAL_EDIT("Unable to edit the goal", "An error occurred while processing your request. The goal wasn't edited."),
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
         ERROR_LOGIN("Invalid password", "Try again"),
       
@@ -34,6 +35,7 @@ public interface Constants {
         SUCCESS_EDIT_PROFILE("Profile edited", "Your profile was successfully created"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
+        SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
         
         /*CONFIRM MESSAGES*/
@@ -159,7 +161,7 @@ public interface Constants {
     /*Property Change Events*/
     public static enum STONKS_EVENT {GOTO_PROFILE_VIEW, GOTO_GOAL_VIEW, GOTO_DASHBOARD_VIEW};
     public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
-    public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL};
+    public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL, EDIT_GOAL};
     public static enum PROFILE_EVENT {UPDATE_PROFILE_VIEW};
     public static enum DASHBOARD_EVENT {};
 }

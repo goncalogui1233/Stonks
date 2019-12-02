@@ -1,12 +1,12 @@
 /*DEBUG CSS ID CHUNKS*/
 .BACKGROUND_RED{
-    -fx-background-color: #AA0000;
+    -fx-background-color: #AA0000 !important;
 }
 .BACKGROUND_GREEN{
-    -fx-background-color: #00AA00;
+    -fx-background-color: #00AA00 !important;
 }
 .BACKGROUND_BLUE{
-    -fx-background-color: #0000AA;
+    -fx-background-color: #0000AA !important;
 }
 
 /*GENERAL*/
@@ -17,7 +17,7 @@
 }
 
 /*FORM*/
-.box{
+.stonks-box{
     -fx-border-width: 1px;
     -fx-border-color: #bdbdbd;
     -fx-border-radius: 5px;
@@ -27,17 +27,18 @@
 }
 
 .form{
-    -fx-padding: 5px;
+    -fx-padding:20px;
 }
 
-/*.form .fieldDiv{
-    
-}*/
+.form .fieldDiv{
+    -fx-padding: 0 0 10 0;
+}
 
 .form .fieldDiv .fieldTitle{
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: #424242;
-    -fx-padding: 0px 0px 5px 0px;
+    -fx-padding: 0 0 5 0;
 }
 
 .form .fieldDiv .fieldInput{
@@ -58,7 +59,7 @@
 }
 
 .form .fieldDiv .fieldError{
-    -fx-font-size: 12px;
+    -fx-font-size: 11.5px;
     -fx-font-weight: bold;
     -fx-text-fill: #d32f2f;
     -fx-padding: 3px 2px 2px 0px;
@@ -284,7 +285,6 @@
 
 /*Auth*/
 #authBox{
-
 }
 
 #authBox .titleBox, 
@@ -493,13 +493,13 @@
     -fx-padding: 0 0 50 0;
 }
 
-#goalForm{
+/*#goalForm{
     -fx-background-color: white;
     -fx-border-width: 1;
     -fx-border-color:black;
     -fx-background-radius: 3;
     -fx-border-radius: 3;
-}
+}*/
 
 #goalForm .topLayout{
     -fx-padding:20px;
@@ -511,21 +511,6 @@
     -fx-font-weight: bold;
 }
 
-.form{
-    -fx-padding:20px;
-}
-
-.fieldDiv{
-    -fx-padding: 0 0 10 0;
-}
-
-.form .fieldTitle{
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #424242;
-    -fx-padding: 0 0 10 0;
-}
-
 #goalForm .form .currency{
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -533,16 +518,10 @@
     -fx-padding: 2 0 0 7;
 }
 
-#goalForm .submit{
+/*#goalForm .submit{
     -fx-text-fill: white;
     -fx-font-size: 16px;
-}
-
-#goalBox{
-    -fx-background-color: #f5f5f5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 1, 1);
-    -fx-background-radius: 5px;
-}
+}*/
 
 #goalBox #topContainer{
     -fx-padding:10px;
@@ -593,5 +572,45 @@
 #goalBox #secondRow .label{
     -fx-font-size: 16px;
     -fx-font-weight: 700;
+}
+
+/*Datepicker*/
+.date-picker{
+    -fx-padding:1 5 1 0 !important;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: white white white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}
+
+.date-picker:focused > .text-field,
+.date-picker > .text-field:focused {
+    -fx-background-color: white white white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}
+
+
+.date-picker > .arrow-button {
+    -fx-background-color: white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+    -fx-padding:0 !important;
+
+}
+
+.date-picker:focused > .arrow-button,
+.date-picker > .arrow-button:focused {
+    -fx-background-color: white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+}
+
+.date-picker > .arrow-button * {
+    -fx-padding:6 !important;
 }
 
