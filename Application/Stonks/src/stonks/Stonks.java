@@ -71,7 +71,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cDashboard = new DashboardController(data);
         cGoal = new GoalController(data);
         
-        populateApp(); /*Remove later*/
+//        populateApp(); /*Remove later*/
         
         ProfileModel.setData(data);
         GoalModel.setData(data);

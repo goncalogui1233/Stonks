@@ -148,7 +148,7 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
         lblUserName.setId("titleProfile");
         
         /*Set CSS Classes to nodes*/
-        authBox.getStyleClass().add("box");
+        authBox.getStyleClass().add("stonks-box");
         formContainer.getStyleClass().add("form");
         titleContainer.getStyleClass().add("titleBox");
         
