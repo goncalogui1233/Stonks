@@ -103,7 +103,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsContainer.setMaxWidth(GOALS_CONTAINER_WIDTH);
  
 
-        this.displayProfileGoals();
+//        this.displayProfileGoals();
 
         //Scrollpane
         goalsScrollPane = new ScrollPane();
@@ -140,6 +140,9 @@ public class GoalView implements Constants, PropertyChangeListener {
     }
 
     public void displayProfileGoals() {
+        try{
+            goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
+            middleContainer.getChildren().removeAll(middleContainer.getChildren());
 
         goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
         middleContainer.getChildren().removeAll(middleContainer.getChildren());
@@ -153,8 +156,7 @@ public class GoalView implements Constants, PropertyChangeListener {
                 divider.getStyleClass().addAll("divider");
                 goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
             }
-        }
-
+        }catch(NullPointerException ex){ }
     }
 
     @Override
