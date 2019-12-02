@@ -137,6 +137,8 @@ public interface Constants {
     public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 300;
     
     /*Dashboard*/
+    public static final int DASHBOARD_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
+    public static final int DASHBOARD_VIEW_HEIGHT = APP_HEIGHT;
 
     /*Goal*/
     public static enum GOAL_FIELD {
