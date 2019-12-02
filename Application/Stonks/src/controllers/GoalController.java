@@ -87,7 +87,7 @@ public class GoalController implements Constants {
 
                 /*Adds the goal to the current profile goals list*/
                 data.getAuthProfile().getGoals().put(newGoal.getId(), newGoal);
-
+                System.out.println(data.getAuthProfile().getFirstName());
                 /*UPDATE DATABASE*/
                 data.updateDatabase();
 
