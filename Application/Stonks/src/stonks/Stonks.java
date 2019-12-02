@@ -66,7 +66,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
-
+    
         authenticationView = new AuthenticationView(authObs);
         goalView = new GoalView(goalsObs);
     }

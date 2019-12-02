@@ -169,4 +169,4 @@ public class GoalView implements Constants, PropertyChangeListener {
             displayProfileGoals(); 
         } 
     } 
-} 
+}

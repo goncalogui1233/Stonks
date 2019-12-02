@@ -200,4 +200,4 @@ public class GoalBox implements Constants {
     public VBox getRoot() { 
         return root; 
     } 
-} 
+}
