@@ -68,6 +68,7 @@
     -fx-font-size: 12px;
     -fx-text-fill: #1976d2;
     -fx-padding: 10px;
+    -fx-cursor:hand;
 }
 
 .link:hover{
@@ -201,8 +202,8 @@
     -fx-border-color: #bdbdbd;
 }
 #sideMenu #profileDiv{
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: #333;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #bdbdbd;
     -fx-padding: 17px;
 }
 #sideMenu #profileDiv #profileIcon{
@@ -216,18 +217,33 @@
     -fx-padding: 10px 10px 10px 20px;
 }
 #sideMenu #linkDiv{
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: #333;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #bdbdbd;
 }
 #sideMenu #linkDiv *{
     -fx-font-weight: bold;
     -fx-font-size: 15px;
     -fx-padding: 0px 17px 0px 17px;
-    -fx-border-width: 0 0 2 0;
+    -fx-border-width: 0 0 1 0;
     -fx-border-radius: 0px;
-    -fx-border-color: #DDD;
+    -fx-border-color: #bdbdbd;
     -fx-text-alignment: center;
 }
+
+#sideMenu #linkDiv *:hover{
+    -fx-background-color:#bdbdbd;
+    -fx-cursor: hand;
+}
+
+#sideMenu #linkDiv *:pressed{
+    -fx-background-color:#adadad;
+}
+
+#sideMenu #linkDiv *:active{
+    -fx-background-color:#bdbdbd !important;
+}
+
+
 #sideMenu #linkDiv *:last{
     -fx-border-width: 0;
 }
@@ -267,7 +283,7 @@
 
 /*Auth*/
 #authBox{
-    
+
 }
 
 #authBox .titleBox, 

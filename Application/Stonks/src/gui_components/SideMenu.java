@@ -85,12 +85,12 @@ public class SideMenu implements Constants{
         linkDiv.setId("linkDiv");
         
         Label dashboardLink = new Label("Dashboard");
-        dashboardLink.setMinWidth(SIDEMENU_WIDTH-2);
+        dashboardLink.setMinWidth(SIDEMENU_WIDTH);
         dashboardLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         
         PseudoClass last = PseudoClass.getPseudoClass("last");
         Label goalLink = new Label("Goals");
-        goalLink.setMinWidth(SIDEMENU_WIDTH-2);
+        goalLink.setMinWidth(SIDEMENU_WIDTH);
         goalLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         goalLink.pseudoClassStateChanged(last, true);
         
