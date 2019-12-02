@@ -259,6 +259,7 @@
     -fx-alignment: center;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
+    -fx-cursor:hand;
 }
 
 #sideProfileBar #profileIcon:selected_black{
