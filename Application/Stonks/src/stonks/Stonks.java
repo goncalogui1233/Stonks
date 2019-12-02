@@ -18,21 +18,22 @@ import observables.StonksObservable;
 import views.AuthenticationView;
 import views.GoalView;
 
-public class Stonks extends Application implements Constants, PropertyChangeListener{
+public class Stonks extends Application implements Constants, PropertyChangeListener {
+
     private Stage window;
-    private StonksData data;  
-    
+    private StonksData data;
+
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
-     private GoalsObservable goalsObs;
+    private GoalsObservable goalsObs;
 
     private ProfileController cProfile;
     private DashboardController cDashboard;
     private GoalController cGoal;
-  
+
     private AuthenticationView authenticationView;
     private GoalView goalView;
-    
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -43,21 +44,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         setupApp();
         setupWindow();
-
-        /*DialogBox test - REMOVE LATER*/
-        DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
-
-        data.setCurrentProfile(new ProfileModel("ads", "asd", "sd", "asd", "asd"));
-        stonksObs = new StonksObservable(data);
-        authObs = new AuthenticationObservable(cProfile, stonksObs);
-        goalsObs = new GoalsObservable(cGoal, stonksObs);
-
-        //window.setScene(new Scene(new ProfileView()));
-        //window.setScene(new Scene(new AuthenticationView(authObs).getRoot()));
-        window.setScene(new Scene(new GoalView(goalsObs).getRoot()));
-
         setupPropertyChangeListeners();
-        
+
         /*DialogBox test - REMOVE LATER*/
         //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
@@ -65,6 +53,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
     public void setupApp() {
         data = new StonksData();
+        data = data.loadDatabase();
 
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
@@ -76,9 +65,10 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
-        
+        goalsObs = new GoalsObservable(cGoal, stonksObs);
+
         authenticationView = new AuthenticationView(authObs);
-        goalView = new GoalView(cGoal);
+        goalView = new GoalView(goalsObs);
     }
 
     public void setupWindow() {
@@ -96,14 +86,16 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         window.show();
     }
 
-    public void setupPropertyChangeListeners(){
+    public void setupPropertyChangeListeners() {
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            goalView.displayProfileGoals();
             window.setScene(new Scene(goalView.getRoot()));
+
         }
     }
 }
