@@ -140,7 +140,6 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         errorColor = new Label("errorColor");
         errorColor.setVisible(false);
         
-
         /*Initialize divs*/
         firstNameDiv = new VBox();
         lastNameDiv = new VBox();
@@ -213,6 +212,98 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         root.setCenter(authBox);
     }
 
+    private int validateInputs(){
+        int errorCounter = 0;
+
+        switch(authObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
+            case EMPTY:
+                errorFirstName.setText("First Name cannot be empty");
+                errorFirstName.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorFirstName.setText("First Name has a maximum of 50 characters");
+                errorFirstName.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorFirstName.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
+            case EMPTY:
+                errorLastName.setText("Last Name cannot be empty");
+                errorLastName.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorLastName.setText("Last Name has a maximum of 50 characters");
+                errorLastName.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorLastName.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())){
+            case MIN_CHAR:
+                errorPassword.setText("Password has a minimum of 6 characters");
+                errorPassword.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorPassword.setText("Password has a maximum of 50 characters");
+                errorPassword.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorPassword.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_QUESTION, cbSecurityQuestion.getValue().toString())){
+            case INVALID_QUESTION:
+                errorSecurityQuestion.setText("Select a question");
+                errorSecurityQuestion.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityQuestion.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txfSecurityAnswer.getText())){
+            case EMPTY:
+                errorSecurityAnswer.setText("Security Answer cannot be empty");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorSecurityAnswer.setText("Security Answer has a maximum of 50 characters");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityAnswer.setVisible(false);
+                break;
+        }
+
+        switch (authObs.verifyData(PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
+            case FORMAT:
+                errorColor.setText("Select a color");
+                errorColor.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorColor.setVisible(false);
+                break;
+        }
+        
+        return errorCounter;
+    }
+    
     private void setupEventListeners() {
         btnSignUp.setOnMouseClicked(e -> {
             if (authObs.hasMaxProfiles()) {
@@ -220,95 +311,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
                 return;
             }
 
-            int errorCounter = 0;
-            
-            switch(authObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
-                case EMPTY:
-                    errorFirstName.setText("First Name cannot be empty");
-                    errorFirstName.setVisible(true);
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    errorFirstName.setText("First Name has a maximum of 50 characters");
-                    errorFirstName.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorFirstName.setVisible(false);
-                    break;
-            }
-            
-            switch(authObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
-                case EMPTY:
-                    errorLastName.setText("Last Name cannot be empty");
-                    errorLastName.setVisible(true);
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    errorLastName.setText("Last Name has a maximum of 50 characters");
-                    errorLastName.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorLastName.setVisible(false);
-                    break;
-            }
-            
-            switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())){
-                case MIN_CHAR:
-                    errorPassword.setText("Password has a minimum of 6 characters");
-                    errorPassword.setVisible(true);
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    errorPassword.setText("Password has a maximum of 50 characters");
-                    errorPassword.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorPassword.setVisible(false);
-                    break;
-            }
-            
-            switch(authObs.verifyData(PROFILE_FIELD.SECURITY_QUESTION, cbSecurityQuestion.getValue().toString())){
-                case INVALID_QUESTION:
-                    errorSecurityQuestion.setText("Select a question");
-                    errorSecurityQuestion.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorSecurityQuestion.setVisible(false);
-                    break;
-            }
-
-            switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txfSecurityAnswer.getText())){
-                case EMPTY:
-                    errorSecurityAnswer.setText("Security Answer cannot be empty");
-                    errorSecurityAnswer.setVisible(true);
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    errorSecurityAnswer.setText("Security Answer has a maximum of 50 characters");
-                    errorSecurityAnswer.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorSecurityAnswer.setVisible(false);
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
-                case FORMAT:
-                    errorColor.setText("Select a color");
-                    errorColor.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorColor.setVisible(false);
-                    break;
-            }
-
-            if (errorCounter == 0) {
+            if (validateInputs() == 0) {
                 if (authObs.createProfile(txfFirstName.getText(),
                         txfLastName.getText(),
                         cbSecurityQuestion.getValue().toString(),

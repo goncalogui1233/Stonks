@@ -14,9 +14,11 @@ import models.ProfileModel;
 import models.WalletModel;
 import observables.AuthenticationObservable;
 import observables.GoalsObservable;
+import observables.ProfileObservable;
 import observables.StonksObservable;
 import views.AuthenticationView;
 import views.GoalView;
+import views.ProfileView;
 
 public class Stonks extends Application implements Constants, PropertyChangeListener{
     private Stage window;
@@ -24,6 +26,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
+    private ProfileObservable profileObs;
      private GoalsObservable goalsObs;
 
     private ProfileController cProfile;
@@ -31,6 +34,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private GoalController cGoal;
   
     private AuthenticationView authenticationView;
+    private ProfileView profileView;
     private GoalView goalView;
     
     public static void main(String[] args) {
@@ -44,7 +48,6 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         setupApp();
         setupWindow();
         setupPropertyChangeListeners();
-        
         /*DialogBox test - REMOVE LATER*/
         //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
         //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
@@ -65,9 +68,11 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
+        profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
         
         authenticationView = new AuthenticationView(authObs);
+        profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
     }
 

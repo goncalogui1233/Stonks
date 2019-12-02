@@ -54,14 +54,10 @@ public class SideMenu implements Constants{
         
         Color profileColor = Color.DARKBLUE /*ADD PROFILE COLOR*/;
         
-        System.out.println((profileColor.getRed() * 0.333) + 
-                (profileColor.getGreen() * 0.333) + 
-                (profileColor.getBlue() * 0.333));
-        
         Color textColor;
-        if(((profileColor.getRed() * 0.299) + 
-                (profileColor.getGreen() * 0.587) + 
-                (profileColor.getBlue() * 0.114)) > 0.2){
+        if(((profileColor.getRed() * 0.333) + 
+                (profileColor.getGreen() * 0.333) + 
+                (profileColor.getBlue() * 0.333)) > 0.3){
             textColor = Color.valueOf("#000"); 
         }else{
             textColor = Color.valueOf("#FFF"); 

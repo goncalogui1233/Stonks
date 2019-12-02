@@ -62,23 +62,26 @@ public class LoginBox implements Constants, PropertyChangeListener{
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_LOGIN.name(), this);
     }
     
+    private int validateInputs(){
+        int errorCounter = 0;
+
+        switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txtPassword.getText())){
+            case EMPTY:
+                errorPassword.setText("Password cannot be empty");
+                errorPassword.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorPassword.setVisible(false);
+                break;
+        }
+        
+        return errorCounter;
+    }
+    
     private void setupEventListeners(){
         btnSignIn.setOnMouseClicked(e -> {
-            
-            int errorCounter = 0;
-            
-            switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txtPassword.getText())){
-                case EMPTY:
-                    errorPassword.setText("Password cannot be empty");
-                    errorPassword.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorPassword.setVisible(false);
-                    break;
-            }
-            
-            if(errorCounter == 0){
+            if(validateInputs() == 0){
                 if(!authObs.loginProfile(authObs.getViewSelectedProfileId(), txtPassword.getText())){
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_LOGIN);
                 }

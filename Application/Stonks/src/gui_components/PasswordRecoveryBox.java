@@ -61,28 +61,31 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), this);
     }
     
+    private int validateInputs(){
+        int errorCounter = 0;
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txtSecurityAnswer.getText())){
+            case EMPTY:
+                errorSecurityAnswer.setText("Security answer cannot be empty");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorSecurityAnswer.setText("Security answer has a maximum of 50 characters");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityAnswer.setVisible(false);
+                break;
+        }
+        
+        return errorCounter;
+    }
+    
     private void setupEventListeners(){
         btnRecover.setOnMouseClicked(e -> {
-            
-            int errorCounter = 0;
-            
-            switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txtSecurityAnswer.getText())){
-                case EMPTY:
-                    errorSecurityAnswer.setText("Security answer cannot be empty");
-                    errorSecurityAnswer.setVisible(true);
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    errorSecurityAnswer.setText("Security answer has a maximum of 50 characters");
-                    errorSecurityAnswer.setVisible(true);
-                    errorCounter++;
-                    break;
-                default:
-                    errorSecurityAnswer.setVisible(false);
-                    break;
-            }
-            
-            if(errorCounter == 0){
+            if(validateInputs() == 0){
                 String password = authObs.recoverPassword(txtSecurityAnswer.getText());
 
                 if(password != null){

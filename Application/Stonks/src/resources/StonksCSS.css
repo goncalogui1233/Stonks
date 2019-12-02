@@ -116,12 +116,18 @@
     -fx-background-color:#212121;
 }
 
-
 .btn-form{
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding:10px 20px 10px 20px;
     -fx-background-radius: 5px 0px 5px 0px !important;
+}
+
+.btn-form-sharp{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding:10px 20px 10px 20px;
+    -fx-background-radius: 0px 0px 0px 0px !important;
 }
 
 /*DIALOG BOX*/
@@ -264,11 +270,16 @@
     
 }
 
-#authBox .titleBox{
+#authBox .titleBox, 
+#profileBox .titleBox{
     -fx-alignment: center; 
-    -fx-padding: 15 0 10 0;
+    -fx-padding: 15 15 10 15;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
+}
+
+#profileBox .titleBox{
+    -fx-alignment: CENTER_LEFT; 
 }
 
 #authBox .titleBox #titleProfile{

@@ -31,6 +31,7 @@ public interface Constants {
       
         /*SUCCESS MESSAGES*/
         /*To be changed*/ SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_EDIT_PROFILE("Profile edited", "Your profile was successfully created"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
