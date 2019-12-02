@@ -17,15 +17,15 @@ public class ProfileObservable extends PropertyChangeSupport implements Constant
     }
     
     /*Bridge Methods*/
+    public StonksObservable getStonksObs(){
+        return stonksObs;
+    }
+    
     public <T> VALIDATE verifyData(PROFILE_FIELD field, T value){
         return cProfile.verifyData(field, value);
     }
     
-    public ProfileModel getProfile(int id) {
-        return cProfile.getProfile(id);
-    }
-    
-    public int getViewSelectedProfileId(){
-        return cProfile.getViewSelectedProfileId();
+    public ProfileModel getAuthProfile(){
+        return stonksObs.getAuthProfile();
     }
 }

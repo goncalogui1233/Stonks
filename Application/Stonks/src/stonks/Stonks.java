@@ -24,15 +24,23 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private Stage window;
     private StonksData data;  
     
+    /*Scenes*/
+    private Scene authScene;
+    private Scene profileScene;
+    private Scene goalScene;
+    
+    /*Observables*/
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
     private ProfileObservable profileObs;
-     private GoalsObservable goalsObs;
+    private GoalsObservable goalsObs;
 
+    /*Controllers*/
     private ProfileController cProfile;
     private DashboardController cDashboard;
     private GoalController cGoal;
   
+    /*Views*/
     private AuthenticationView authenticationView;
     private ProfileView profileView;
     private GoalView goalView;
@@ -74,6 +82,10 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         authenticationView = new AuthenticationView(authObs);
         profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
+        
+        authScene = new Scene(authenticationView.getRoot());
+        profileScene = new Scene(profileView.getRoot());
+        goalScene = new Scene(goalView.getRoot());
     }
 
     public void setupWindow() {
@@ -83,7 +95,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         window.setHeight(APP_HEIGHT);
 
         //window.setScene(new Scene(new ProfileView()));
-        window.setScene(new Scene(authenticationView.getRoot()));
+        window.setScene(authScene);
 
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS.css");
@@ -93,12 +105,16 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
     public void setupPropertyChangeListeners(){
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
     }
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
-            window.setScene(new Scene(goalView.getRoot()));
+            window.setScene(goalScene);
+        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
+            profileObs.firePropertyChange(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), null, null);
+            window.setScene(profileScene);
         }
     }
 

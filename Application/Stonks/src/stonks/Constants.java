@@ -157,9 +157,9 @@ public interface Constants {
     /*Wallet*/
 
     /*Property Change Events*/
-    public static enum STONKS_EVENT {GOTO_GOAL_VIEW};
+    public static enum STONKS_EVENT {GOTO_PROFILE_VIEW, GOTO_GOAL_VIEW, GOTO_DASHBOARD_VIEW};
     public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL};
-    public static enum PROFILE_EVENT {};
+    public static enum PROFILE_EVENT {UPDATE_PROFILE_VIEW};
     public static enum DASHBOARD_EVENT {};
 }

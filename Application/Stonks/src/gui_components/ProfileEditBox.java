@@ -1,5 +1,7 @@
 package gui_components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -8,12 +10,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import models.ProfileModel;
 import observables.ProfileObservable;
 import stonks.Constants;
-import static stonks.Constants.PROFILE_EDIT_VIEW_HEIGHT;
-import static stonks.Constants.PROFILE_EDIT_VIEW_WIDTH;
 
-public class ProfileEditBox {
+public class ProfileEditBox implements Constants, PropertyChangeListener{
     private final ProfileObservable profileObs;
     private final BorderPane root;
     
@@ -61,6 +63,15 @@ public class ProfileEditBox {
         
         setupProfileEditBox();
         setupEventListeners();
+        setupPropertyChangeListeners();
+    }
+
+    public BorderPane getRoot() {
+        return root;
+    }
+
+    private void setupPropertyChangeListeners() {
+        profileObs.addPropertyChangeListener(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), this);
     }
     
     private void setupProfileEditBox(){
@@ -166,14 +177,10 @@ public class ProfileEditBox {
         root.setBottom(buttonContainer); 
     }
 
-    public BorderPane getRoot() {
-        return root;
-    }
-
     private int validateInputs(){
         int errorCounter = 0;
 
-        switch(profileObs.verifyData(Constants.PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
+        switch(profileObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
             case EMPTY:
                 errorFirstName.setText("First Name cannot be empty");
                 errorFirstName.setVisible(true);
@@ -189,7 +196,7 @@ public class ProfileEditBox {
                 break;
         }
 
-        switch(profileObs.verifyData(Constants.PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
+        switch(profileObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
             case EMPTY:
                 errorLastName.setText("Last Name cannot be empty");
                 errorLastName.setVisible(true);
@@ -205,7 +212,7 @@ public class ProfileEditBox {
                 break;
         }
 
-        switch(profileObs.verifyData(Constants.PROFILE_FIELD.PASSWORD, txfPassword.getText())){
+        switch(profileObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())){
             case MIN_CHAR:
                 errorPassword.setText("Password has a minimum of 6 characters");
                 errorPassword.setVisible(true);
@@ -221,7 +228,7 @@ public class ProfileEditBox {
                 break;
         }
 
-        switch (profileObs.verifyData(Constants.PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
+        switch (profileObs.verifyData(PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
             case FORMAT:
                 errorColor.setText("Select a color");
                 errorColor.setVisible(true);
@@ -237,13 +244,29 @@ public class ProfileEditBox {
     
     private void setupEventListeners() {
         btnDeleteProfile.setOnMouseClicked((event) -> {
-            DialogBox.display(Constants.DBOX_TYPE.CONFIRM, Constants.DBOX_CONTENT.CONFIRM_DELETE_PROFILE);
+            DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE);
         });
         
         btnSave.setOnMouseClicked((event) -> {
             if (validateInputs() == 0) {
-                DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCCESS_EDIT_PROFILE);
+                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_EDIT_PROFILE);
             }
         });
+    }
+
+    private void setTextFieldValues(ProfileModel authProfile) {
+        try{
+            txfFirstName.setText(authProfile.getFirstName());
+            txfLastName.setText(authProfile.getLastName());
+            txfPassword.setText(authProfile.getPassword());
+            cpPickColor.setValue(Color.valueOf(authProfile.getColor()));
+        }catch(NullPointerException ex){}
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name())) {
+            setTextFieldValues(profileObs.getAuthProfile());
+        }
     }
 }

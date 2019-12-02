@@ -13,7 +13,7 @@ public class ProfileView implements Constants{
     public ProfileView(ProfileObservable profileObs){
         this.profileObs = profileObs;
         root = new HBox();
-        root.getChildren().add(new SideMenu().getRoot());
+        root.getChildren().add(new SideMenu(profileObs.getStonksObs()).getRoot());
         root.getChildren().add(new ProfileEditBox(profileObs).getRoot());
     }
 

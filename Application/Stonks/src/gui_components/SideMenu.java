@@ -14,16 +14,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import observables.StonksObservable;
 import stonks.Constants;
 
 public class SideMenu implements Constants{
-    VBox rootDiv;
+    private final StonksObservable stonksObs;
+    private final VBox rootDiv;
     
-    HBox profileDiv;
-    VBox linkDiv;
-    VBox goalDiv;
+    private HBox profileDiv;
+    private VBox linkDiv;
+    private VBox goalDiv;
+    private Label profileIcon;
+    private Color profileColor;
+    private Color textColor;
+    private VBox profileLinkDiv;
+    private Label profileLink;
+    private Label logoutLink;
+    private Label dashboardLink;
+    private Label goalLink;
+    private PseudoClass last;
     
-    public SideMenu() {
+    public SideMenu(StonksObservable stonksObs) {
+        this.stonksObs = stonksObs;
         rootDiv = new VBox();
         
         rootDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT);
@@ -31,13 +43,10 @@ public class SideMenu implements Constants{
         
         rootDiv.setId("sideMenu");
         
-        setupSideMenu();
-    }
-    
-    private void setupSideMenu(){
         setupProfileDiv();
         setupLinkDiv();
         setupGoalDiv();
+        setupEventListeners();
     }
     
     private void setupProfileDiv(){
@@ -47,14 +56,12 @@ public class SideMenu implements Constants{
         profileDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
         profileDiv.setId("profileDiv");
         
-        Label profileIcon = new Label("U1"/*ADD PROFILE INITIALS*/);
-        
+        profileIcon = new Label("U1"/*ADD PROFILE INITIALS*/);
         profileIcon.setMinSize(75, 75);
         profileIcon.setId("profileIcon");
         
-        Color profileColor = Color.DARKBLUE /*ADD PROFILE COLOR*/;
+        profileColor = Color.DARKBLUE /*ADD PROFILE COLOR*/;
         
-        Color textColor;
         if(((profileColor.getRed() * 0.333) + 
                 (profileColor.getGreen() * 0.333) + 
                 (profileColor.getBlue() * 0.333)) > 0.3){
@@ -66,11 +73,11 @@ public class SideMenu implements Constants{
         profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), new Insets(3))));
         profileIcon.setBorder(new Border(new BorderStroke(Color.valueOf("#111"), BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(5))));
         
-        VBox profileLinkDiv = new VBox();
+        profileLinkDiv = new VBox();
         profileLinkDiv.setId("profileLinkDiv");
         
-        Label profileLink = new Label("Profile");
-        Label logoutLink = new Label("Logout");
+        profileLink = new Label("Profile");
+        logoutLink = new Label("Logout");
         profileLinkDiv.getChildren().addAll(profileLink, logoutLink);
         profileDiv.getChildren().addAll(profileIcon, profileLinkDiv);
         
@@ -84,12 +91,13 @@ public class SideMenu implements Constants{
         linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.50);
         linkDiv.setId("linkDiv");
         
-        Label dashboardLink = new Label("Dashboard");
+        dashboardLink = new Label("Dashboard");
         dashboardLink.setMinWidth(SIDEMENU_WIDTH);
         dashboardLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         
-        PseudoClass last = PseudoClass.getPseudoClass("last");
-        Label goalLink = new Label("Goals");
+        last = PseudoClass.getPseudoClass("last");
+        
+        goalLink = new Label("Goals");
         goalLink.setMinWidth(SIDEMENU_WIDTH);
         goalLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         goalLink.pseudoClassStateChanged(last, true);
@@ -109,5 +117,17 @@ public class SideMenu implements Constants{
     
     public Pane getRoot(){
         return rootDiv;
+    }
+
+    private void setupEventListeners() {
+        profileLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_PROFILE_VIEW);
+        });
+        dashboardLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW);
+        });
+        goalLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW);
+        });
     }
 }
