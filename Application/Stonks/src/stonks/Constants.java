@@ -32,6 +32,7 @@ public interface Constants {
       
         /*SUCCESS MESSAGES*/
         /*To be changed*/ SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_EDIT_PROFILE("Profile edited", "Your profile was successfully created"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
         SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
@@ -158,9 +159,9 @@ public interface Constants {
     /*Wallet*/
 
     /*Property Change Events*/
-    public static enum STONKS_EVENT {GOTO_GOAL_VIEW};
+    public static enum STONKS_EVENT {GOTO_PROFILE_VIEW, GOTO_GOAL_VIEW, GOTO_DASHBOARD_VIEW};
     public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL, EDIT_GOAL};
-    public static enum PROFILE_EVENT {};
+    public static enum PROFILE_EVENT {UPDATE_PROFILE_VIEW};
     public static enum DASHBOARD_EVENT {};
 }

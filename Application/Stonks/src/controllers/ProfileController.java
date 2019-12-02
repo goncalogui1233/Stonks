@@ -179,75 +179,75 @@ public class ProfileController implements Constants {
  
         return 1; 
     } 
-    //Inputs validation 
-    public <T> VALIDATE verifyData(PROFILE_FIELD field, T value) { //verify the data in goal name and objective 
-        try { 
-            switch (field) { 
-                /*FIRST_NAME FIELD VALIDATIONS*/ 
-                case FIRST_NAME: 
-                    if ((((String) value).length() < 1))/*CONSTANT*/ 
-                        return VALIDATE.MIN_CHAR; 
-                    if ((((String) value).length() > 50))/*CONSTANT*/ 
-                        return VALIDATE.MAX_CHAR; 
-                     
-                    return VALIDATE.OK; 
- 
-                /*LAST_NAME FIELD VALIDATIONS*/ 
-                case LAST_NAME: 
-                    if ((((String) value).isEmpty()))/*CONSTANT*/ 
-                        return VALIDATE.MIN_CHAR; 
-                    if ((((String) value).length() > 50))/*CONSTANT*/ 
-                        return VALIDATE.MAX_CHAR; 
-                     
-                    return VALIDATE.OK; 
- 
-                /*SECURITY_QUESTION FIELD VALIDATIONS*/ 
-                case SECURITY_QUESTION: 
-                    if(((String) value).equals(SECURITY_QUESTIONS.PROTOTYPE.getQuestion())) 
-                        return VALIDATE.INVALID_QUESTION; 
-                    return VALIDATE.OK; 
- 
-                /*SECURITY_ANSWER FIELD VALIDATIONS*/ 
-                case SECURITY_ANSWER: 
-                    if ((((String) value).length() < 1))/*CONSTANT*/ 
-                        return VALIDATE.MIN_CHAR; 
-                    if ((((String) value).length() > 50))/*CONSTANT*/ 
-                        return VALIDATE.MAX_CHAR; 
-                     
-                    return VALIDATE.OK; 
- 
-                /*PASSWORD FIELD VALIDATIONS*/ 
-                case PASSWORD: 
-                    if ((((String) value).isEmpty()))/*CONSTANT*/ 
-                        return VALIDATE.OK; 
-                    if ((((String) value).length() < 6))/*CONSTANT*/ 
-                        return VALIDATE.MIN_CHAR; 
-                    if ((((String) value).length() > 50))/*CONSTANT*/ 
-                        return VALIDATE.MAX_CHAR; 
-                     
-                    return VALIDATE.OK; 
-                     
-                /*COLOR FIELD VALIDATIONS*/ 
-                case COLOR: 
-                    Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"); 
-                    Matcher matcher = pattern.matcher(((String) value)); 
- 
-                    if(!matcher.matches()) 
-                        return VALIDATE.FORMAT; 
-                     
-                    return VALIDATE.OK; 
- 
-                default: 
-                    return VALIDATE.UNDEFINED; 
-            } 
-        } catch (ClassCastException ex) { 
-            return VALIDATE.UNDEFINED; 
-        } catch (Exception ex) { 
-            System.out.println(ex); 
- 
-            return VALIDATE.UNDEFINED; 
-        } 
-    } 
+    //Inputs validation
+    public <T> VALIDATE verifyData(PROFILE_FIELD field, T value) { //verify the data in goal name and objective
+        try {
+            switch (field) {
+                /*FIRST_NAME FIELD VALIDATIONS*/
+                case FIRST_NAME:
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
+                    if ((((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
+
+                /*LAST_NAME FIELD VALIDATIONS*/
+                case LAST_NAME:
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
+                    if ((((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
+
+                /*SECURITY_QUESTION FIELD VALIDATIONS*/
+                case SECURITY_QUESTION:
+                    if(((String) value).equals(SECURITY_QUESTIONS.PROTOTYPE.getQuestion()))
+                        return VALIDATE.INVALID_QUESTION;
+                    return VALIDATE.OK;
+
+                /*SECURITY_ANSWER FIELD VALIDATIONS*/
+                case SECURITY_ANSWER:
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
+                    if ((((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
+
+                /*PASSWORD FIELD VALIDATIONS*/
+                case PASSWORD:
+                    if ((((String) value).isEmpty()))/*CONSTANT*/
+                        return VALIDATE.EMPTY;
+                    if ((((String) value).length() < 6))/*CONSTANT*/
+                        return VALIDATE.MIN_CHAR;
+                    if ((((String) value).length() > 50))/*CONSTANT*/
+                        return VALIDATE.MAX_CHAR;
+                    
+                    return VALIDATE.OK;
+                    
+                /*COLOR FIELD VALIDATIONS*/
+                case COLOR:
+                    Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+                    Matcher matcher = pattern.matcher(((String) value));
+
+                    if(!matcher.matches())
+                        return VALIDATE.FORMAT;
+                    
+                    return VALIDATE.OK;
+
+                default:
+                    return VALIDATE.UNDEFINED;
+            }
+        } catch (ClassCastException ex) {
+            return VALIDATE.UNDEFINED;
+        } catch (Exception ex) {
+            System.out.println(ex);
+
+            return VALIDATE.UNDEFINED;
+        }
+    }
  
     public boolean loginProfile(int id, String password) { 
         //Profile can only login if there isnt any other loged profile 

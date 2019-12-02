@@ -2,6 +2,8 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -15,21 +17,28 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
     private final AuthenticationObservable authObs;
     
     //Containers
+    private BorderPane authBox;
+    private VBox titleContainer;
     private VBox formContainer;
-    private BorderPane bpRecoverRoot;
-    private VBox vbTitle;
-    private BorderPane bpOption;
+    private BorderPane optionContainer;
 
+    //Input Divs
+    private VBox securityDiv;
+    
     //Title Labels
     private Label lblTitle;
     private Label lblUserName;
-    private Label lvSecurityQuestion;
-
-    //Label Buttons
-    private Label btnRecover;
-
-    //Text Field
+    private Label lblSecurityQuestion;
+    
+    //Field Inputs
     private TextField txtSecurityAnswer;
+
+    //Error Labels
+    private Label errorSecurityAnswer;
+    
+    //Buttons
+    private Button btnRecover;
+
     
     public PasswordRecoveryBox(AuthenticationObservable authObs) {
         this.authObs = authObs;
@@ -47,74 +56,111 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
     public BorderPane getRoot() {
         return root;
     }
-    
-    private void setupEventListeners(){
-        btnRecover.setOnMouseClicked(e -> {
-            String password = authObs.recoverPassword(txtSecurityAnswer.getText());
-            
-            if(password != null){
-                DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD.setTextExtra(password);
-                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD);
-            }else{
-                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_RECOVER_PASSWORD);
-            }
-        });
-    }
 
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), this);
     }
     
+    private int validateInputs(){
+        int errorCounter = 0;
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txtSecurityAnswer.getText())){
+            case EMPTY:
+                errorSecurityAnswer.setText("Security answer cannot be empty");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorSecurityAnswer.setText("Security answer has a maximum of 50 characters");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityAnswer.setVisible(false);
+                break;
+        }
+        
+        return errorCounter;
+    }
+    
+    private void setupEventListeners(){
+        btnRecover.setOnMouseClicked(e -> {
+            if(validateInputs() == 0){
+                String password = authObs.recoverPassword(txtSecurityAnswer.getText());
+
+                if(password != null){
+                    DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD.setTextExtra(password);
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_RECOVER_PASSWORD);
+                }else{
+                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_RECOVER_PASSWORD);
+                }
+            }
+        });
+    }
+    
     private void setupRecoverPasswordForm(){
-        bpRecoverRoot = new BorderPane();
-        bpRecoverRoot.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
-        bpRecoverRoot.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT);
+        authBox = new BorderPane();
+        authBox.setMinWidth(PROFILE_AUTH_BOX_WIDTH);
+        authBox.setMaxSize(PROFILE_AUTH_BOX_WIDTH, PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT);
         
         lblTitle = new Label("Recover Password");
         lblUserName = new Label();
         lblUserName.setWrapText(true);
-        vbTitle = new VBox();
+        lblUserName.setAlignment(Pos.CENTER);//CHECK
+        titleContainer = new VBox();
         
         formContainer = new VBox();
         
-        lvSecurityQuestion = new Label(/*INSERT PROFILE SECURITY QUESTION*/);
-        lvSecurityQuestion.setWrapText(true);
-        lvSecurityQuestion.setTextAlignment(TextAlignment.JUSTIFY);
+        lblSecurityQuestion = new Label();
+        lblSecurityQuestion.setWrapText(true);
+        lblSecurityQuestion.setTextAlignment(TextAlignment.JUSTIFY);
         
         txtSecurityAnswer = new TextField();
         
-        btnRecover = new Label("Recover");
+        btnRecover = new Button("Recover");
         
-        bpOption = new BorderPane();
+        optionContainer = new BorderPane();
+        
+        /*Initialize error labels*/
+        errorSecurityAnswer = new Label("errorSecurityAnswer");
+        errorSecurityAnswer.setVisible(false);
+        
+        /*Initialize divs*/
+        securityDiv = new VBox();
         
         /*Add the title to the title box*/
-        vbTitle.getChildren().addAll(lblTitle, lblUserName);
+        titleContainer.getChildren().addAll(lblTitle, lblUserName);
         
         /*Add all labels and inputs to the form box*/
-        formContainer.getChildren().addAll(lvSecurityQuestion, txtSecurityAnswer);
+        securityDiv.getChildren().addAll(lblSecurityQuestion, txtSecurityAnswer, errorSecurityAnswer);
+        formContainer.getChildren().addAll(securityDiv);
         
         /*Add the button to the button box*/
-        bpOption.setRight(btnRecover);
+        optionContainer.setRight(btnRecover);
         
         /*Add title on top, formContainer on center, button on bottom*/
-        bpRecoverRoot.setTop(vbTitle);
-        bpRecoverRoot.setCenter(formContainer);
-        bpRecoverRoot.setBottom(bpOption);
+        authBox.setTop(titleContainer);
+        authBox.setCenter(formContainer);
+        authBox.setBottom(optionContainer);
         
         /*Set CSS ID's to nodes*/
-        bpRecoverRoot.setId("recoverRoot");
-        formContainer.setId("recoverVbox");
+        authBox.setId("authBox");
+        lblUserName.setId("titleProfile");
         
         /*Set CSS Classes to nodes*/
-        lblTitle.getStyleClass().add("TitleLabel");
-        lblUserName.getStyleClass().add("UsernameLabel");
-        lvSecurityQuestion.getStyleClass().add("FormLabel");
-        txtSecurityAnswer.getStyleClass().add("textFieldInput");
-        btnRecover.getStyleClass().add("labelButton");
-        vbTitle.getStyleClass().add("hbTitle");
+        authBox.getStyleClass().add("box");
+        formContainer.getStyleClass().add("form");
+        titleContainer.getStyleClass().add("titleBox");
+        
+        securityDiv.getStyleClass().addAll("fieldDiv");
+        lblSecurityQuestion.getStyleClass().add("fieldTitle");
+        txtSecurityAnswer.getStyleClass().add("fieldInput");
+        errorSecurityAnswer.getStyleClass().addAll("fieldError");
+        
+        btnRecover.getStyleClass().addAll("button", "btn-default", "btn-form");
         
         /*Add login container into the root pane*/
-        root.setCenter(bpRecoverRoot);
+        root.setCenter(authBox);
     }
 
     @Override
@@ -124,12 +170,13 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
                     authObs.getProfile(authObs.getViewSelectedProfileId()).getFirstName() 
                     + " "
                     + authObs.getProfile(authObs.getViewSelectedProfileId()).getLastName());
-            lvSecurityQuestion.setText(authObs.getProfile(authObs.getViewSelectedProfileId()).getSecurityQuestion());
+            lblSecurityQuestion.setText(authObs.getProfile(authObs.getViewSelectedProfileId()).getSecurityQuestion());
             resetFields();
         }
     }
 
     private void resetFields() {
         txtSecurityAnswer.setText("");
+        errorSecurityAnswer.setVisible(false);
     }
 }

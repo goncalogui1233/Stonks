@@ -30,6 +30,10 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     }
 
     /*Methods*/
+    public StonksObservable getStonksObs(){
+        return stonksObs;
+    }
+    
     public <T> VALIDATE verifyData(GOAL_FIELD field, T value) {
         return cGoal.verifyData(field, value);
     }

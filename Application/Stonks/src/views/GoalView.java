@@ -131,7 +131,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         viewContent.getChildren().addAll(topContainer, middleContainer); 
         viewContent.setId("goalViewContent"); 
  
-        root.getChildren().addAll(new SideMenu().getRoot(), viewContent); 
+        root.getChildren().addAll(new SideMenu(goalsObs.getStonksObs()).getRoot(), viewContent); 
  
         btnAdd.setOnAction(e -> { 
             form.display(0); 

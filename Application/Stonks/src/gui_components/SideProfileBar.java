@@ -65,6 +65,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
 
             profileIcon = new Label(profileInitials);
             profileIcon.setMinSize(60, 60);
+            profileIcon.setPickOnBounds(false);
 
             profileColor = Color.valueOf(profile.getColor());
 
@@ -107,6 +108,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
     private void setupRegisterButton() {
         registerButton = new Label("+");
         registerButton.setMinSize(70, 70);
+        registerButton.setPickOnBounds(false);
 
         /*Set node properties*/
         registerButton.setTextFill(Color.valueOf("#333"));
