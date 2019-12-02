@@ -43,8 +43,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         setupApp();
         setupWindow();
-        setupPropertyChangeListeners();
-        
+
         /*DialogBox test - REMOVE LATER*/
         DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setExtra("User 1");
 
@@ -77,7 +76,6 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
-        goalsObs = new GoalsObservable(cGoal, stonksObs);
         
         authenticationView = new AuthenticationView(authObs);
         goalView = new GoalView(cGoal);
