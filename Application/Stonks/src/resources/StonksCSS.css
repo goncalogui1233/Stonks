@@ -232,16 +232,16 @@
 }
 
 #sideMenu #linkDiv *:hover{
-    -fx-background-color:#bdbdbd;
+    -fx-background-color:#bdbdbd !important;
     -fx-cursor: hand;
 }
 
 #sideMenu #linkDiv *:pressed{
-    -fx-background-color:#adadad;
+    -fx-background-color:#adadad !important;
 }
 
 #sideMenu #linkDiv *:active{
-    -fx-background-color:#bdbdbd !important;
+    -fx-background-color:#d4d4d4;
 }
 
 
