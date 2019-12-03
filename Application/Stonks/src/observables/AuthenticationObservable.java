@@ -18,6 +18,10 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     }
     
     /*Bridge Methods*/
+    public StonksObservable getStonksObs(){
+        return stonksObs;
+    }
+    
     public HashMap<Integer, ProfileModel> getListProfiles() {
         return stonksObs.getListProfiles();
     }

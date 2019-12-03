@@ -15,21 +15,22 @@ import models.ProfileModel;
 import observables.ProfileObservable;
 import stonks.Constants;
 
-public class ProfileEditBox implements Constants, PropertyChangeListener{
+public class ProfileEditBox implements Constants, PropertyChangeListener {
+
     private final ProfileObservable profileObs;
     private final BorderPane root;
-    
+
     //Containers
-    private HBox titleContainer;
+    private VBox titleContainer;
     private VBox formContainer;
     private HBox buttonContainer;
 
     //Input Divs
     private VBox firstNameDiv;
-    private VBox lastNameDiv;      
+    private VBox lastNameDiv;
     private VBox passwordDiv;
     private VBox colorDiv;
-    
+
     //Title Labels
     private Label lblTitle;
     private Label lblUserName;
@@ -39,17 +40,17 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
     private Label lblColor;
 
     //Field Inputs
-    private TextField txfFirstName; 
+    private TextField txfFirstName;
     private TextField txfLastName;
     private TextField txfPassword;
     private ColorPicker cpPickColor;
-    
+
     //Error Labels
     private Label errorFirstName;
     private Label errorLastName;
     private Label errorPassword;
     private Label errorColor;
-    
+
     //Buttons
     private Button btnDeleteProfile;
     private Button btnSave;
@@ -57,10 +58,10 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
     public ProfileEditBox(ProfileObservable profileObs) {
         this.profileObs = profileObs;
         root = new BorderPane();
-        
-        root.setMinWidth(PROFILE_EDIT_VIEW_WIDTH-6/*CHECK WHY THIS IS NEEDED*/);
-        root.setMaxSize(PROFILE_EDIT_VIEW_WIDTH-6/*CHECK WHY THIS IS NEEDED*/, PROFILE_EDIT_VIEW_HEIGHT);
-        
+
+        root.setMinWidth(PROFILE_EDIT_VIEW_WIDTH - 6/*CHECK WHY THIS IS NEEDED*/);
+        root.setMaxSize(PROFILE_EDIT_VIEW_WIDTH - 6/*CHECK WHY THIS IS NEEDED*/, PROFILE_EDIT_VIEW_HEIGHT);
+
         setupProfileEditBox();
         setupEventListeners();
         setupPropertyChangeListeners();
@@ -71,37 +72,38 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
     }
 
     private void setupPropertyChangeListeners() {
-        profileObs.addPropertyChangeListener(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), this);
+        profileObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
+        profileObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name(), this);
     }
-    
-    private void setupProfileEditBox(){
-        lblTitle = new Label("My Profile");
+
+    private void setupProfileEditBox() {
+        lblTitle = new Label("Edit Profile");
         lblUserName = new Label();
-        titleContainer = new HBox();
-        
+        titleContainer = new VBox();
+
         formContainer = new VBox();
         formContainer.setMaxWidth(400);
         BorderPane.setAlignment(formContainer, Pos.CENTER_LEFT);
-        
+
         lblFirstName = new Label("First Name");
         txfFirstName = new TextField();
-        
+
         lblLastName = new Label("Last Name");
         txfLastName = new TextField();
-        
+
         lblPassword = new Label("Password");
         txfPassword = new TextField();
-        
+
         lblColor = new Label("Color");
         cpPickColor = new ColorPicker();
         cpPickColor.setMinWidth(400);
         cpPickColor.setMaxWidth(400);
-        
+
         buttonContainer = new HBox();
         buttonContainer.setAlignment(Pos.BOTTOM_RIGHT);
         btnDeleteProfile = new Button("Delete Profile");
         btnSave = new Button("Save Changes");
-        
+
         /*Initialize error labels*/
         errorFirstName = new Label("errorFirstName");
         errorFirstName.setVisible(false);
@@ -111,76 +113,76 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
         errorPassword.setVisible(false);
         errorColor = new Label("errorColor");
         errorColor.setVisible(false);
-        
+
         /*Initialize divs*/
         firstNameDiv = new VBox();
         lastNameDiv = new VBox();
         passwordDiv = new VBox();
         colorDiv = new VBox();
-        
+
         /*Add the title to the title box*/
-        titleContainer.getChildren().add(lblTitle);
-        
+        titleContainer.getChildren().addAll(lblTitle, lblUserName);
+
         /*Add all labels and inputs to the form box*/
         firstNameDiv.getChildren().addAll(lblFirstName, txfFirstName, errorFirstName);
         lastNameDiv.getChildren().addAll(lblLastName, txfLastName, errorLastName);
         passwordDiv.getChildren().addAll(lblPassword, txfPassword, errorPassword);
         colorDiv.getChildren().addAll(lblColor, cpPickColor, errorColor);
         formContainer.getChildren().addAll(firstNameDiv, lastNameDiv, passwordDiv, colorDiv);
-        
+
         /*Add delete and save buttons to the button container*/
         buttonContainer.getChildren().addAll(btnDeleteProfile, btnSave);
-                
+
         /*Set CSS ID's to nodes*/
         root.setId("profileBox");
         cpPickColor.setId("colorPicker");
-        
+        lblUserName.setId("titleProfile");
+
         /*Set CSS Classes to nodes*/
         formContainer.getStyleClass().add("form");
         titleContainer.getStyleClass().add("titleBox");
-        
+
         firstNameDiv.getStyleClass().addAll("fieldDiv");
         lastNameDiv.getStyleClass().addAll("fieldDiv");
         passwordDiv.getStyleClass().addAll("fieldDiv");
         colorDiv.getStyleClass().addAll("fieldDiv");
-        
+
         lblFirstName.getStyleClass().add("fieldTitle");
         lblLastName.getStyleClass().add("fieldTitle");
         lblPassword.getStyleClass().add("fieldTitle");
         lblColor.getStyleClass().add("fieldTitle");
-        
+
         txfFirstName.getStyleClass().add("fieldInput");
         txfLastName.getStyleClass().add("fieldInput");
         txfPassword.getStyleClass().add("fieldInput");
         cpPickColor.getStyleClass().add("fieldInput");
-        
+
         errorFirstName.getStyleClass().addAll("fieldError");
         errorLastName.getStyleClass().addAll("fieldError");
         errorPassword.getStyleClass().addAll("fieldError");
         errorColor.getStyleClass().addAll("fieldError");
-        
+
         btnDeleteProfile.getStyleClass().addAll("button", "btn-danger", "btn-form-sharp");
         btnSave.getStyleClass().addAll("button", "btn-default", "btn-form-sharp");
-        
-        lblTitle.getStyleClass().addAll("TitleLabel", "editTitleLabel");
-        lblFirstName.getStyleClass().add("FormLabel");       
+
+        lblFirstName.getStyleClass().add("FormLabel");
         txfFirstName.getStyleClass().add("textFieldInput");
         lblLastName.getStyleClass().add("FormLabel");
         txfLastName.getStyleClass().add("textFieldInput");
         lblPassword.getStyleClass().add("FormLabel");
         txfPassword.getStyleClass().add("textFieldInput");
         lblColor.getStyleClass().add("FormLabel");
-        
+
         /*Add title on top, formContainer on center, button on bottom*/
-        root.setTop(titleContainer);    
+        root.setTop(titleContainer);
         root.setCenter(formContainer);
-        root.setBottom(buttonContainer); 
+        root.setBottom(buttonContainer);
     }
 
-    private int validateInputs(){
+    private int validateInputs() {
         int errorCounter = 0;
 
-        switch(profileObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
+        switch (profileObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())) {
             case EMPTY:
                 errorFirstName.setText("First Name cannot be empty");
                 errorFirstName.setVisible(true);
@@ -196,7 +198,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
                 break;
         }
 
-        switch(profileObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
+        switch (profileObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())) {
             case EMPTY:
                 errorLastName.setText("Last Name cannot be empty");
                 errorLastName.setVisible(true);
@@ -212,7 +214,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
                 break;
         }
 
-        switch(profileObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())){
+        switch (profileObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())) {
             case MIN_CHAR:
                 errorPassword.setText("Password has a minimum of 6 characters");
                 errorPassword.setVisible(true);
@@ -238,34 +240,44 @@ public class ProfileEditBox implements Constants, PropertyChangeListener{
                 errorColor.setVisible(false);
                 break;
         }
-        
+
         return errorCounter;
     }
-    
+
     private void setupEventListeners() {
-        btnDeleteProfile.setOnMouseClicked((event) -> {
-            DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE);
+        btnDeleteProfile.setOnMouseClicked(e -> {
+            if (DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE) == DBOX_RETURN.YES) {
+                profileObs.removeProfile();
+            }
         });
-        
-        btnSave.setOnMouseClicked((event) -> {
+
+        btnSave.setOnMouseClicked(e -> {
             if (validateInputs() == 0) {
-                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_EDIT_PROFILE);
+                if (profileObs.editProfile(txfFirstName.getText(), txfLastName.getText(), txfPassword.getText(), String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_EDIT_PROFILE);
+                }
             }
         });
     }
 
     private void setTextFieldValues(ProfileModel authProfile) {
-        try{
+        try {
+            lblUserName.setText(authProfile.getFirstName()
+                    + " "
+                    + authProfile.getLastName());
             txfFirstName.setText(authProfile.getFirstName());
             txfLastName.setText(authProfile.getLastName());
             txfPassword.setText(authProfile.getPassword());
             cpPickColor.setValue(Color.valueOf(authProfile.getColor()));
-        }catch(NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name())) {
+        if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
+            setTextFieldValues(profileObs.getAuthProfile());
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name())) {
             setTextFieldValues(profileObs.getAuthProfile());
         }
     }
