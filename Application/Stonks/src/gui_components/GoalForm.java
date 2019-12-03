@@ -45,6 +45,7 @@ public class GoalForm implements Constants {
     //Containers 
     private BorderPane rootLayout;
     private BorderPane topLayout;
+    private VBox titleContainer;
     private Pane imageContainer;
     private ImageView closeBtn;
     private VBox form;
@@ -57,6 +58,7 @@ public class GoalForm implements Constants {
 
     //Labels 
     private Label title;
+    private Label subtitle;
     private Label lblName;
     private Label errorName;
     private Label lblObjective;
@@ -87,7 +89,7 @@ public class GoalForm implements Constants {
         goalForm.initModality(Modality.APPLICATION_MODAL);
         /*Unables clicks outside of this window*/
         goalForm.setWidth(300);
-        goalForm.setHeight(370);
+        goalForm.setHeight(425);
         goalForm.setAlwaysOnTop(true);
         /*Cant be onfocused (application wise)*/
 
@@ -111,10 +113,18 @@ public class GoalForm implements Constants {
         topLayout.getStyleClass().addAll("topLayout");
 
         //Title 
+        titleContainer = new VBox();
         title = new Label("Adding Goal");
+        title.getStyleClass().addAll("title");
+        
         if (goalId > 0) {
             try {
-                title.setText("Editting " + goalsObs.getGoal(goalId).getName());
+                title.setText("Editting");
+                subtitle = new Label(goalsObs.getGoal(goalId).getName());
+                subtitle.getStyleClass().add("subtitle");
+                subtitle.wrapTextProperty().setValue(true);
+                subtitle.setMinHeight(50);
+                subtitle.setMaxWidth(150);
             } catch (AuthenticationException ex) {
                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                 return false;
@@ -122,10 +132,14 @@ public class GoalForm implements Constants {
                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
                 return false;
             }
-            title.wrapTextProperty().set(true);
 
         }
-        title.getStyleClass().addAll("title");
+        
+        titleContainer.getChildren().add(title);
+        if(goalId > 0){
+            titleContainer.getChildren().add(subtitle);
+        }
+        
 
         //Close button 
         imageContainer = new Pane();
@@ -139,7 +153,7 @@ public class GoalForm implements Constants {
             goalForm.close();
         });
 
-        topLayout.setLeft(title);
+        topLayout.setLeft(titleContainer);
         topLayout.setRight(imageContainer);
 
         //Form 
@@ -394,7 +408,7 @@ public class GoalForm implements Constants {
                             try {
                                 isGoalCreated = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                goalForm.close(); 
+                                goalForm.close();
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             } catch (GoalNotFoundException ex) {
@@ -404,7 +418,7 @@ public class GoalForm implements Constants {
                             try {
                                 isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
-                                goalForm.close(); 
+                                goalForm.close();
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             }
@@ -415,7 +429,7 @@ public class GoalForm implements Constants {
                             try {
                                 isGoalCreated = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                goalForm.close(); 
+                                goalForm.close();
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             } catch (GoalNotFoundException ex) {
@@ -425,7 +439,7 @@ public class GoalForm implements Constants {
                             try {
                                 isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
-                                goalForm.close(); 
+                                goalForm.close();
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             }
