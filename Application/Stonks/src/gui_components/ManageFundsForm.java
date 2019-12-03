@@ -30,6 +30,7 @@ public class ManageFundsForm {
    
     private int goalID = 0;
     private final GoalsObservable goalsObs; 
+    private int valueForAccom;
     
     private Stage fundsForm;
     
@@ -56,12 +57,14 @@ public class ManageFundsForm {
     private Button btnsubmit;
     
     public ManageFundsForm(GoalsObservable goalsObs) { 
-        this.goalsObs = goalsObs; 
+        this.goalsObs = goalsObs;
     } 
     
     public void display(int goalID){
         this.goalID = goalID;
-        //System.out.println(goalID);
+        
+        this.valueForAccom = goalsObs.getGoal(goalID).getWallet().getSavedMoney();
+        
         fundsForm = new Stage();
         
         fundsForm.initStyle(StageStyle.TRANSPARENT); 
@@ -157,11 +160,10 @@ public class ManageFundsForm {
         
         imagePlusButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             String txt = value.getText();
-            if(txt.isEmpty())
-                value.setText("1");
-            else{
+            if(!txt.isEmpty()){
                 Integer i = Integer.parseInt(txt);
-                value.setText(String.valueOf(i + 1)); 
+                valueForAccom += i;
+                accomplished.setText("Accomplished: " + valueForAccom + "€"); 
             }
         });
         
@@ -171,9 +173,12 @@ public class ManageFundsForm {
         
         imageSubButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             String txt = value.getText();
-            if(!txt.isEmpty() && !txt.equals("0")){
+            if(!txt.isEmpty()){
                 Integer i = Integer.parseInt(txt);
-                value.setText(String.valueOf(i - 1)); 
+                if(valueForAccom - i >= 0){
+                    valueForAccom -= i;
+                    accomplished.setText("Accomplished: " + valueForAccom + "€");
+                }
             }
         });
         
@@ -188,7 +193,7 @@ public class ManageFundsForm {
         //label Accomplished
         accomplished = new Label();
         accomplished.getStyleClass().addAll("fieldTitle");
-        accomplished.setText("Accomplished: " + goalsObs.getGoal(goalID).getWallet().getSavedMoney() + "€");
+        accomplished.setText("Accomplished: " + valueForAccom + "€");
         
         fundsDiv.getChildren().addAll(value, buttons, errorFunds, objective, accomplished);
         
@@ -240,9 +245,18 @@ public class ManageFundsForm {
             
             
             if(errors == 0)*/
-                goalsObs.updateWallet(goalID, Integer.parseInt(value.getText()));
-                accomplished.setText("Accomplished: " + goalsObs.getGoal(goalID).getWallet().getSavedMoney() + "€");
+            if(valueForAccom > goalsObs.getGoal(goalID).getWallet().getSavedMoney()) //if the value on the label is bigger, 
+                valueForAccom -= goalsObs.getGoal(goalID).getWallet().getSavedMoney();  //than he take off what is already saved
             
+            goalsObs.updateWallet(goalID, valueForAccom);
+            
+            Constants.DBOX_CONTENT content; 
+            content = Constants.DBOX_CONTENT.SUCESS_UPDATE_WALLET; 
+            content.setSubExtra(goalsObs.getGoal(goalID).getName()); 
+            
+            DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCESS_UPDATE_WALLET);
+            
+            fundsForm.close();
         });
     }
     

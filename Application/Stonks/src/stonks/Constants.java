@@ -37,6 +37,7 @@ public interface Constants {
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
         SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
+        SUCESS_UPDATE_WALLET("Wallet Updated", "The value has been updated succesfully"),
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),

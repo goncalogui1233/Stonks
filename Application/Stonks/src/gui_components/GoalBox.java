@@ -202,11 +202,6 @@ public class GoalBox implements Constants {
         btnFunds.setOnAction(new EventHandler<ActionEvent>(){
            @Override
            public void handle(ActionEvent e){
-               
-               DBOX_CONTENT content; 
-               content = DBOX_CONTENT.CONFIRM_DELETE_GOAL; 
-               content.setSubExtra(goal.getName()); 
-               
                ManageFundsForm f = new ManageFundsForm(goalsObs);
                f.display(goal.getId());
            }
