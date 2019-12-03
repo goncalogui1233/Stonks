@@ -73,6 +73,16 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
 
         return ans;
     }
+    
+    public boolean updateWallet(int id, int value){
+        boolean ans = cGoal.getGoal(id).getWallet().setSavedMoney(value);
+        
+        /*if(ans){
+            firePropertyChange(GOAL_EVENT.UPDATE_WALLET.name(), null, null);
+        }*/
+        
+        return ans;  
+    }
 
     /*Getters*/
     public ProfileModel getAuthProfile() {

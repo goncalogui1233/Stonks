@@ -33,8 +33,18 @@ public class WalletModel implements Serializable{
         return savedMoney;
     }
 
-    public void setSavedMoney(int savedMoney) {
-        this.savedMoney = savedMoney;
+    public boolean setSavedMoney(int savedMoney) {
+        if(firstDepositDate == null)
+            firstDepositDate = LocalDate.now();
+        else{ 
+            lastDepositDate = firstDepositDate;
+            firstDepositDate = LocalDate.now();
+        }
+        System.out.println("l: " + this.savedMoney);
+        this.savedMoney += savedMoney;
+        System.out.println("A: " + this.savedMoney);
+        
+        return true;
     }
 
     public LocalDate getFirstDepositDate() {
