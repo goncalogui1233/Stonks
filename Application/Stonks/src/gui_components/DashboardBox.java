@@ -25,7 +25,7 @@ import static stonks.Constants.APP_WIDTH;
  *
  * @author Bizarro
  */
-public class DashboardBox extends Application implements Constants{
+public class DashboardBox implements Constants{
     private VBox root;
     private Label lbTitle;
     private Label lbSavings;
@@ -34,7 +34,7 @@ public class DashboardBox extends Application implements Constants{
     private final Label lbDeadlines;
     
     
-    public DashboardBox(/*GoalController controller*/) {
+    public DashboardBox(GoalController controller) {
         root = new VBox();
         root.setPrefHeight(DASHBOARD_VIEW_WIDTH/2);
         root.setPrefHeight(DASHBOARD_VIEW_HEIGHT);
@@ -46,11 +46,7 @@ public class DashboardBox extends Application implements Constants{
         lbDeadlines = new Label();
         //lbDeadlines = generateDeadlinesLabel(controller.getGoalsWithDeadline());
         
-        Map<String, Integer> map = new HashMap<>();
-        map.put("Bike",50);
-        map.put("Toy",50);
         pieChart = new PieChart();
-        pieChart = generatePieChart(map);
         //pieChart = generatePieChart(controller.getListOfUncomplichedGoals());
         
         root.getChildren().addAll(lbTitle,lbSavings,pieChart,lbDeadlinesTitle,lbDeadlines);
@@ -72,17 +68,10 @@ public class DashboardBox extends Application implements Constants{
         }
         return new Label(str);
     }
-    
-        public static void main(String[] args){
-           launch(args);
-	
-    }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(root,APP_WIDTH,APP_HEIGHT));
-        primaryStage.show();
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public VBox getRoot() {
+        return root;
     }
+    
     
 }
