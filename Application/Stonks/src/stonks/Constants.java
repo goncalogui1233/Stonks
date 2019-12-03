@@ -23,6 +23,8 @@ public interface Constants {
 
     public static enum DBOX_CONTENT {
         /*ERROR MESSAGES*/
+        ERROR_AUTH("Unable to fulfill your request", "Your profile isn't authenticated, please sign in to perform your action"),
+        ERROR_GOAL_NOTFOUND("Unable to fulfill your request", "The requested goal doesn't exist"),
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while processing your request. The goal wasn't created."),
         ERROR_GOAL_DELETE("Unable to delete the goal", "An error occurred while processing your request. The goal wasn't deleted."),

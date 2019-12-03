@@ -6,6 +6,7 @@ import controllers.GoalController;
 import controllers.ProfileController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -57,6 +58,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         setupApp();
         setupWindow();
         setupPropertyChangeListeners();
+        
 
         /*DialogBox test - REMOVE LATER*/
         //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
@@ -73,9 +75,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         
 //        populateApp(); /*Remove later*/
         
-        ProfileModel.setData(data);
-        GoalModel.setData(data);
-        WalletModel.setData(data);
+        //ProfileModel.setData(data);
+        //WalletModel.setData(data);
 
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);

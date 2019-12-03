@@ -5,6 +5,10 @@
  */ 
 package gui_components; 
  
+import exceptions.AuthenticationException;
+import exceptions.GoalNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.css.PseudoClass; 
 import javafx.event.ActionEvent; 
 import javafx.event.EventHandler; 
@@ -171,7 +175,13 @@ public class GoalBox implements Constants {
                 if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) { 
                     boolean isGoalDeleted = false; 
  
-                    isGoalDeleted = goalsObs.removeGoal(goal.getId()); 
+                    try { 
+                        isGoalDeleted = goalsObs.removeGoal(goal.getId());
+                    } catch (AuthenticationException ex) {
+                         DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+                    } catch (GoalNotFoundException ex) {
+                         DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+                    }
  
                     if (isGoalDeleted) { 
                         DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE); 

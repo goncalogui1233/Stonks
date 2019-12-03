@@ -1,5 +1,8 @@
 package controllers;
 
+import exceptions.AuthenticationException;
+import exceptions.EmptyDepositException;
+import exceptions.GoalNotFoundException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import stonks.StonksData;
@@ -18,7 +21,7 @@ public class GoalController implements Constants {
         this.data = data;
     }
 
-    public int getNextId() {
+    public int getNextId() throws AuthenticationException {
 
         try {
             /*Check if the authenticated profile has goals*/
@@ -39,13 +42,13 @@ public class GoalController implements Constants {
 
             /*If the authenticated profile doesn't have any goals, the id will be 1*/
             return 1;
-        } catch (Exception ex) {
-            return -1;
+        } catch (NullPointerException ex) {
+            throw new AuthenticationException();
         }
 
     }
 
-    public GoalModel getGoal(int id) {
+    public GoalModel getGoal(int id) throws AuthenticationException, GoalNotFoundException {
         /*If the authenticated profile has goals*/
         try {
             if (data.getAuthProfile().hasGoals()) {
@@ -55,16 +58,17 @@ public class GoalController implements Constants {
                         return goal;
                     }
                 }
-            }
-        } catch (Exception ex) {
-            return null;
-        }
 
-        /*If the goal wasn't found returns null*/
-        return null;
+            }
+
+            throw new GoalNotFoundException();
+
+        } catch (NullPointerException ex) {
+            throw new AuthenticationException();
+        }
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) {
+    public boolean createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
 
         /*A profile must be authenticated to create a goal*/
         try {
@@ -82,8 +86,7 @@ public class GoalController implements Constants {
                 }
 
                 /*Creates a goal and assign an id*/
-                GoalModel newGoal = new GoalModel(name, objective, deadline);
-                newGoal.setId(this.getNextId());
+                GoalModel newGoal = new GoalModel(getNextId(), name, objective, deadline);
 
                 /*Adds the goal to the current profile goals list*/
                 data.getAuthProfile().getGoals().put(newGoal.getId(), newGoal);
@@ -94,15 +97,15 @@ public class GoalController implements Constants {
                 return true;
             }
 
-        } catch (Exception ex) {
+        } catch (NullPointerException ex) {
             /*If the profile isn't authenticated, it will catch a NullPointerException*/
-            return false;
+            throw new AuthenticationException();
         }
 
         return false;
     }
 
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
+    public boolean editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
         try {
             /*Checks if the inputs recevied by argument are in the correct format*/
@@ -126,23 +129,25 @@ public class GoalController implements Constants {
                 data.updateDatabase();
                 return true;
             }
-        } catch (Exception ex) {
-            return false;
+        } catch (NullPointerException ex) {
+            throw new AuthenticationException();
+        } catch (GoalNotFoundException ex) {
+            throw ex;
         }
 
         return false;
     }
 
-    public boolean removeGoal(int id) {
+    public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
         try {
 
-            data.getAuthProfile().getGoals().remove(id);
+            data.getAuthProfile().getGoals().remove(getGoal(id).getId());
 
             /*UPDATE DATABASE*/
             data.updateDatabase();
             return true;
-        } catch (NullPointerException ex) {
-            return false;
+        } catch (AuthenticationException | GoalNotFoundException ex) {
+            throw ex;
         }
     }
 
@@ -194,49 +199,68 @@ public class GoalController implements Constants {
         }
     }
 
-    public int getGoalProgress(int id) {
+    public float getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException {
         try {
-            int objective = getGoal(id).getObjective();
+            int objective = this.getGoal(id).getObjective();
             int currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
 
             /*Returns the value in percentage (%)*/
             return (currentSavedMoney * objective) / 100;
 
-        } catch (NullPointerException ex) {
-            /*If the goals doesnt exist*/
-            return -1;
+        } catch (AuthenticationException | GoalNotFoundException ex) {
+            /*If the goals doesnt exist or the profile isn't authenticated*/
+            throw ex;
 
         }
     }
 
-    public boolean manageGoalFunds(int id, int updateValue) {
+    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();
 
         try {
-            getGoal(id).getWallet().setSavedMoney(updateValue);
+
+            GoalModel goal = getGoal(id);
+
             /*If a deposit was never made*/
-            if (getGoal(id).getWallet().getFirstDepositDate() == null) {
+            if (goal.getWallet().getFirstDepositDate() == null) {
                 /*Updates the first deposit date*/
-                getGoal(id).getWallet().setFirstDepositDate(date);
+                goal.getWallet().setFirstDepositDate(date);
                 /*And the last deposit date*/
-                getGoal(id).getWallet().setLastDepositDate(date);
+                goal.getWallet().setLastDepositDate(date);
 
             } else {
                 /*If the first deposit was already made, only the updates last deposit date*/
-                getGoal(id).getWallet().setLastDepositDate(date);
+                goal.getWallet().setLastDepositDate(date);
 
             }
+
+            if (updateValue > 0) {
+
+                if (goal.getWallet().getSavedMoney() + updateValue > goal.getObjective()) {
+                    return false;
+                }
+
+                goal.getWallet().addMoney(updateValue);
+            } else {
+
+                if (goal.getWallet().getSavedMoney() - Math.abs(updateValue) < 0) {
+                    return false;
+                }
+
+                goal.getWallet().removeMoney(Math.abs(updateValue));
+            }
+
             return true;
         } catch (NullPointerException ex) {
             return false;
         }
     }
 
-    public LocalDate getEstimatedDate(int id) {
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
         try {
             GoalModel goal = getGoal(id);
-            
+
             /*Saving Rate*/
             LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
             LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
@@ -261,8 +285,8 @@ public class GoalController implements Constants {
             today.plusDays(countDays);
 
             return today;
-        } catch (NullPointerException ex) { }
-
-        return null;
+        } catch (AuthenticationException | GoalNotFoundException | EmptyDepositException ex) {
+            throw ex;
+        }
     }
 }
