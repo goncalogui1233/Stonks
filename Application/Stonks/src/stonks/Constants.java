@@ -157,6 +157,7 @@ public interface Constants {
     public static final int GOAL_BOX_HEIGHT = 125;
 
     /*Wallet*/
+    
 
     /*Property Change Events*/
     public static enum STONKS_EVENT {GOTO_PROFILE_VIEW, GOTO_GOAL_VIEW, GOTO_DASHBOARD_VIEW};
