@@ -85,6 +85,10 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     public GoalModel getGoal(int id) throws AuthenticationException, GoalNotFoundException {
         return cGoal.getGoal(id);
     }
+    
+     public float getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
+         return cGoal.getGoalProgress(id);
+     }
 
     public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
         return cGoal.getEstimatedDate(id);

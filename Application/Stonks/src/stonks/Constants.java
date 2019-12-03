@@ -156,7 +156,7 @@ public interface Constants {
     public static final int GOAL_VIEW_HEIGHT = APP_HEIGHT;
     public static final int GOALS_CONTAINER_WIDTH = GOAL_VIEW_WIDTH - 160 - 10;
     public static final int GOAL_BOX_WIDTH = GOALS_CONTAINER_WIDTH - 40;
-    public static final int GOAL_BOX_HEIGHT = 125;
+    public static final int GOAL_BOX_HEIGHT = 160;
 
     /*Wallet*/
 
