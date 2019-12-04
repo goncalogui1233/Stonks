@@ -529,22 +529,28 @@
 }*/
 
 #goalBox #topContainer{
-    -fx-padding:10px;
-    -fx-background-color: #fafafa;
+    /*-fx-padding:10px;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color:#e0e0e0;
+    -fx-border-color:#e0e0e0;*/
+    -fx-padding: 10 0 0 0;
+    -fx-background-color: #fafafa;
     -fx-background-radius: 5px 5px 0 0;
 }
 
 #goalBox #topContainer .title{
+    -fx-padding: 10 0 15 10;
     -fx-font-size: 14px;
     -fx-text-fill: #616161;
     -fx-font-weight: bold;
 }
 
-#goalBox #topContainer .progress-bar{
+#goalBox #topContainer .progress-bar > *{
     -fx-accent: #66bb6a;
     -fx-padding: 8 0 0 0;
+    -fx-border-width:0 0 0 0;
+    -fx-border-color:#e0e0e0;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
 }
 
 #goalBox .row{

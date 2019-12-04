@@ -4,9 +4,13 @@ import com.sun.javafx.css.StyleManager;
 import controllers.DashboardController;
 import controllers.GoalController;
 import controllers.ProfileController;
+import exceptions.AuthenticationException;
+import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -24,13 +28,13 @@ import views.ProfileView;
 public class Stonks extends Application implements Constants, PropertyChangeListener {
 
     private Stage window;
-    private StonksData data;  
-    
+    private StonksData data;
+
     /*Scenes*/
     private Scene authScene;
     private Scene profileScene;
     private Scene goalScene;
-    
+
     /*Observables*/
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
@@ -41,7 +45,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private ProfileController cProfile;
     private DashboardController cDashboard;
     private GoalController cGoal;
-  
+
     /*Views*/
     private AuthenticationView authenticationView;
     private ProfileView profileView;
@@ -58,7 +62,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         setupApp();
         setupWindow();
         setupPropertyChangeListeners();
-        
+
 
         /*DialogBox test - REMOVE LATER*/
         //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
@@ -72,24 +76,23 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
         cGoal = new GoalController(data);
-        
+
 //        populateApp(); /*Remove later*/
-        
         //ProfileModel.setData(data);
         //WalletModel.setData(data);
-
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
-    
+
         authenticationView = new AuthenticationView(authObs);
         profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
-        
+
         authScene = new Scene(authenticationView.getRoot());
         profileScene = new Scene(profileView.getRoot());
         goalScene = new Scene(goalView.getRoot());
+
     }
 
     public void setupWindow() {
@@ -117,7 +120,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
             goalView.displayProfileGoals();/*CHECK LATER - GOAL VIEW CAN BE NOTIFIED BY STONKS OBS*/
             window.setScene(goalScene);
-        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
             profileObs.firePropertyChange(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), null, null);
             window.setScene(profileScene);
         }
@@ -125,11 +128,11 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 
     /*Remove later*/
     private void populateApp() {
-        cProfile.createProfile("Ricardo", 
-                "Pereira", 
-                SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(), 
-                "kekkek", 
-                "kekkek", 
+        cProfile.createProfile("Ricardo",
+                "Pereira",
+                SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(),
+                "kekkek",
+                "kekkek",
                 "#d3d9f1");
     }
 }

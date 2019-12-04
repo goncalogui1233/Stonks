@@ -101,8 +101,8 @@ public class GoalBox implements Constants {
         //Goal progress bar
         try {
             pbGoalProgress = new ProgressBar(goalsObs.getGoalProgress(goal.getId()) + 0.5);
-            pbGoalProgress.setMinSize(GOAL_BOX_WIDTH - 30, 30);
-            pbGoalProgress.setMaxSize(GOAL_BOX_WIDTH - 30, 30);
+            pbGoalProgress.setMinSize(GOAL_BOX_WIDTH - 2, 20);
+            pbGoalProgress.setMaxSize(GOAL_BOX_WIDTH - 2, 20);
             topContainer.getChildren().add(pbGoalProgress);
         } catch (AuthenticationException ex) {
             DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
