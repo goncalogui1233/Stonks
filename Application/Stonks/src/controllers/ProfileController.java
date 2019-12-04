@@ -58,7 +58,6 @@ public class ProfileController implements Constants {
 //            System.out.println(newProfile.toString()); 
             data.getListProfiles().put(newProfile.getId(), newProfile);
 
-            /*UPDATE DATABASE*/
             data.updateDatabase();
             return true;
         }
@@ -83,6 +82,8 @@ public class ProfileController implements Constants {
         data.getListProfiles().get(profileId).setLastName(lastName);
         data.getListProfiles().get(profileId).setPassword(password);
         data.getListProfiles().get(profileId).setColor(color);
+        
+        data.updateDatabase();
 
         return true;
     }
@@ -94,7 +95,7 @@ public class ProfileController implements Constants {
             }
             data.getListProfiles().remove(profileId);
 
-            /*UPDATE DATABASE*/
+            data.updateDatabase();
             return true;
         } catch (NullPointerException ex) {
             return false;

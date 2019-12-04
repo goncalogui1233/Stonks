@@ -246,6 +246,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener {
 
     private void setupEventListeners() {
         btnDeleteProfile.setOnMouseClicked(e -> {
+            DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra(profileObs.getAuthProfile().getFirstName() + " " + profileObs.getAuthProfile().getLastName());
             if (DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE) == DBOX_RETURN.YES) {
                 profileObs.removeProfile();
             }
