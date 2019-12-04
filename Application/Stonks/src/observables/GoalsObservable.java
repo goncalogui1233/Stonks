@@ -6,6 +6,9 @@
 package observables;
 
 import controllers.GoalController;
+import exceptions.AuthenticationException;
+import exceptions.EmptyDepositException;
+import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -38,7 +41,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return cGoal.verifyData(field, value);
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) {
+    public boolean createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
 
         boolean ans = cGoal.createGoal(name, objective, deadline);
 
@@ -51,7 +54,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
-    public boolean removeGoal(int id) {
+    public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
         boolean ans = cGoal.removeGoal(id);
 
         if (ans) {
@@ -61,7 +64,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
+    public boolean editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
         boolean ans = cGoal.editGoal(id, name, objective, deadline);
 
@@ -79,11 +82,15 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return stonksObs.getAuthProfile();
     }
 
-    public GoalModel getGoal(int id) {
+    public GoalModel getGoal(int id) throws AuthenticationException, GoalNotFoundException {
         return cGoal.getGoal(id);
     }
+    
+     public float getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
+         return cGoal.getGoalProgress(id);
+     }
 
-    public LocalDate getEstimatedDate(int id) {
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
         return cGoal.getEstimatedDate(id);
     }
 

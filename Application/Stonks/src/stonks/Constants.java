@@ -23,6 +23,8 @@ public interface Constants {
 
     public static enum DBOX_CONTENT {
         /*ERROR MESSAGES*/
+        ERROR_AUTH("Unable to fulfill your request", "Your profile isn't authenticated, please sign in to perform your action"),
+        ERROR_GOAL_NOTFOUND("Unable to fulfill your request", "The requested goal doesn't exist"),
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while processing your request. The goal wasn't created."),
         ERROR_GOAL_DELETE("Unable to delete the goal", "An error occurred while processing your request. The goal wasn't deleted."),
@@ -153,7 +155,7 @@ public interface Constants {
     public static final int GOAL_VIEW_HEIGHT = APP_HEIGHT;
     public static final int GOALS_CONTAINER_WIDTH = GOAL_VIEW_WIDTH - 160 - 10;
     public static final int GOAL_BOX_WIDTH = GOALS_CONTAINER_WIDTH - 40;
-    public static final int GOAL_BOX_HEIGHT = 125;
+    public static final int GOAL_BOX_HEIGHT = 160;
 
     /*Wallet*/
 
