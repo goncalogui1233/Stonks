@@ -232,16 +232,16 @@
 }
 
 #sideMenu #linkDiv *:hover{
-    -fx-background-color:#bdbdbd;
+    -fx-background-color:#bdbdbd !important;
     -fx-cursor: hand;
 }
 
 #sideMenu #linkDiv *:pressed{
-    -fx-background-color:#adadad;
+    -fx-background-color:#adadad !important;
 }
 
 #sideMenu #linkDiv *:active{
-    -fx-background-color:#bdbdbd !important;
+    -fx-background-color:#d4d4d4;
 }
 
 
@@ -284,9 +284,6 @@
 
 
 /*Auth*/
-#authBox{
-}
-
 #authBox .titleBox, 
 #profileBox .titleBox{
     -fx-alignment: center; 
@@ -295,18 +292,19 @@
     -fx-font-size: 20px;
 }
 
-#profileBox .titleBox{
-    -fx-alignment: CENTER_LEFT; 
-}
-
 #authBox .titleBox #titleProfile{
     -fx-padding: 5px 0px 0px 0px;
     -fx-font-size: 12px;
 }
 
-#authBox .formBox{
+#profileBox .titleBox{
+    -fx-alignment: CENTER_LEFT; 
 }
 
+#profileBox .titleBox #titleProfile{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-size: 12px;
+}
 
 /*
 #registerVbox {
@@ -511,6 +509,11 @@
     -fx-font-weight: bold;
 }
 
+#goalForm .topLayout .subtitle{
+    -fx-font-size: 14px;
+    -fx-text-fill: #616161;
+}
+
 #goalForm .form .currency{
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -524,19 +527,48 @@
 }*/
 
 #goalBox #topContainer{
-    -fx-padding:10px;
-    -fx-background-color: #fafafa;
+    /*-fx-padding:10px;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color:#e0e0e0;
+    -fx-border-color:#e0e0e0;*/
+    -fx-padding: 10 0 0 0;
+    -fx-background-color: #fafafa;
     -fx-background-radius: 5px 5px 0 0;
 }
 
 #goalBox #topContainer .title{
+    -fx-padding: 10 0 15 10;
     -fx-font-size: 14px;
     -fx-text-fill: #616161;
     -fx-font-weight: bold;
 }
 
+/*#goalBox #topContainer .progress-bar > *{
+    -fx-accent: #66bb6a;
+    -fx-padding: 8 0 0 0;
+    -fx-border-width:0 0 0 0;
+    -fx-border-color:#e0e0e0;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}*/
+.progress-bar {
+    -fx-indeterminate-bar-length: 0;
+    -fx-indeterminate-bar-escape: false;
+    -fx-indeterminate-bar-flip: false;
+    -fx-indeterminate-bar-animation-time: 0;
+}
+.progress-bar > .bar {
+    -fx-background-color: #28a745;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+.progress-bar > .track {
+      -fx-background-color: 
+          -fx-shadow-highlight-color,
+          linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
 #goalBox .row{
     -fx-padding:10px;
 }

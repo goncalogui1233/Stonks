@@ -6,9 +6,6 @@ import stonks.StonksData;
 
 public class GoalModel implements Serializable {
 
-    private static int idCounter = 0;
-    private static StonksData data;
-
     private int id;
     private final LocalDate creationDate;
     private LocalDate achievementDate;
@@ -18,21 +15,17 @@ public class GoalModel implements Serializable {
 
     private final WalletModel wallet;
 
-    public GoalModel(String name, int objective, LocalDate deadline) {
+    public GoalModel(int id, String name, int objective, LocalDate deadline) {
+        this.id = id;
         this.name = name;
         this.objective = objective;
         if (deadline != null) {
             this.deadlineDate = deadline;
         }
 
-        id = idCounter++;
         creationDate = LocalDate.now();
 
         wallet = new WalletModel();
-    }
-
-    public static void setData(StonksData data) {
-        GoalModel.data = data;
     }
 
     public int getId() {
