@@ -542,15 +542,33 @@
     -fx-font-weight: bold;
 }
 
-#goalBox #topContainer .progress-bar > *{
+/*#goalBox #topContainer .progress-bar > *{
     -fx-accent: #66bb6a;
     -fx-padding: 8 0 0 0;
     -fx-border-width:0 0 0 0;
     -fx-border-color:#e0e0e0;
     -fx-background-insets: 0 !important;
     -fx-background-radius: 0 !important;
+}*/
+.progress-bar {
+    -fx-indeterminate-bar-length: 0;
+    -fx-indeterminate-bar-escape: false;
+    -fx-indeterminate-bar-flip: false;
+    -fx-indeterminate-bar-animation-time: 0;
 }
-
+.progress-bar > .bar {
+    -fx-background-color: #28a745;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+.progress-bar > .track {
+      -fx-background-color: 
+          -fx-shadow-highlight-color,
+          linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
 #goalBox .row{
     -fx-padding:10px;
 }

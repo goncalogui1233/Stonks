@@ -86,7 +86,7 @@ public class GoalBox implements Constants {
         setupGoalBox();
     }
 
-    public void setupGoalBox() {
+    private void setupGoalBox() {
 
         this.name = new Label(goal.getName()); //01234567890123456789012345678901234567890123456789 
         name.getStyleClass().addAll("title");
@@ -100,7 +100,7 @@ public class GoalBox implements Constants {
 
         //Goal progress bar
         try {
-            pbGoalProgress = new ProgressBar(goalsObs.getGoalProgress(goal.getId()) + 0.5);
+            pbGoalProgress = new ProgressBar(goalsObs.getGoalProgress(goal.getId()));
             pbGoalProgress.setMinSize(GOAL_BOX_WIDTH - 2, 20);
             pbGoalProgress.setMaxSize(GOAL_BOX_WIDTH - 2, 20);
             topContainer.getChildren().add(pbGoalProgress);
@@ -180,46 +180,38 @@ public class GoalBox implements Constants {
         root.getChildren().addAll(topContainer, firstRow, secondRow);
 
         //Delete behaviour 
-        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        btnDelete.setOnAction(e -> {
+            DBOX_CONTENT content;
+            content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
+            content.setSubExtra(goal.getName());
 
-                DBOX_CONTENT content;
-                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
-                content.setSubExtra(goal.getName());
+            if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                boolean isGoalDeleted = false;
 
-                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                    boolean isGoalDeleted = false;
+                try {
+                    isGoalDeleted = goalsObs.removeGoal(goal.getId());
+                } catch (AuthenticationException ex) {
+                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+                } catch (GoalNotFoundException ex) {
+                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+                }
 
-                    try {
-                        isGoalDeleted = goalsObs.removeGoal(goal.getId());
-                    } catch (AuthenticationException ex) {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
-                    } catch (GoalNotFoundException ex) {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
-                    }
-
-                    if (isGoalDeleted) {
-                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
-                    } else {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
-                    }
+                if (isGoalDeleted) {
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
+                } else {
+                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
                 }
             }
         });
 
         //Edit behaviour 
-        btnEdit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        btnEdit.setOnAction(e -> {
+            DBOX_CONTENT content;
+            content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
+            content.setSubExtra(goal.getName());
 
-                DBOX_CONTENT content;
-                content = DBOX_CONTENT.CONFIRM_DELETE_GOAL;
-                content.setSubExtra(goal.getName());
-
-                GoalForm form = new GoalForm(goalsObs);
-                form.display(goal.getId());
-            }
+            GoalForm form = new GoalForm(goalsObs);
+            form.display(goal.getId());
         });
     }
 
