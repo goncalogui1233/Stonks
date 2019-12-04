@@ -28,4 +28,28 @@ public class ProfileObservable extends PropertyChangeSupport implements Constant
     public ProfileModel getAuthProfile(){
         return stonksObs.getAuthProfile();
     }
+    
+    public boolean editProfile(String firstName, String lastName, String password, String color){
+        boolean edited = cProfile.editProfile(getAuthProfile().getId(), firstName, lastName, password, color);
+        
+        System.out.println(edited);
+        
+        if(edited){
+            /*CAN BE CHANGED INTO ANOTHER EVENT IF DECIDED BETTER 
+            In order to update the view*/
+            stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED);
+        }
+        
+        return edited;
+    }
+    
+    public boolean removeProfile(){
+        boolean removed = cProfile.removeProfile(getAuthProfile().getId());
+        
+        if(removed){
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW);
+        }
+        
+        return removed;
+    }
 }
