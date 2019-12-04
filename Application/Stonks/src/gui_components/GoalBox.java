@@ -67,27 +67,28 @@ public class GoalBox implements Constants {
     private Label created;
 
     //Buttons 
-    private Button btnDelete;
-    private Button btnEdit;
-    private Button btnFunds;
-
-    public GoalBox(GoalModel goal, GoalsObservable goalsObs) {
-
-        this.goal = goal;
-        this.goalsObs = goalsObs;
-
-        root = new VBox();
-        root.setId("goalBox");
-        root.getStyleClass().add("stonks-box");
-
-        root.setMinSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT);
-        root.setMaxSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT);
-
-        setupGoalBox();
-    }
-
-    private void setupGoalBox() {
-
+    private Button btnDelete; 
+    private Button btnEdit; 
+    private Button btnFunds; 
+    
+    private ManageFundsForm form;
+ 
+    public GoalBox(GoalModel goal, GoalsObservable goalsObs) { 
+ 
+        this.goal = goal; 
+        this.goalsObs = goalsObs; 
+ 
+        root = new VBox(); 
+        root.setId("goalBox"); 
+        root.getStyleClass().add("stonks-box"); 
+ 
+        root.setMinSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT); 
+        root.setMaxSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT); 
+ 
+        setupGoalBox(); 
+    } 
+ 
+    public void setupGoalBox() { 
         this.name = new Label(goal.getName()); //01234567890123456789012345678901234567890123456789 
         name.getStyleClass().addAll("title");
         topContainer = new VBox();
@@ -212,6 +213,15 @@ public class GoalBox implements Constants {
 
             GoalForm form = new GoalForm(goalsObs);
             form.display(goal.getId());
+        });
+        
+        //Manage Funds of Goal
+        btnFunds.setOnAction(new EventHandler<ActionEvent>(){
+           @Override
+           public void handle(ActionEvent e){
+               ManageFundsForm f = new ManageFundsForm(goalsObs);
+               f.display(goal.getId());
+           }
         });
     }
 

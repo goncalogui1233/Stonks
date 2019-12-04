@@ -32,12 +32,14 @@ public interface Constants {
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
         ERROR_LOGIN("Invalid password", "Try again"),
         /*SUCCESS MESSAGES*/
-        /*To be changed*/ SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
-        SUCCESS_EDIT_PROFILE("Profile edited", "Your profile was successfully edited"),
+        /*To be changed*/ SUCCESS_PROFILE_CREATE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_PROFILE_EDIT("Profile edited", "Your profile was successfully edited"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
         SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
+        SUCCESS_WALLET_UPDATE("Wallet Updated", "The value has been updated succesfully"),
+        
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
         CONFIRM_DELETE_GOAL("Deleting goal \"{}\"", "This action will delete this goal permanently...");
@@ -142,7 +144,7 @@ public interface Constants {
 
     /*Dashboard*/
 
- /*Goal*/
+    /*Goal*/
     public static enum GOAL_FIELD {
         NAME, OBJECTIVE, DEADLINE
     };
@@ -159,7 +161,7 @@ public interface Constants {
 
     /*Wallet*/
 
- /*Property Change Events*/
+    /*Property Change Events*/
     public static enum STONKS_EVENT {
         /*GENERAL GOTO EVENTS*/
         GOTO_AUTHENTICATION_VIEW, 
@@ -185,7 +187,8 @@ public interface Constants {
         /*GOAL CUD EVENTS*/
         CREATE_GOAL, 
         EDIT_GOAL,
-        DELETE_GOAL
+        DELETE_GOAL, 
+        UPDATE_WALLET
     };
 
     public static enum PROFILE_EVENT {
