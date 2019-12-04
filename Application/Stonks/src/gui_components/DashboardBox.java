@@ -44,10 +44,10 @@ public class DashboardBox implements Constants{
         lbDeadlinesTitle = new Label("Deadlines");
     
         lbDeadlines = new Label();
-        //lbDeadlines = generateDeadlinesLabel(controller.getGoalsWithDeadline());
+        //lbDeadlines = generateDeadlinesLabel(controller.getGoalsWithDeadline()); //from controller
         
         pieChart = new PieChart();
-        //pieChart = generatePieChart(controller.getListOfUncomplichedGoals());
+        //pieChart = generatePieChart(controller.getListOfUncomplichedGoals()); //from controller
         
         root.getChildren().addAll(lbTitle,lbSavings,pieChart,lbDeadlinesTitle,lbDeadlines);
     }
