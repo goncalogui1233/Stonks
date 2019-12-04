@@ -31,7 +31,7 @@ public class StonksData implements Serializable {
         return authProfile;
     }
 
-    public void setCurrentProfile(ProfileModel authProfile) {
+    public void setAuthProfile(ProfileModel authProfile) {
         this.authProfile = authProfile;
     }
 

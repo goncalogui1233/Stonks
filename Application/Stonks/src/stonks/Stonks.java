@@ -21,7 +21,6 @@ import views.GoalView;
 import views.ProfileView;
 
 public class Stonks extends Application implements Constants, PropertyChangeListener {
-
     private Stage window;
     private StonksData data;  
     
@@ -109,6 +108,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     public void setupPropertyChangeListeners() {
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), this);
     }
 
     @Override
@@ -117,8 +117,9 @@ public class Stonks extends Application implements Constants, PropertyChangeList
             goalView.displayProfileGoals();/*CHECK LATER - GOAL VIEW CAN BE NOTIFIED BY STONKS OBS*/
             window.setScene(goalScene);
         }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
-            profileObs.firePropertyChange(PROFILE_EVENT.UPDATE_PROFILE_VIEW.name(), null, null);
             window.setScene(profileScene);
+        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())) {
+            window.setScene(authScene);
         }
     }
 

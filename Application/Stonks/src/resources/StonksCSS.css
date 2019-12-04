@@ -284,9 +284,6 @@
 
 
 /*Auth*/
-#authBox{
-}
-
 #authBox .titleBox, 
 #profileBox .titleBox{
     -fx-alignment: center; 
@@ -295,18 +292,19 @@
     -fx-font-size: 20px;
 }
 
-#profileBox .titleBox{
-    -fx-alignment: CENTER_LEFT; 
-}
-
 #authBox .titleBox #titleProfile{
     -fx-padding: 5px 0px 0px 0px;
     -fx-font-size: 12px;
 }
 
-#authBox .formBox{
+#profileBox .titleBox{
+    -fx-alignment: CENTER_LEFT; 
 }
 
+#profileBox .titleBox #titleProfile{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-size: 12px;
+}
 
 /*
 #registerVbox {
