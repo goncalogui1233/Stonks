@@ -32,13 +32,18 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private Label profileIcon;
     private Color profileColor;
     private Color textColor;
-    private BorderPane profileLinkDiv;
+    private VBox profileInfoDiv;
+    private Label profileFirstName;
+    private Label profileLastName;
     private Label profileLink;
     private Label logoutLink;
     private Label dashboardLink;
     private Label goalLink;
     private PseudoClass last;
     private PseudoClass active;
+
+    private final PseudoClass selected_black;
+    private final PseudoClass selected_white;
 
     public SideMenu(StonksObservable stonksObs) {
         this.stonksObs = stonksObs;
@@ -48,6 +53,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
         rootDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT);
 
         rootDiv.setId("sideMenu");
+        
+        selected_black = PseudoClass.getPseudoClass("selected_black");
+        selected_white = PseudoClass.getPseudoClass("selected_white");
 
         setupProfileDiv();
         setupLinkDiv();
@@ -65,23 +73,29 @@ public class SideMenu implements Constants, PropertyChangeListener {
     }
 
     private void setupProfileDiv() {
+        
         profileDiv = new HBox();
-
         profileDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
         profileDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
-        profileDiv.setId("profileDiv");
+        profileDiv.setId("profile");
 
         profileIcon = new Label();
-        profileIcon.setMinSize(75, 75);
+        profileIcon.setMinSize(70, 70);
         profileIcon.setId("profileIcon");
 
-        profileLinkDiv = new BorderPane();
-        profileLinkDiv.setId("profileLinkDiv");
-
+        profileInfoDiv = new VBox();
+        profileInfoDiv.setId("profileInfo");
+        profileFirstName = new Label();
+        profileFirstName.setId("firstName");
+        profileLastName = new Label();
+        profileLastName.setId("lastName");
         logoutLink = new Label("Logout");
+        logoutLink.setId("logout");
         logoutLink.getStyleClass().addAll("link");
-        profileLinkDiv.setCenter(logoutLink);
-        profileDiv.getChildren().addAll(profileIcon, profileLinkDiv);
+        
+        profileInfoDiv.getChildren().addAll(profileFirstName, profileLastName, logoutLink);
+        
+        profileDiv.getChildren().addAll(profileIcon, profileInfoDiv);
 
         rootDiv.getChildren().add(profileDiv);
     }
@@ -163,6 +177,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private void updateSideMenu() {
         ProfileModel authProfile = stonksObs.getAuthProfile();
 
+        profileFirstName.setText(authProfile.getFirstName());
+        profileLastName.setText(authProfile.getLastName());
+        
         profileIcon.setText(""
                 + authProfile.getFirstName().charAt(0)
                 + authProfile.getLastName().charAt(0));
@@ -172,12 +189,15 @@ public class SideMenu implements Constants, PropertyChangeListener {
         if (((profileColor.getRed() * 0.333)
                 + (profileColor.getGreen() * 0.333)
                 + (profileColor.getBlue() * 0.333)) > 0.3) {
-            textColor = Color.valueOf("#000");
+            profileIcon.pseudoClassStateChanged(selected_black, true);
+            profileIcon.pseudoClassStateChanged(selected_white, false);
+            textColor = Color.valueOf("#111");
         } else {
-            textColor = Color.valueOf("#FFF");
+            profileIcon.pseudoClassStateChanged(selected_black, false);
+            profileIcon.pseudoClassStateChanged(selected_white, true);
+            textColor = Color.valueOf("#eee");
         }
         profileIcon.setTextFill(textColor);
-        profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), new Insets(3))));
-        profileIcon.setBorder(new Border(new BorderStroke(Color.valueOf("#111"), BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(5))));
+        profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), Insets.EMPTY)));
     }
 }

@@ -75,10 +75,10 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
                     + (profileColor.getGreen() * 0.333)
                     + (profileColor.getBlue() * 0.333)) > 0.3) {
                 profileIcon.getProperties().put("blackBorder", true);
-                textColor = Color.valueOf("#000");
+                textColor = Color.valueOf("#111");
             } else {
                 profileIcon.getProperties().put("blackBorder", false);
-                textColor = Color.valueOf("#FFF");
+                textColor = Color.valueOf("#eee");
             }
 
             /*Set node properties*/
