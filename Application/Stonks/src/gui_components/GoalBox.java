@@ -95,7 +95,7 @@ public class GoalBox implements Constants {
         name.getStyleClass().addAll("title");
         try {
             System.out.println(goalsObs.getGoalProgress(goal.getId()));
-            DecimalFormat df = new DecimalFormat("#.00"); 
+            DecimalFormat df = new DecimalFormat("#,##0.0#"); 
             
             percentage = new Label( df.format(goalsObs.getGoalProgress(goal.getId()) * 100) + "%");
         } catch (AuthenticationException ex) {

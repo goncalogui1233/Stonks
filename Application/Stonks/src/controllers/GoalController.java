@@ -184,7 +184,7 @@ public class GoalController implements Constants {
         double currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
 
         /*Returns the value in percentage (%)*/
-        return ((currentSavedMoney * objective) / 1000) * 0.1;
+        return (currentSavedMoney / objective);
 
     }
 
