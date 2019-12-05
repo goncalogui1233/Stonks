@@ -1,5 +1,9 @@
 package gui_components;
 
+import exceptions.AuthenticationException;
+import exceptions.GoalNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener; 
 import javafx.beans.value.ObservableValue; 
 import javafx.event.ActionEvent;  
@@ -63,7 +67,13 @@ public class ManageFundsForm {
     public void display(int goalID){
         this.goalID = goalID;
         
-        this.valueForAccom = goalsObs.getGoal(goalID).getWallet().getSavedMoney();
+        try {
+            this.valueForAccom = goalsObs.getGoal(goalID).getWallet().getSavedMoney();
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GoalNotFoundException ex) {
+            Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         fundsForm = new Stage();
         
@@ -95,7 +105,13 @@ public class ManageFundsForm {
         //Title 
         title = new Label("Updating Funds"); 
         if (goalID > 0) { 
-            title.setText(goalsObs.getGoal(goalID).getName() + " Wallet"); 
+            try { 
+                title.setText(goalsObs.getGoal(goalID).getName() + " Wallet");
+            } catch (AuthenticationException ex) {
+                Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (GoalNotFoundException ex) {
+                Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             title.wrapTextProperty().set(true);
         } 
         
@@ -154,11 +170,14 @@ public class ManageFundsForm {
         buttons = new HBox();
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setSpacing(10);
+        
+        Pane imagePlusContainer = new Pane();
         imagePlusButton = new ImageView(new Image("resources/FundsFormPlus.png"));
         imagePlusButton.setFitWidth(25); 
         imagePlusButton.setFitHeight(25);
+        imagePlusContainer.getChildren().add(imagePlusButton);
         
-        imagePlusButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
+        imagePlusContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             String txt = value.getText();
             if(!txt.isEmpty()){
                 Integer i = Integer.parseInt(txt);
@@ -167,11 +186,13 @@ public class ManageFundsForm {
             }
         });
         
+        Pane imageSubContainer = new Pane();
         imageSubButton = new ImageView(new Image("resources/FundsFormSub.png"));
         imageSubButton.setFitWidth(25); 
         imageSubButton.setFitHeight(25);
+        imageSubContainer.getChildren().add(imageSubButton);
         
-        imageSubButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
+        imageSubContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             String txt = value.getText();
             if(!txt.isEmpty()){
                 Integer i = Integer.parseInt(txt);
@@ -182,13 +203,19 @@ public class ManageFundsForm {
             }
         });
         
-        buttons.getChildren().addAll(imagePlusButton, imageSubButton);
+        buttons.getChildren().addAll(imagePlusContainer, imageSubContainer);
         
         
         //label Objective
         objective = new Label();
         objective.getStyleClass().addAll("fieldTitle");
-        objective.setText("Objective: " + goalsObs.getGoal(goalID).getObjective() + "€");
+        try {
+            objective.setText("Objective: " + goalsObs.getGoal(goalID).getObjective() + "€");
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GoalNotFoundException ex) {
+            Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         //label Accomplished
         accomplished = new Label();
@@ -217,46 +244,52 @@ public class ManageFundsForm {
         
         btnsubmit.setOnAction((ActionEvent e) ->{
             
-            /*int errors = 0;
-            
-            try{
+            try {
+                /*int errors = 0;
+                
+                try{
                 if(!value.getText().isEmpty()){
-                    switch (goalsObs.verifyData(Constants.GOAL_FIELD.OBJECTIVE, Integer.parseInt(value.getText()))) { 
-                        case MIN_NUMBER: 
-                            errorFunds.setText("Wallet value cannot be negative"); 
-                            errorFunds.setVisible(true); 
-                            errors++; 
-                            break; 
-                        case MAX_NUMBER: 
-                            errorFunds.setText("Objective has a maximum value 999999999"); 
-                            errorFunds.setVisible(true); 
-                            errors++; 
-                            break; 
-                        default: 
- 
-                            errorFunds.setVisible(false); 
-                            break; 
-                    }
+                switch (goalsObs.verifyData(Constants.GOAL_FIELD.OBJECTIVE, Integer.parseInt(value.getText()))) {
+                case MIN_NUMBER:
+                errorFunds.setText("Wallet value cannot be negative");
+                errorFunds.setVisible(true);
+                errors++;
+                break;
+                case MAX_NUMBER:
+                errorFunds.setText("Objective has a maximum value 999999999");
+                errorFunds.setVisible(true);
+                errors++;
+                break;
+                default:
+                
+                errorFunds.setVisible(false);
+                break;
                 }
-            }
-            catch(NumberFormatException excep){
+                }
+                }
+                catch(NumberFormatException excep){
                 System.out.println(excep);
+                }
+                
+                
+                if(errors == 0)*/
+                if(valueForAccom > goalsObs.getGoal(goalID).getWallet().getSavedMoney()) //if the value on the label is bigger,
+                    valueForAccom -= goalsObs.getGoal(goalID).getWallet().getSavedMoney();  //than he take off what is already saved
+                
+                goalsObs.updateWallet(goalID, valueForAccom);
+                
+                Constants.DBOX_CONTENT content;
+                content = Constants.DBOX_CONTENT.SUCCESS_WALLET_UPDATE;
+                content.setSubExtra(goalsObs.getGoal(goalID).getName());
+                
+                DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCCESS_WALLET_UPDATE);
+                
+                fundsForm.close();
+            } catch (AuthenticationException ex) {
+                Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (GoalNotFoundException ex) {
+                Logger.getLogger(ManageFundsForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-            if(errors == 0)*/
-            if(valueForAccom > goalsObs.getGoal(goalID).getWallet().getSavedMoney()) //if the value on the label is bigger, 
-                valueForAccom -= goalsObs.getGoal(goalID).getWallet().getSavedMoney();  //than he take off what is already saved
-            
-            goalsObs.updateWallet(goalID, valueForAccom);
-            
-            Constants.DBOX_CONTENT content; 
-            content = Constants.DBOX_CONTENT.SUCESS_UPDATE_WALLET; 
-            content.setSubExtra(goalsObs.getGoal(goalID).getName()); 
-            
-            DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCESS_UPDATE_WALLET);
-            
-            fundsForm.close();
         });
     }
     

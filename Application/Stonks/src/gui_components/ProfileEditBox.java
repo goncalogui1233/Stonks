@@ -255,7 +255,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener {
         btnSave.setOnMouseClicked(e -> {
             if (validateInputs() == 0) {
                 if (profileObs.editProfile(txfFirstName.getText(), txfLastName.getText(), txfPassword.getText(), String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
-                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_EDIT_PROFILE);
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_PROFILE_EDIT);
                 }
             }
         });

@@ -319,7 +319,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
                         txfPassword.getText(),
                         String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255))
                 )) {
-                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_PROFILE);
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_PROFILE_CREATE);
                     resetFields();
                 }
             }

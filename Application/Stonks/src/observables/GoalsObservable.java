@@ -12,6 +12,8 @@ import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import models.GoalModel;
 import models.ProfileModel;
 import stonks.Constants;
@@ -78,7 +80,14 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     }
     
     public boolean updateWallet(int id, int value){
-        boolean ans = cGoal.getGoal(id).getWallet().setSavedMoney(value);
+        boolean ans = false;
+        try {
+            ans = cGoal.getGoal(id).getWallet().setSavedMoney(value);
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GoalNotFoundException ex) {
+            Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         /*if(ans){
             firePropertyChange(GOAL_EVENT.UPDATE_WALLET.name(), null, null);
