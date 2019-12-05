@@ -23,7 +23,7 @@ import stonks.StonksData;
  *
  * @author joaom
  */
-public class DashboardControllerTest {
+public class DashboardControllerTest  {
 
     StonksData data;
     DashboardController dashboardController;
@@ -181,6 +181,11 @@ public class DashboardControllerTest {
         goals.removeGoal(model6.getId());
 
         assertEquals(null, dashboardController.getListOfUncomplichedGoals());
+    }
+
+    @Test
+    public void testCalculateGoalsStatistics() {
+
     }
 
 }

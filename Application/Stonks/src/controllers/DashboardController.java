@@ -1,15 +1,18 @@
 package controllers;
 
+import models.GoalModel;
+import stonks.Constants;
+import stonks.StonksData;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import models.GoalModel;
-import stonks.StonksData;
 
-public class DashboardController {
+public class DashboardController implements Constants {
 
     private final StonksData data;
 
@@ -56,11 +59,11 @@ public class DashboardController {
     //THE LAST ONE WILL OVERRIDE DE LASTONE
     public Map<String, Integer> getListOfUncomplichedGoals() {
         Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
-        
+
         for (GoalModel obj : data.getAuthProfile().getGoals()) {
             if (obj.getGoalProgress() < 100) {
                 String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
-                allData.put( text, obj.getGoalProgress());
+                allData.put(text, obj.getGoalProgress());
             }
         }
 
@@ -83,5 +86,111 @@ public class DashboardController {
             count++;
         }
         return target;
+    }
+
+    //-------------Statistics-------------
+    public Map<Integer, String> CalculateGoalsStatistics(String year, String month) {
+        Map<Integer, String> returnData = new HashMap<>();
+        List<GoalModel> listOfAllGoals;
+
+        //The Filters was the default value
+        if (year.equals("Year") && month.equals("Month")) {
+            returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+        } else {
+            //Check if both filters are selected
+            if (!year.equals("Year") && !month.equals("Month")) {
+                listOfAllGoals = getListOfGoalsByYearAndMonth(
+                        Integer.parseInt(year), month.toUpperCase());
+            } else {
+                //The filter year is selected
+                if (!year.equals("Year")) {
+                    listOfAllGoals = getListOfGoalsByYear(Integer.parseInt(year));
+                } else//The filter month is selected
+                {
+                    listOfAllGoals = getListOfGoalsByMonth(month.toUpperCase());
+                }
+            }
+            //goals statics
+            goalStatistics(listOfAllGoals, returnData);
+        }
+
+        return returnData;
+    }
+
+    private void goalStatistics(List<GoalModel> filterGoals, Map<Integer, String> returnData) {
+        int totalGoals = 0;
+        int GoalsComplete = 0;
+        int GoalsIncomplete = 0;
+        int savedMoney = 0;
+        int totalObjective = 0;
+
+        for (GoalModel obj : filterGoals) {
+            totalGoals++;
+            totalObjective += obj.getObjective();
+            savedMoney += obj.getWallet().getSavedMoney();
+            
+            if (obj.getGoalProgress() >= 100) { //Goal completed
+                GoalsComplete++;
+            }
+            else
+                GoalsIncomplete++; 
+        }
+
+        returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, 
+                Integer.toString(GoalsComplete));
+        
+        returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE,
+                Integer.toString(GoalsIncomplete));
+        
+        returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, 
+                Integer.toString(totalGoals));
+        
+        returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, 
+                Integer.toString(savedMoney)+"€");
+        
+        returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE,
+                Integer.toString(totalObjective)+"€");
+
+    }
+
+    private List<GoalModel> getListOfGoalsByYearAndMonth(int year, String month) {
+        List<GoalModel> listOfAllGoals = new ArrayList<>();
+
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.getCreationDate()
+                    .getMonth().toString().equals(month) //Same Month and Year
+                    && obj.getCreationDate()
+                            .getYear() == year) {
+                listOfAllGoals.add(obj);
+            }
+        }
+        return listOfAllGoals;
+    }
+
+    private List<GoalModel> getListOfGoalsByYear(int year) {
+        List<GoalModel> listOfAllGoals = new ArrayList<>();
+
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.getCreationDate().getYear() == year) {
+                listOfAllGoals.add(obj);
+            }
+        }
+        return listOfAllGoals;
+    }
+
+    private List<GoalModel> getListOfGoalsByMonth(String month) {
+        List<GoalModel> listOfAllGoals = new ArrayList<>();
+
+        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+            if (obj.getCreationDate()
+                    .getMonth().toString().equals(month)) {
+                listOfAllGoals.add(obj);
+            }
+        }
+        return listOfAllGoals;
     }
 }
