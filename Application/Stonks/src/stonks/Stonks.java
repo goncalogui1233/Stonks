@@ -79,7 +79,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 //        populateApp(); /*Remove later*/
         //ProfileModel.setData(data);
         //WalletModel.setData(data);
-        stonksObs = new StonksObservable(data);
+        stonksObs = new StonksObservable(cProfile, data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);

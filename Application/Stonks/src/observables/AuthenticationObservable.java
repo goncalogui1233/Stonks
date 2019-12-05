@@ -60,6 +60,7 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         boolean resp = cProfile.loginProfile(id, password);
         
         if(resp){
+            stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH);
             stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW);
         }
         
