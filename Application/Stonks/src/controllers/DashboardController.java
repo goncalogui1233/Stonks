@@ -92,6 +92,22 @@ public class DashboardController implements Constants {
     public Map<Integer, String> CalculateGoalsStatistics(String year, String month) {
         Map<Integer, String> returnData = new HashMap<>();
         List<GoalModel> listOfAllGoals;
+        int intYear = 0;
+        String monthUpperCase;
+        
+        try {
+            if(!year.equals("Year"))
+                intYear = Integer.parseInt(year);
+            monthUpperCase = month.toUpperCase();
+            
+        } catch (Exception e) {
+            returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+            return returnData;
+        }
 
         //The Filters was the default value
         if (year.equals("Year") && month.equals("Month")) {
@@ -104,14 +120,14 @@ public class DashboardController implements Constants {
             //Check if both filters are selected
             if (!year.equals("Year") && !month.equals("Month")) {
                 listOfAllGoals = getListOfGoalsByYearAndMonth(
-                        Integer.parseInt(year), month.toUpperCase());
+                        intYear, monthUpperCase);
             } else {
                 //The filter year is selected
                 if (!year.equals("Year")) {
-                    listOfAllGoals = getListOfGoalsByYear(Integer.parseInt(year));
+                    listOfAllGoals = getListOfGoalsByYear(intYear);
                 } else//The filter month is selected
                 {
-                    listOfAllGoals = getListOfGoalsByMonth(month.toUpperCase());
+                    listOfAllGoals = getListOfGoalsByMonth(monthUpperCase);
                 }
             }
             //goals statics

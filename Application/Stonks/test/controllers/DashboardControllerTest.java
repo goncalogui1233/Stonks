@@ -17,13 +17,18 @@ import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import static stonks.Constants.DASHBOARD_STATISTICS_GOALS_COMPLETE;
+import static stonks.Constants.DASHBOARD_STATISTICS_SAVED_MONEY;
+import static stonks.Constants.DASHBOARD_STATISTICS_TOTAL_GOALS;
+import static stonks.Constants.DASHBOARD_STATISTICS_TOTAL_INCOMPLETE;
+import static stonks.Constants.DASHBOARD_STATISTICS_TOTAL_OBJECTIVE;
 import stonks.StonksData;
 
 /**
  *
  * @author joaom
  */
-public class DashboardControllerTest  {
+public class DashboardControllerTest {
 
     StonksData data;
     DashboardController dashboardController;
@@ -165,13 +170,13 @@ public class DashboardControllerTest  {
         //Left only 3 goals
         goals.removeGoal(model2.getId());
         goals.removeGoal(model4.getId());
-        
+
         //More that 4 Goals
         Map<String, Integer> test2 = new TreeMap<>(Collections.reverseOrder());
         test2.put("45% - Carro-3", 45);
         test2.put("7% - Carro-2", 7);
         test2.put("2% - Trotineta-2", 2);
-        
+
         assertEquals(test2, dashboardController.getListOfUncomplichedGoals());
 
         //Remove all goals
@@ -185,6 +190,122 @@ public class DashboardControllerTest  {
 
     @Test
     public void testCalculateGoalsStatistics() {
+        GoalModel model1 = new GoalModel("Trotineta", 200, null);
+        GoalModel model2 = new GoalModel("Trotineta-2", 200, null);
+        GoalModel model3 = new GoalModel("Carro-2", 200, null);
+        GoalModel model4 = new GoalModel("Carro-3", 200, null);
+
+        data.getAuthProfile().getGoals().add(model1);
+        data.getAuthProfile().getGoals().add(model2);
+        data.getAuthProfile().getGoals().add(model3);
+        data.getAuthProfile().getGoals().add(model4);
+
+        model1.getWallet().setSavedMoney(200); //Achived
+        model2.getWallet().setSavedMoney(190); //Not Achived
+        model3.getWallet().setSavedMoney(5); //5
+        model4.getWallet().setSavedMoney(30); //3
+
+        Map<Integer, String> filtersNotSelected = new HashMap<>();
+
+        filtersNotSelected.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersNotSelected.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersNotSelected.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersNotSelected.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersNotSelected.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+
+        //No filter select
+        assertEquals(filtersNotSelected,
+                dashboardController.CalculateGoalsStatistics("Year", "Month"));
+
+        //Filter year 
+        //Fiilter with previous(2018) year
+        Map<Integer, String> filtersPreviousYear = new HashMap<>();
+
+        filtersPreviousYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersPreviousYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+        assertEquals(filtersPreviousYear,
+                dashboardController.CalculateGoalsStatistics("2018", "Month"));
+        //Fiilter with actual year
+        Map<Integer, String> filtersActualYear = new HashMap<>();
+
+        filtersActualYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "1");
+        filtersActualYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "3");
+        filtersActualYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "4");
+        filtersActualYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "425€");
+        filtersActualYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "800€");
+        assertEquals(filtersActualYear,
+                dashboardController.CalculateGoalsStatistics("2019", "Month"));
+
+        //Filter Month
+        //Fiilter with previous month
+        Map<Integer, String> filtersPreviousMonth = new HashMap<>();
+
+        filtersPreviousMonth.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersPreviousMonth.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersPreviousMonth.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersPreviousMonth.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersPreviousMonth.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+        assertEquals(filtersPreviousMonth,
+                dashboardController.CalculateGoalsStatistics("Year", "March"));
+        //Fiilter with actual month
+        Map<Integer, String> filtersActualMonth = new HashMap<>();
+
+        filtersActualMonth.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "1");
+        filtersActualMonth.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "3");
+        filtersActualMonth.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "4");
+        filtersActualMonth.put(DASHBOARD_STATISTICS_SAVED_MONEY, "425€");
+        filtersActualMonth.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "800€");
+        assertEquals(filtersActualMonth,
+                dashboardController.CalculateGoalsStatistics("Year", "December"));
+
+        //Filter Year and Month
+        //Fiilter with previous month And actual year
+        Map<Integer, String> filtersPreviousMonthActualYear = new HashMap<>();
+
+        filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+        assertEquals(filtersPreviousMonthActualYear,
+                dashboardController.CalculateGoalsStatistics("2019", "March"));
+        
+        //Fiilter with actual month  and actual year
+        Map<Integer, String> filtersActualMonthActualYear = new HashMap<>();
+
+        filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "1");
+        filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "3");
+        filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "4");
+        filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "425€");
+        filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "800€");
+                assertEquals(filtersActualMonthActualYear,
+                dashboardController.CalculateGoalsStatistics("2019", "December"));
+
+        //Fiilter with previous month And previous year
+        Map<Integer, String> filtersPreviousMonthPreviousYear = new HashMap<>();
+
+        filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+                assertEquals(filtersPreviousMonthPreviousYear,
+                dashboardController.CalculateGoalsStatistics("2018", "March"));
+
+        //Fiilter with actual month  and previous year
+        Map<Integer, String> filtersActualMonthPreviousYear = new HashMap<>();
+
+        filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
+        filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
+        filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
+        filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+        filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+        
+        assertEquals(filtersActualMonthPreviousYear,
+                dashboardController.CalculateGoalsStatistics("2018", "December"));
 
     }
 
