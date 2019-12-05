@@ -178,13 +178,13 @@ public class GoalController implements Constants {
         }
     }
 
-    public float getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException {
+    public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException {
 
-        int objective = this.getGoal(id).getObjective();
-        int currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
+        double objective = this.getGoal(id).getObjective();
+        double currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
 
         /*Returns the value in percentage (%)*/
-        return (currentSavedMoney * objective) / 100;
+        return ((currentSavedMoney * objective) / 1000) * 0.1;
 
     }
 

@@ -536,10 +536,16 @@
 }
 
 #goalBox #topContainer .title{
-    -fx-padding: 10 0 15 10;
+    -fx-padding: 10 0 10 10;
     -fx-font-size: 14px;
     -fx-text-fill: #616161;
     -fx-font-weight: bold;
+}
+
+#goalBox #topContainer .percentage{
+    -fx-padding: 0 0 10 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #616161;
 }
 
 /*#goalBox #topContainer .progress-bar > *{

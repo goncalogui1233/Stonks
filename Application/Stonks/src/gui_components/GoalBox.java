@@ -7,6 +7,7 @@ package gui_components;
 
 import exceptions.AuthenticationException;
 import exceptions.GoalNotFoundException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.css.PseudoClass;
@@ -60,6 +61,7 @@ public class GoalBox implements Constants {
 
     //Value labels 
     private Label name;
+    private Label percentage;
     private Label objective;
     private Label accomplished;
     private Label deadline;
@@ -91,13 +93,24 @@ public class GoalBox implements Constants {
     public void setupGoalBox() { 
         this.name = new Label(goal.getName()); //01234567890123456789012345678901234567890123456789 
         name.getStyleClass().addAll("title");
+        try {
+            System.out.println(goalsObs.getGoalProgress(goal.getId()));
+            DecimalFormat df = new DecimalFormat("#.00"); 
+            
+            percentage = new Label( df.format(goalsObs.getGoalProgress(goal.getId()) * 100) + "%");
+        } catch (AuthenticationException ex) {
+            DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+        } catch (GoalNotFoundException ex) {
+            DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+        }
+        percentage.getStyleClass().add("percentage");
         topContainer = new VBox();
         topContainer.setId("topContainer");
         //topContainer.setMinSize(GOALBOX_WIDTH, 40); 
         // topContainer.setMaxSize(GOALBOX_WIDTH, 40); 
         //topContainer.getStyleClass().add("BACKGROUND_RED"); 
 
-        topContainer.getChildren().add(name);
+        topContainer.getChildren().addAll(name, percentage);
 
         //Goal progress bar
         try {

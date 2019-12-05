@@ -89,9 +89,9 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
             Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        /*if(ans){
+        if(ans){
             firePropertyChange(GOAL_EVENT.UPDATE_WALLET.name(), null, null);
-        }*/
+        }
         
         return ans;  
     }
@@ -105,7 +105,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return cGoal.getGoal(id);
     }
     
-     public float getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
+     public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
          return cGoal.getGoalProgress(id);
      }
 
