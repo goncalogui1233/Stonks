@@ -39,6 +39,7 @@ public class GoalView implements Constants, PropertyChangeListener {
     //Labels 
     private Label viewTitle;
     private Label lblNoGoalsMsg;
+    private Label lblOnlyCompletedGoals;
 
     //Buttons 
     private Button btnAdd;
@@ -98,11 +99,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         tbtnFilter.setOnAction(e -> {
 
             showCompleted = !showCompleted;
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         });
 
         topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
@@ -117,6 +114,10 @@ public class GoalView implements Constants, PropertyChangeListener {
         //No goals message 
         lblNoGoalsMsg = new Label("This profile doesn’t have any goals. Add a new goal and let us help you achieve it!");
         lblNoGoalsMsg.setId("noGoalsMsg");
+
+        //Only has completed goals Mgs
+        lblOnlyCompletedGoals = new Label("This profile as achieved all goals!  Add a new goal and let us help you achieve it!");
+        lblOnlyCompletedGoals.setId("noGoalsMsg");
 
         //Goals container 
         goalsContainer = new VBox();
@@ -164,38 +165,20 @@ public class GoalView implements Constants, PropertyChangeListener {
 
             if (goalsObs.getAuthProfile().getGoals().size() < 1) {
                 middleContainer.getChildren().add(lblNoGoalsMsg);
+            } else if (!goalsObs.getStonksObs().getAuthProfile().hasIncompletedGoals() && !showCompleted) {
+                middleContainer.getChildren().add(lblOnlyCompletedGoals);
             } else {
                 middleContainer.getChildren().add(goalsScrollPane);
                 for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
                     Label divider = new Label();
                     divider.getStyleClass().addAll("divider");
-                    goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
-                }
-            }
-        } catch (NullPointerException ex) {
-        }
-    }
-
-    public void displayIncompleteProfileGoals() {
-        try {
-            goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
-            middleContainer.getChildren().removeAll(middleContainer.getChildren());
-
-            if (goalsObs.getAuthProfile().getGoals().size() < 1) {
-                middleContainer.getChildren().add(lblNoGoalsMsg);
-            } else {
-                middleContainer.getChildren().add(goalsScrollPane);
-                for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
-                    try {
-                        if (goalsObs.getGoalProgress(goal.getId()) < 1.0) {
-                            Label divider = new Label();
-                            divider.getStyleClass().addAll("divider");
+                    if (showCompleted) {
+                        goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                    } else {
+                        if (!goal.isCompleted()) {
                             goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
                         }
-                    } catch (AuthenticationException ex) {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
-                    } catch (GoalNotFoundException ex) {
-                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+
                     }
 
                 }
@@ -208,39 +191,19 @@ public class GoalView implements Constants, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
 
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.CREATE_GOAL.name())) {
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.DELETE_GOAL.name())) {
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.EDIT_GOAL.name())) {
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.UPDATE_WALLET.name())) {
-            if (showCompleted) {
-                displayProfileGoals();
-            } else {
-                displayIncompleteProfileGoals();
-            }
+            displayProfileGoals();
         }
     }
 }

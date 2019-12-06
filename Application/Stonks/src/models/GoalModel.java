@@ -83,4 +83,12 @@ public class GoalModel implements Serializable {
 
         return false;
     }
+
+    public boolean isCompleted() {
+        if (this.objective == this.wallet.getSavedMoney()) {
+            return true;
+        }
+
+        return false;
+    }
 }
