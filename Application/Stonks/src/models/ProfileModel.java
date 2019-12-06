@@ -111,6 +111,36 @@ public class ProfileModel implements Serializable {
         return false;
     }
 
+    public boolean hasCompletedGoals() {
+
+        try {
+            for (GoalModel goal : this.goals.values()) {
+                if (goal.isCompleted()) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return false;
+    }
+
+    public boolean hasIncompleteGoals() {
+
+        try {
+            for (GoalModel goal : this.goals.values()) {
+                if (!goal.isCompleted()) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return false;
+    }
+
     public boolean hasPassword() {
         return !(password == null || password.isEmpty());
     }
