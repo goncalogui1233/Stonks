@@ -3,6 +3,8 @@ package observables;
 import controllers.ProfileController;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.List;
+import models.GoalModel;
 import models.ProfileModel;
 import stonks.Constants;
 import stonks.StonksData;
@@ -32,13 +34,13 @@ public class StonksObservable extends PropertyChangeSupport implements Constants
         boolean loggedOut = cProfile.logoutProfile();
         
         if(loggedOut){
-            firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW);
+            firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), null, null);
         }
         
         return loggedOut;
     }
     
-    public void firePropertyChange(STONKS_EVENT event){
-        firePropertyChange(event.name(), null, null);
+    public List<GoalModel> getTopGoals(){
+        return getAuthProfile().getTopGoals(5);
     }
 }

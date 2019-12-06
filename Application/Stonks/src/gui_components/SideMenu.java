@@ -2,6 +2,8 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -17,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import models.GoalModel;
 import models.ProfileModel;
 import observables.StonksObservable;
 import stonks.Constants;
@@ -70,6 +73,7 @@ public class SideMenu implements Constants, PropertyChangeListener {
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOAL_STATE_CHANGED.name(), this);
     }
 
     private void setupProfileDiv() {
@@ -103,8 +107,8 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private void setupLinkDiv() {
         linkDiv = new VBox();
 
-        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.10);
-        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.50);
+        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
+        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
         linkDiv.setId("linkDiv");
 
         last = PseudoClass.getPseudoClass("last");
@@ -131,6 +135,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private void setupGoalDiv() {
         goalDiv = new VBox();
 
+        goalDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
+        goalDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
+        
         /*ToDo*/
         rootDiv.getChildren().add(goalDiv);
     }
@@ -144,36 +151,43 @@ public class SideMenu implements Constants, PropertyChangeListener {
             stonksObs.logout();
         });
         profileLink.setOnMouseClicked(e -> {
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_PROFILE_VIEW);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), null, null);
         });
         dashboardLink.setOnMouseClicked(e -> {
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), null, null);
         });
         goalLink.setOnMouseClicked(e -> {
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW.name(), null, null);
         });
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
-        profileLink.pseudoClassStateChanged(active, false);
-        goalLink.pseudoClassStateChanged(active, false);
-        dashboardLink.pseudoClassStateChanged(active, false);
-
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
+            resetPseudoClasses();
             profileLink.pseudoClassStateChanged(active, true);
         } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            resetPseudoClasses();
             goalLink.pseudoClassStateChanged(active, true);
         } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
+            resetPseudoClasses();
             dashboardLink.pseudoClassStateChanged(active, true);
         } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name())) {
             updateSideMenu();
+            updateMiniGoalBoxes();
         } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name())) {
             updateSideMenu();
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOAL_STATE_CHANGED.name())) {
+            updateMiniGoalBoxes();
         }
     }
 
+    private void resetPseudoClasses(){
+        profileLink.pseudoClassStateChanged(active, false);
+        goalLink.pseudoClassStateChanged(active, false);
+        dashboardLink.pseudoClassStateChanged(active, false);
+    }
+    
     private void updateSideMenu() {
         ProfileModel authProfile = stonksObs.getAuthProfile();
 
@@ -199,5 +213,13 @@ public class SideMenu implements Constants, PropertyChangeListener {
         }
         profileIcon.setTextFill(textColor);
         profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), Insets.EMPTY)));
+    }
+
+    private void updateMiniGoalBoxes() {
+        goalDiv.getChildren().clear();
+        
+        for(GoalModel goal:stonksObs.getTopGoals()){
+            goalDiv.getChildren().add(new Label(goal.getName() + " - " + goal.getProgress()));
+        }
     }
 }

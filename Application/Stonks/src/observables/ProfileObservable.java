@@ -37,7 +37,7 @@ public class ProfileObservable extends PropertyChangeSupport implements Constant
         if(edited){
             /*CAN BE CHANGED INTO ANOTHER EVENT IF DECIDED BETTER 
             In order to update the view*/
-            stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED);
+            stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name(), null, null);
         }
         
         return edited;
@@ -47,7 +47,7 @@ public class ProfileObservable extends PropertyChangeSupport implements Constant
         boolean removed = cProfile.removeProfile(getAuthProfile().getId());
         
         if(removed){
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), null, null);
         }
         
         return removed;
