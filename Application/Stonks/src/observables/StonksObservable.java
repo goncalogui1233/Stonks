@@ -1,6 +1,7 @@
 package observables;
 
 import controllers.ProfileController;
+import exceptions.EmptyGoalListException;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class StonksObservable extends PropertyChangeSupport implements Constants
         return loggedOut;
     }
     
-    public List<GoalModel> getTopGoals(){
+    public List<GoalModel> getTopGoals() throws EmptyGoalListException {
         return getAuthProfile().getTopGoals(5);
     }
 }

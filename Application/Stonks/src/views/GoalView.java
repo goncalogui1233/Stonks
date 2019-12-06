@@ -165,7 +165,7 @@ public class GoalView implements Constants, PropertyChangeListener {
 
             if (goalsObs.getAuthProfile().getGoals().size() < 1) {
                 middleContainer.getChildren().add(lblNoGoalsMsg);
-            } else if (!goalsObs.getStonksObs().getAuthProfile().hasIncompletedGoals() && !showCompleted) {
+            } else if (!goalsObs.getStonksObs().getAuthProfile().hasIncompleteGoals() && !showCompleted) {
                 middleContainer.getChildren().add(lblOnlyCompletedGoals);
             } else {
                 middleContainer.getChildren().add(goalsScrollPane);

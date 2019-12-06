@@ -75,7 +75,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     public boolean updateWallet(int id, int value){
         boolean ans = false;
         try {
-            ans = cGoal.getGoal(id).getWallet().setSavedMoney(value);
+            ans = cGoal.manageGoalFunds(id, value);
         } catch (AuthenticationException ex) {
             Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GoalNotFoundException ex) {

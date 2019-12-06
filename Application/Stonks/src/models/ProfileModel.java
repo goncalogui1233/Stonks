@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.EmptyGoalListException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,7 +115,7 @@ public class ProfileModel implements Serializable {
     public boolean hasCompletedGoals() {
 
         try {
-            for (GoalModel goal : this.goals.values()) {
+            for (GoalModel goal : this.goalList.values()) {
                 if (goal.isCompleted()) {
                     return true;
                 }
@@ -129,7 +130,7 @@ public class ProfileModel implements Serializable {
     public boolean hasIncompleteGoals() {
 
         try {
-            for (GoalModel goal : this.goals.values()) {
+            for (GoalModel goal : this.goalList.values()) {
                 if (!goal.isCompleted()) {
                     return true;
                 }
@@ -151,22 +152,20 @@ public class ProfileModel implements Serializable {
     }
 
     /*INCOMPLETE*/
-    public List<GoalModel> getTopGoals(int quant) {
+    public List<GoalModel> getTopGoals(int quant) throws EmptyGoalListException{
         List<GoalModel> tempList = new ArrayList();
-
-        for (GoalModel newGoal : goalList.values()) {
-            if (tempList.size() < quant) {
-                tempList.add(newGoal);
-            } else {
-                for (GoalModel insertedGoal : tempList) {
-                    if (newGoal.getProgress() > insertedGoal.getProgress()) {
-                        tempList.remove(insertedGoal);
-                        tempList.add(newGoal);
-                    }
+        
+        try{
+            for (GoalModel newGoal : goalList.values()) {
+                if (tempList.size() < quant) {
+                    tempList.add(newGoal);
+                } else {
                 }
             }
+        }catch(NullPointerException ex){
+            throw new EmptyGoalListException();
         }
-
+            
         return tempList;
     }
 }

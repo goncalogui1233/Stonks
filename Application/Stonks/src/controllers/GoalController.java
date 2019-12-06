@@ -83,7 +83,6 @@ public class GoalController implements Constants {
 
             /*Adds the goal to the current profile goals list*/
             data.getAuthProfile().getGoals().put(newGoal.getId(), newGoal);
-            System.out.println(data.getAuthProfile().getFirstName());
             /*UPDATE DATABASE*/
             data.updateDatabase();
 
@@ -179,10 +178,13 @@ public class GoalController implements Constants {
     }
 
     public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
+        GoalModel goal = getGoal(id);
+        
+        if(updateValue < 0 || updateValue > goal.getObjective())
+            return false;
+        
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();
-
-        GoalModel goal = getGoal(id);
 
         /*If a deposit was never made*/
         if (goal.getWallet().getFirstDepositDate() == null) {
@@ -190,31 +192,16 @@ public class GoalController implements Constants {
             goal.getWallet().setFirstDepositDate(date);
             /*And the last deposit date*/
             goal.getWallet().setLastDepositDate(date);
-
         } else {
             /*If the first deposit was already made, only the updates last deposit date*/
             goal.getWallet().setLastDepositDate(date);
-
         }
 
-        if (updateValue > 0) {
+        goal.getWallet().setSavedMoney(updateValue);
 
-            if (goal.getWallet().getSavedMoney() + updateValue > goal.getObjective()) {
-                return false;
-            }
-
-            goal.getWallet().addMoney(updateValue);
-        } else {
-
-            if (goal.getWallet().getSavedMoney() - Math.abs(updateValue) < 0) {
-                return false;
-            }
-
-            goal.getWallet().removeMoney(Math.abs(updateValue));
-        }
-
+        data.updateDatabase();
+        
         return true;
-
     }
 
     public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {

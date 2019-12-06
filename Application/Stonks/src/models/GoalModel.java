@@ -85,7 +85,7 @@ public class GoalModel implements Serializable {
   
     public double getProgress() {
         /*Returns the value from a range of 0 to 1*/
-        return (wallet.getSavedMoney() / objective);
+        return (Double.valueOf(wallet.getSavedMoney()) / Double.valueOf(objective));
     }
   
     public boolean isCompleted() {

@@ -1,9 +1,12 @@
 package gui_components;
 
+import exceptions.EmptyGoalListException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -218,8 +221,12 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private void updateMiniGoalBoxes() {
         goalDiv.getChildren().clear();
         
-        for(GoalModel goal:stonksObs.getTopGoals()){
-            goalDiv.getChildren().add(new Label(goal.getName() + " - " + goal.getProgress()));
+        try {
+            for(GoalModel goal:stonksObs.getTopGoals()){
+                goalDiv.getChildren().add(new Label(goal.getName() + " - " + goal.getProgress()));
+            }
+        } catch (EmptyGoalListException ex) {
+            goalDiv.getChildren().add(new Label("There are no pending goals"));
         }
     }
 }

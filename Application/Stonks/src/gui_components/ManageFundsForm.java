@@ -176,10 +176,8 @@ public class ManageFundsForm {
         imagePlusContainer.getChildren().add(imagePlusButton);
 
         imagePlusContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            String txt = value.getText();
-            if (!txt.isEmpty()) {
-                Integer i = Integer.parseInt(txt);
-                valueForAccom += i;
+            if (!value.getText().isEmpty()) {
+                valueForAccom += Integer.parseInt(value.getText());
                 accomplished.setText("Accomplished: " + valueForAccom + "€");
             }
         });
@@ -191,11 +189,9 @@ public class ManageFundsForm {
         imageSubContainer.getChildren().add(imageSubButton);
 
         imageSubContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            String txt = value.getText();
-            if (!txt.isEmpty()) {
-                Integer i = Integer.parseInt(txt);
-                if (valueForAccom - i >= 0) {
-                    valueForAccom -= i;
+            if (!value.getText().isEmpty()) {
+                if (valueForAccom - Integer.parseInt(value.getText()) >= 0) {
+                    valueForAccom -= Integer.parseInt(value.getText());
                     accomplished.setText("Accomplished: " + valueForAccom + "€");
                 }
             }
@@ -237,9 +233,7 @@ public class ManageFundsForm {
     }
 
     private void setupEventListeners() {
-
         btnsubmit.setOnAction((ActionEvent e) -> {
-
             try {
                 /*int errors = 0;
                 
