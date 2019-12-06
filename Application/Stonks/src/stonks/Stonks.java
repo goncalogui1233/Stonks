@@ -4,19 +4,11 @@ import com.sun.javafx.css.StyleManager;
 import controllers.DashboardController;
 import controllers.GoalController;
 import controllers.ProfileController;
-import exceptions.AuthenticationException;
-import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.GoalModel;
-import models.ProfileModel;
-import models.WalletModel;
 import observables.AuthenticationObservable;
 import observables.GoalsObservable;
 import observables.ProfileObservable;
@@ -79,7 +71,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
 //        populateApp(); /*Remove later*/
         //ProfileModel.setData(data);
         //WalletModel.setData(data);
-        stonksObs = new StonksObservable(data);
+        stonksObs = new StonksObservable(cProfile, data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);

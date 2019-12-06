@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package observables;
 
 import controllers.GoalController;
@@ -11,17 +6,12 @@ import exceptions.EmptyDepositException;
 import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.GoalModel;
 import models.ProfileModel;
 import stonks.Constants;
 
-/**
- *
- * @author Tiago
- */
 public class GoalsObservable extends PropertyChangeSupport implements Constants {
 
     private final StonksObservable stonksObs;
@@ -51,6 +41,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
 
         if (ans) {
             firePropertyChange(GOAL_EVENT.CREATE_GOAL.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
 
         return ans;
@@ -61,6 +52,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
 
         if (ans) {
             firePropertyChange(GOAL_EVENT.DELETE_GOAL.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
 
         return ans;
@@ -74,6 +66,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
 
         if (ans) {
             firePropertyChange(GOAL_EVENT.EDIT_GOAL.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
 
         return ans;
@@ -91,6 +84,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         
         if(ans){
             firePropertyChange(GOAL_EVENT.UPDATE_WALLET.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
         
         return ans;  
@@ -106,7 +100,7 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     }
     
      public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
-         return cGoal.getGoalProgress(id);
+         return cGoal.getGoal(id).getProgress();
      }
 
     public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {

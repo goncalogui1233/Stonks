@@ -1,22 +1,27 @@
 package observables;
 
+import controllers.ProfileController;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.List;
+import models.GoalModel;
 import models.ProfileModel;
 import stonks.Constants;
 import stonks.StonksData;
 
 public class StonksObservable extends PropertyChangeSupport implements Constants{
     
+    private final ProfileController cProfile;
     private final StonksData data;
     
-    public StonksObservable(StonksData data) {
+    public StonksObservable(ProfileController cProfile, StonksData data) {
         super(data);
         
+        this.cProfile = cProfile;
         this.data = data;
     }
     
-    /*Methods*/
+    /*Bridge Methods*/
     public HashMap<Integer, ProfileModel> getListProfiles() {
         return data.getListProfiles();
     }
@@ -24,8 +29,18 @@ public class StonksObservable extends PropertyChangeSupport implements Constants
     public ProfileModel getAuthProfile(){
         return data.getAuthProfile();
     }
-  
-    public void firePropertyChange(STONKS_EVENT event){
-        firePropertyChange(event.name(), null, null);
+    
+    public boolean logout(){
+        boolean loggedOut = cProfile.logoutProfile();
+        
+        if(loggedOut){
+            firePropertyChange(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), null, null);
+        }
+        
+        return loggedOut;
+    }
+    
+    public List<GoalModel> getTopGoals(){
+        return getAuthProfile().getTopGoals(5);
     }
 }

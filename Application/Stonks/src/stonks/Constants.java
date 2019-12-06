@@ -170,7 +170,9 @@ public interface Constants {
         GOTO_GOAL_VIEW, 
         GOTO_DASHBOARD_VIEW,
         /*GENERAL EVENTS*/
-        PROFILE_HAS_BEEN_EDITED
+        PROFILE_HAS_BEEN_EDITED,
+        PROFILE_HAS_BEEN_AUTH,
+        GOAL_STATE_CHANGED
     };
 
     public static enum AUTH_EVENT {

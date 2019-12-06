@@ -2,16 +2,14 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import stonks.StonksData;
 
 public class ProfileModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static int idCounter = 0;
-    private static StonksData data;
 
     private int id;
     private String firstName;
@@ -20,7 +18,7 @@ public class ProfileModel implements Serializable {
     private final String securityAnswer;
     private String password;
     private String color;
-    private HashMap<Integer, GoalModel> goals;
+    private HashMap<Integer, GoalModel> goalList;
 
     /*ProfileModel constructor WITH Password*/
     public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
@@ -30,7 +28,7 @@ public class ProfileModel implements Serializable {
         this.securityAnswer = securityAnswer;
         this.password = password;
         this.color = color;
-        this.goals = new HashMap<>();
+        this.goalList = new HashMap<>();
 
         id = idCounter++;
     }
@@ -42,13 +40,9 @@ public class ProfileModel implements Serializable {
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.color = color;
-        this.goals = new HashMap<>();
+        this.goalList = new HashMap<>();
 
         id = idCounter++;
-    }
-
-    public static void setData(StonksData data) {
-        ProfileModel.data = data;
     }
 
     public int getId() {
@@ -100,16 +94,16 @@ public class ProfileModel implements Serializable {
     }
 
     public HashMap<Integer, GoalModel> getGoals() {
-        return goals;
+        return goalList;
     }
 
     public void setGoals(HashMap<Integer, GoalModel> goals) {
-        this.goals = goals;
+        this.goalList = goals;
     }
 
     public boolean hasGoals() {
-        if (goals != null) {
-            if (goals.size() > 0) {
+        if (goalList != null) {
+            if (goalList.size() > 0) {
                 return true;
             }
         }
@@ -132,7 +126,7 @@ public class ProfileModel implements Serializable {
         return false;
     }
 
-    public boolean hasIncompletedGoals() {
+    public boolean hasIncompleteGoals() {
 
         try {
             for (GoalModel goal : this.goals.values()) {
@@ -153,6 +147,26 @@ public class ProfileModel implements Serializable {
 
     @Override
     public String toString() {
-        return "ProfileModel{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", password=" + password + ", color=" + color + ", goals=" + goals + '}';
+        return "ProfileModel{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", password=" + password + ", color=" + color + ", goals=" + goalList + '}';
+    }
+
+    /*INCOMPLETE*/
+    public List<GoalModel> getTopGoals(int quant) {
+        List<GoalModel> tempList = new ArrayList();
+
+        for (GoalModel newGoal : goalList.values()) {
+            if (tempList.size() < quant) {
+                tempList.add(newGoal);
+            } else {
+                for (GoalModel insertedGoal : tempList) {
+                    if (newGoal.getProgress() > insertedGoal.getProgress()) {
+                        tempList.remove(insertedGoal);
+                        tempList.add(newGoal);
+                    }
+                }
+            }
+        }
+
+        return tempList;
     }
 }

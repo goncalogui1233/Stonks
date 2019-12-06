@@ -178,16 +178,6 @@ public class GoalController implements Constants {
         }
     }
 
-    public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException {
-
-        double objective = this.getGoal(id).getObjective();
-        double currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
-
-        /*Returns the value in percentage (%)*/
-        return (currentSavedMoney / objective);
-
-    }
-
     public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();

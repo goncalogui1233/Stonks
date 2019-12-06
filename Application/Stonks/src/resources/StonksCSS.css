@@ -202,20 +202,39 @@
     -fx-border-width: 0 1 0 0;
     -fx-border-color: #bdbdbd;
 }
-#sideMenu #profileDiv{
+#sideMenu #profile{
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #bdbdbd;
     -fx-padding: 17px;
 }
-#sideMenu #profileDiv #profileIcon{
+#sideMenu #profile #profileIcon{
     -fx-alignment: center;
     -fx-font-weight: bold;
-    -fx-font-size: 25px;
+    -fx-font-size: 20px;
 }
-#sideMenu #profileDiv #profileLinkDiv *{
-    -fx-font-weight: bold;
+#sideMenu #profile #profileIcon:selected_black{
+    -fx-border-color: #333;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 5px;
+}
+#sideMenu #profile #profileIcon:selected_white{
+    -fx-border-color: #eee;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 5px;
+}
+#sideMenu #profile #profileInfo{
     -fx-font-size: 15px;
+    -fx-font-weight: bold;
     -fx-padding: 10px 10px 10px 20px;
+}
+#sideMenu #profile #profileInfo #lastName{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+#sideMenu #profile #profileInfo #logout{
+    -fx-padding: 10px 0px 0px 0px;
 }
 #sideMenu #linkDiv{
     -fx-border-width: 0 0 1 0;

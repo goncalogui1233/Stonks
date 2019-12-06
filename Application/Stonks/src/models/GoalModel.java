@@ -2,7 +2,6 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import stonks.StonksData;
 
 public class GoalModel implements Serializable {
 
@@ -83,7 +82,12 @@ public class GoalModel implements Serializable {
 
         return false;
     }
-
+  
+    public double getProgress() {
+        /*Returns the value from a range of 0 to 1*/
+        return (wallet.getSavedMoney() / objective);
+    }
+  
     public boolean isCompleted() {
         if (this.objective == this.wallet.getSavedMoney()) {
             return true;
