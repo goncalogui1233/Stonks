@@ -1,11 +1,16 @@
 package views;
 
 import controllers.GoalController;
+import exceptions.AuthenticationException;
+import exceptions.GoalNotFoundException;
+import gui_components.DialogBox;
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,6 +26,8 @@ import stonks.Constants;
 
 public class GoalView implements Constants, PropertyChangeListener {
 
+    private boolean showCompleted;
+
     //Containers 
     private VBox viewContent;
     private BorderPane topContainer;
@@ -32,6 +39,7 @@ public class GoalView implements Constants, PropertyChangeListener {
     //Labels 
     private Label viewTitle;
     private Label lblNoGoalsMsg;
+    private Label lblOnlyCompletedGoals;
 
     //Buttons 
     private Button btnAdd;
@@ -42,7 +50,9 @@ public class GoalView implements Constants, PropertyChangeListener {
     private GoalForm form;
 
     public GoalView(GoalsObservable goalsObs) {
+
         this.goalsObs = goalsObs;
+        showCompleted = false;
 
         root = new HBox();
         root.setId("goalView");
@@ -64,6 +74,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.EDIT_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.UPDATE_WALLET.name(), this);
+        goalsObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
     }
 
     private void setupGoalView() {
@@ -85,6 +96,12 @@ public class GoalView implements Constants, PropertyChangeListener {
         tbtnFilter = new ToggleButton("Show Completed");
         tbtnFilter.getStyleClass().addAll("lala");
 
+        tbtnFilter.setOnAction(e -> {
+
+            showCompleted = !showCompleted;
+            displayProfileGoals();
+        });
+
         topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
 
         topContainer.setLeft(viewTitle);
@@ -98,13 +115,16 @@ public class GoalView implements Constants, PropertyChangeListener {
         lblNoGoalsMsg = new Label("This profile doesn’t have any goals. Add a new goal and let us help you achieve it!");
         lblNoGoalsMsg.setId("noGoalsMsg");
 
+        //Only has completed goals Mgs
+        lblOnlyCompletedGoals = new Label("This profile has achieved all goals!  Add a new goal and let us help you achieve it!");
+        lblOnlyCompletedGoals.setId("noGoalsMsg");
+
         //Goals container 
         goalsContainer = new VBox();
         goalsContainer.setId("goalsContainer");
         goalsContainer.setMinWidth(GOALS_CONTAINER_WIDTH);
         goalsContainer.setMaxWidth(GOALS_CONTAINER_WIDTH);
 
-//        this.displayProfileGoals(); 
         //Scrollpane 
         goalsScrollPane = new ScrollPane();
         goalsScrollPane.setStyle("-fx-background-color:transparent;");
@@ -124,7 +144,6 @@ public class GoalView implements Constants, PropertyChangeListener {
 
         goalsScrollPane.setContent(goalsContainer);
 
-        //middleContainer.getChildren().addAll(lblNoGoalsMsg); 
         //View container 
         viewContent = new VBox();
         viewContent.setMinSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
@@ -146,12 +165,22 @@ public class GoalView implements Constants, PropertyChangeListener {
 
             if (goalsObs.getAuthProfile().getGoals().size() < 1) {
                 middleContainer.getChildren().add(lblNoGoalsMsg);
+            } else if (!goalsObs.getStonksObs().getAuthProfile().hasIncompletedGoals() && !showCompleted) {
+                middleContainer.getChildren().add(lblOnlyCompletedGoals);
             } else {
                 middleContainer.getChildren().add(goalsScrollPane);
                 for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
                     Label divider = new Label();
                     divider.getStyleClass().addAll("divider");
-                    goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                    if (showCompleted) {
+                        goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                    } else {
+                        if (!goal.isCompleted()) {
+                            goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                        }
+
+                    }
+
                 }
             }
         } catch (NullPointerException ex) {
@@ -160,6 +189,10 @@ public class GoalView implements Constants, PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+
+        if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            displayProfileGoals();
+        }
         if (evt.getPropertyName().equals(GOAL_EVENT.CREATE_GOAL.name())) {
             displayProfileGoals();
         }

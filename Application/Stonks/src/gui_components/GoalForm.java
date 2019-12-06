@@ -7,8 +7,6 @@ package gui_components;
 
 import exceptions.AuthenticationException;
 import exceptions.GoalNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -51,7 +49,6 @@ public class GoalForm implements Constants {
     private VBox form;
     private VBox nameDiv;
     private VBox objectiveDiv;
-    private HBox objectiveInlineInput;
     private VBox deadlineDiv;
     private HBox deadlineInlineInput;
     private BorderPane bottomLayout;
@@ -62,7 +59,6 @@ public class GoalForm implements Constants {
     private Label lblName;
     private Label errorName;
     private Label lblObjective;
-    private Label lblCurrency;
     private Label errorObjective;
     private Label lblDeadline;
     private Label errorDeadline;
@@ -116,7 +112,7 @@ public class GoalForm implements Constants {
         titleContainer = new VBox();
         title = new Label("Adding Goal");
         title.getStyleClass().addAll("title");
-        
+
         if (goalId > 0) {
             try {
                 title.setText("Editting");
@@ -134,12 +130,11 @@ public class GoalForm implements Constants {
             }
 
         }
-        
+
         titleContainer.getChildren().add(title);
-        if(goalId > 0){
+        if (goalId > 0) {
             titleContainer.getChildren().add(subtitle);
         }
-        
 
         //Close button 
         imageContainer = new Pane();
@@ -205,7 +200,6 @@ public class GoalForm implements Constants {
         lblObjective = new Label("Objective (€)");
         lblObjective.getStyleClass().addAll("fieldTitle");
 
-        objectiveInlineInput = new HBox();
         txfObjective = new TextField();
         //txfObjective.setMinWidth(250); 
         txfObjective.getStyleClass().add("fieldInput");
@@ -240,9 +234,6 @@ public class GoalForm implements Constants {
             }
         });
 
-        /*lblCurrency = new Label("€"); 
-        lblCurrency.getStyleClass().addAll("currency"); 
-        objectiveInlineInput.getChildren().addAll(txfObjective, lblCurrency);*/
         errorObjective = new Label("Objective value cannot be negative");
         errorObjective.getStyleClass().addAll("fieldError");
         errorObjective.setVisible(false);
@@ -322,6 +313,7 @@ public class GoalForm implements Constants {
     }
 
     private void setupEventListeners() {
+
         btnSubmit.setOnAction((ActionEvent e) -> {
 
             int errors = 0;
@@ -400,15 +392,21 @@ public class GoalForm implements Constants {
             }
 
             if (errors == 0) {
-                boolean isGoalCreated = false;
 
                 try {
                     if (hasDeadline.isSelected()) {
                         if (goalId > 0) {
                             try {
-                                isGoalCreated = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
-                                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                goalForm.close();
+
+                                DBOX_CONTENT content;
+                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
+                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                    goalForm.close();
+                                }
+
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             } catch (GoalNotFoundException ex) {
@@ -416,7 +414,7 @@ public class GoalForm implements Constants {
                             }
                         } else {
                             try {
-                                isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
+                                goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
                                 goalForm.close();
                             } catch (AuthenticationException ex) {
@@ -427,9 +425,14 @@ public class GoalForm implements Constants {
                     } else {
                         if (goalId > 0) {
                             try {
-                                isGoalCreated = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
-                                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                goalForm.close();
+                                DBOX_CONTENT content;
+                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                    goalForm.close();
+                                }
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             } catch (GoalNotFoundException ex) {
@@ -437,7 +440,7 @@ public class GoalForm implements Constants {
                             }
                         } else {
                             try {
-                                isGoalCreated = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                                goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
                                 DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
                                 goalForm.close();
                             } catch (AuthenticationException ex) {
