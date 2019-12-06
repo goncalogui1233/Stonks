@@ -1,11 +1,16 @@
 package views;
 
 import controllers.GoalController;
+import exceptions.AuthenticationException;
+import exceptions.GoalNotFoundException;
+import gui_components.DialogBox;
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +25,8 @@ import observables.GoalsObservable;
 import stonks.Constants;
 
 public class GoalView implements Constants, PropertyChangeListener {
+
+    private boolean showCompleted;
 
     //Containers 
     private VBox viewContent;
@@ -42,7 +49,9 @@ public class GoalView implements Constants, PropertyChangeListener {
     private GoalForm form;
 
     public GoalView(GoalsObservable goalsObs) {
+
         this.goalsObs = goalsObs;
+        showCompleted = false;
 
         root = new HBox();
         root.setId("goalView");
@@ -64,6 +73,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.EDIT_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.UPDATE_WALLET.name(), this);
+        goalsObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
     }
 
     private void setupGoalView() {
@@ -85,6 +95,16 @@ public class GoalView implements Constants, PropertyChangeListener {
         tbtnFilter = new ToggleButton("Show Completed");
         tbtnFilter.getStyleClass().addAll("lala");
 
+        tbtnFilter.setOnAction(e -> {
+
+            showCompleted = !showCompleted;
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
+        });
+
         topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
 
         topContainer.setLeft(viewTitle);
@@ -104,7 +124,6 @@ public class GoalView implements Constants, PropertyChangeListener {
         goalsContainer.setMinWidth(GOALS_CONTAINER_WIDTH);
         goalsContainer.setMaxWidth(GOALS_CONTAINER_WIDTH);
 
-//        this.displayProfileGoals(); 
         //Scrollpane 
         goalsScrollPane = new ScrollPane();
         goalsScrollPane.setStyle("-fx-background-color:transparent;");
@@ -124,7 +143,6 @@ public class GoalView implements Constants, PropertyChangeListener {
 
         goalsScrollPane.setContent(goalsContainer);
 
-        //middleContainer.getChildren().addAll(lblNoGoalsMsg); 
         //View container 
         viewContent = new VBox();
         viewContent.setMinSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
@@ -158,19 +176,71 @@ public class GoalView implements Constants, PropertyChangeListener {
         }
     }
 
+    public void displayIncompleteProfileGoals() {
+        try {
+            goalsContainer.getChildren().removeAll(goalsContainer.getChildren());
+            middleContainer.getChildren().removeAll(middleContainer.getChildren());
+
+            if (goalsObs.getAuthProfile().getGoals().size() < 1) {
+                middleContainer.getChildren().add(lblNoGoalsMsg);
+            } else {
+                middleContainer.getChildren().add(goalsScrollPane);
+                for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
+                    try {
+                        if (goalsObs.getGoalProgress(goal.getId()) < 1.0) {
+                            Label divider = new Label();
+                            divider.getStyleClass().addAll("divider");
+                            goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                        }
+                    } catch (AuthenticationException ex) {
+                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+                    } catch (GoalNotFoundException ex) {
+                        DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+                    }
+
+                }
+            }
+        } catch (NullPointerException ex) {
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+
+        if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
+        }
         if (evt.getPropertyName().equals(GOAL_EVENT.CREATE_GOAL.name())) {
-            displayProfileGoals();
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.DELETE_GOAL.name())) {
-            displayProfileGoals();
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.EDIT_GOAL.name())) {
-            displayProfileGoals();
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.UPDATE_WALLET.name())) {
-            displayProfileGoals();
+            if (showCompleted) {
+                displayProfileGoals();
+            } else {
+                displayIncompleteProfileGoals();
+            }
         }
     }
 }

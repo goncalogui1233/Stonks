@@ -42,7 +42,8 @@ public interface Constants {
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
-        CONFIRM_DELETE_GOAL("Deleting goal \"{}\"", "This action will delete this goal permanently...");
+        CONFIRM_GOAL_DELETE("Deleting goal \"{}\"", "This action will delete this goal permanently..."),
+        CONFIRM_GOAL_EDIT("Editing goal \"{}\"", "This action will edit this goal permanently...");
 
         private final String subTitle;
         private String newSubTitle;
