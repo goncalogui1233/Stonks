@@ -116,7 +116,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         lblNoGoalsMsg.setId("noGoalsMsg");
 
         //Only has completed goals Mgs
-        lblOnlyCompletedGoals = new Label("This profile as achieved all goals!  Add a new goal and let us help you achieve it!");
+        lblOnlyCompletedGoals = new Label("This profile has achieved all goals!  Add a new goal and let us help you achieve it!");
         lblOnlyCompletedGoals.setId("noGoalsMsg");
 
         //Goals container 
