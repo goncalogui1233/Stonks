@@ -90,4 +90,15 @@ public class GoalModel implements Serializable {
 
         return false;
     }
+    
+    public int getGoalProgress()
+    {
+        if (getObjective() <= 0)
+        {
+            return 0;
+        }
+        //To remove Trunc of integer
+       return (int) ((getWallet().getSavedMoney() * 1.0 / getObjective())*100); 
+    }
+    
 }
