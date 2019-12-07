@@ -115,10 +115,13 @@ public class StatisticsBox implements Constants, PropertyChangeListener {
         cbMonth.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                 System.out.println("Mes:" + newValue);
+                dashObs.goalsFiltered(cbYear.getValue().toString(), newValue.toString());
+                
                 });
         
         cbYear.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
+                dashObs.goalsFiltered(newValue.toString(), cbMonth.getValue().toString());
                 System.out.println("Year:" + newValue);
                 });
     }

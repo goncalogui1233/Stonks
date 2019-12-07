@@ -156,16 +156,19 @@ public class DashboardController implements Constants {
         int savedMoney = 0;
         int totalObjective = 0;
 
-        for (GoalModel obj : filterGoals) {
-            totalGoals++;
-            totalObjective += obj.getObjective();
-            savedMoney += obj.getWallet().getSavedMoney();
+        try {
+            for (GoalModel obj : filterGoals) {
+                totalGoals++;
+                totalObjective += obj.getObjective();
+                savedMoney += obj.getWallet().getSavedMoney();
 
-            if (obj.getGoalProgress() >= 100) { //Goal completed
-                GoalsComplete++;
-            } else {
-                GoalsIncomplete++;
+                if (obj.getGoalProgress() >= 100) { //Goal completed
+                    GoalsComplete++;
+                } else {
+                    GoalsIncomplete++;
+                }
             }
+        } catch (Exception e) {
         }
 
         returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE,
@@ -188,37 +191,49 @@ public class DashboardController implements Constants {
     private List<GoalModel> getListOfGoalsByYearAndMonth(int year, String month) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.getCreationDate()
-                    .getMonth().toString().equals(month) //Same Month and Year
-                    && obj.getCreationDate()
-                            .getYear() == year) {
-                listOfAllGoals.add(obj);
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.getCreationDate()
+                        .getMonth().toString().equals(month) //Same Month and Year
+                        && obj.getCreationDate()
+                                .getYear() == year) {
+                    listOfAllGoals.add(obj);
+                }
             }
+        } catch (Exception e) {
         }
+
         return listOfAllGoals;
     }
 
     private List<GoalModel> getListOfGoalsByYear(int year) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.getCreationDate().getYear() == year) {
-                listOfAllGoals.add(obj);
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.getCreationDate().getYear() == year) {
+                    listOfAllGoals.add(obj);
+                }
             }
+        } catch (Exception e) {
         }
+
         return listOfAllGoals;
     }
 
     private List<GoalModel> getListOfGoalsByMonth(String month) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.getCreationDate()
-                    .getMonth().toString().equals(month)) {
-                listOfAllGoals.add(obj);
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.getCreationDate()
+                        .getMonth().toString().equals(month)) {
+                    listOfAllGoals.add(obj);
+                }
             }
+        } catch (Exception e) {
         }
+
         return listOfAllGoals;
     }
 }

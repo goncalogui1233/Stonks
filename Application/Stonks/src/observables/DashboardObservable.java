@@ -7,7 +7,9 @@ package observables;
 
 import controllers.DashboardController;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 import java.util.Map;
+import models.GoalModel;
 import stonks.Constants;
 
 
@@ -41,5 +43,9 @@ public class DashboardObservable  extends PropertyChangeSupport implements Const
     public int moneySaved()
     {
         return cDashboard.getCurrentlySaved();
+    }
+    
+    public Map<Integer, String> goalsFiltered(String year, String month){
+        return cDashboard.CalculateGoalsStatistics(year, month);
     }
 }
