@@ -3,27 +3,33 @@ package views;
 import controllers.GoalController;
 import gui_components.DashboardBox;
 import gui_components.StatisticsBox;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import observables.DashboardObservable;
 import stonks.Constants;
 
-public class DashboardView implements Constants{
+public class DashboardView implements Constants, PropertyChangeListener{
+    
+    private final DashboardObservable dashObs;
     
     private final TilePane root;
     private DashboardBox dashboardBox;
     private StatisticsBox statisticsBox;
-    private GoalController controller;
     
-    public DashboardView(GoalController controller) {
-        this.controller = controller;
+    public DashboardView(DashboardObservable dashboardobservable) {
+        this.dashObs = dashboardobservable;
+        
         this.root = new TilePane();
-        dashboardBox = new DashboardBox(controller);
-        statisticsBox = new StatisticsBox(controller);
+        
+        setupContainers();
+        setupPropertyChangeListeners();
+    }
+    
+    private void setupContainers(){
+        dashboardBox = new DashboardBox(dashObs);
+        statisticsBox = new StatisticsBox(dashObs);
+        //statisticsBox = new StatisticsBox(controller);
         root.setPrefColumns(2);
         root.setPrefTileWidth(DASHBOARD_VIEW_WIDTH/2);
         root.setId("dashboardView");
@@ -31,4 +37,19 @@ public class DashboardView implements Constants{
         root.setMaxSize(DASHBOARD_VIEW_WIDTH, DASHBOARD_VIEW_HEIGHT);
         root.getChildren().addAll(dashboardBox.getRoot(),statisticsBox.getRoot());
     }
+    
+    public TilePane getRoot()
+    {
+        return root;
+    }
+    
+    private void setupPropertyChangeListeners(){
+        dashObs.addPropertyChangeListener(DASHBOARD_EVENT.CALCULATE_STATISTICS.name(),this);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

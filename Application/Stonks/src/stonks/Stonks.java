@@ -13,9 +13,11 @@ import models.GoalModel;
 import models.ProfileModel;
 import models.WalletModel;
 import observables.AuthenticationObservable;
+import observables.DashboardObservable;
 import observables.GoalsObservable;
 import observables.StonksObservable;
 import views.AuthenticationView;
+import views.DashboardView;
 import views.GoalView;
 
 public class Stonks extends Application implements Constants, PropertyChangeListener{
@@ -25,6 +27,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
      private GoalsObservable goalsObs;
+     private DashboardObservable dashObs;
 
     private ProfileController cProfile;
     private DashboardController cDashboard;
@@ -32,6 +35,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
   
     private AuthenticationView authenticationView;
     private GoalView goalView;
+    private DashboardView dashView;
     
     public static void main(String[] args) {
         launch(args);
@@ -56,6 +60,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
         cGoal = new GoalController(data);
+        cDashboard = new DashboardController(data);
 
         ProfileModel.setData(data);
         GoalModel.setData(data);
@@ -64,7 +69,10 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         stonksObs = new StonksObservable(data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
+        dashObs = new DashboardObservable(cDashboard, stonksObs);
+
         
+        dashView = new DashboardView(dashObs);
         authenticationView = new AuthenticationView(authObs);
         goalView = new GoalView(goalsObs);
     }
@@ -75,8 +83,10 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         window.setWidth(APP_WIDTH);
         window.setHeight(APP_HEIGHT);
 
+        
         //window.setScene(new Scene(new ProfileView()));
-        window.setScene(new Scene(authenticationView.getRoot()));
+        //window.setScene(new Scene(authenticationView.getRoot()));
+        window.setScene(new Scene(dashView.getRoot()));
 
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS.css");

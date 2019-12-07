@@ -171,5 +171,5 @@ public interface Constants {
     public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
     public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL};
     public static enum PROFILE_EVENT {};
-    public static enum DASHBOARD_EVENT {};
+    public static enum DASHBOARD_EVENT { CALCULATE_STATISTICS};
 }

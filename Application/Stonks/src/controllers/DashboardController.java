@@ -23,18 +23,22 @@ public class DashboardController implements Constants {
     public int getCurrentySaved() {
         int sum = 0;
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.getGoalProgress() < 100 //dont count progress of goals achived
-                    && obj.getWallet().getSavedMoney() >= 0) // dont add negative values
-            {
-                if (obj.hasDeadline()) { //verify if deadline already passed
-                    if (LocalDate.now().compareTo(obj.getDeadlineDate()) < 0) {
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.getGoalProgress() < 100 //dont count progress of goals achived
+                        && obj.getWallet().getSavedMoney() >= 0) // dont add negative values
+                {
+                    if (obj.hasDeadline()) { //verify if deadline already passed
+                        if (LocalDate.now().compareTo(obj.getDeadlineDate()) < 0) {
+                            sum += obj.getWallet().getSavedMoney();
+                        }
+                    } else {
                         sum += obj.getWallet().getSavedMoney();
                     }
-                } else {
-                    sum += obj.getWallet().getSavedMoney();
                 }
             }
+
+        } catch (Exception e) {
         }
 
         return sum;
@@ -44,12 +48,15 @@ public class DashboardController implements Constants {
         Map<String, String> returnData = new HashMap<>();;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.hasDeadline()
-                    && obj.getGoalProgress() < 100) //dont count goals already accomplished
-            { //goals 
-                returnData.put(obj.getName(), obj.getDeadlineDate().format(formatter));
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.hasDeadline()
+                        && obj.getGoalProgress() < 100) //dont count goals already accomplished
+                { //goals 
+                    returnData.put(obj.getName(), obj.getDeadlineDate().format(formatter));
+                }
             }
+        } catch (Exception e) {
         }
 
         return returnData.isEmpty() ? null : returnData;
@@ -60,10 +67,14 @@ public class DashboardController implements Constants {
     public Map<String, Integer> getListOfUncomplichedGoals() {
         Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
 
-        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-            if (obj.getGoalProgress() < 100) {
-                String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
-                allData.put(text, obj.getGoalProgress());
+        try {
+
+        } catch (Exception e) {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                if (obj.getGoalProgress() < 100) {
+                    String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
+                    allData.put(text, obj.getGoalProgress());
+                }
             }
         }
 
@@ -94,12 +105,13 @@ public class DashboardController implements Constants {
         List<GoalModel> listOfAllGoals;
         int intYear = 0;
         String monthUpperCase;
-        
+
         try {
-            if(!year.equals("Year"))
+            if (!year.equals("Year")) {
                 intYear = Integer.parseInt(year);
+            }
             monthUpperCase = month.toUpperCase();
-            
+
         } catch (Exception e) {
             returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
@@ -148,28 +160,28 @@ public class DashboardController implements Constants {
             totalGoals++;
             totalObjective += obj.getObjective();
             savedMoney += obj.getWallet().getSavedMoney();
-            
+
             if (obj.getGoalProgress() >= 100) { //Goal completed
                 GoalsComplete++;
+            } else {
+                GoalsIncomplete++;
             }
-            else
-                GoalsIncomplete++; 
         }
 
-        returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, 
+        returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE,
                 Integer.toString(GoalsComplete));
-        
+
         returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE,
                 Integer.toString(GoalsIncomplete));
-        
-        returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, 
+
+        returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS,
                 Integer.toString(totalGoals));
-        
-        returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, 
-                Integer.toString(savedMoney)+"€");
-        
+
+        returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY,
+                Integer.toString(savedMoney) + "€");
+
         returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE,
-                Integer.toString(totalObjective)+"€");
+                Integer.toString(totalObjective) + "€");
 
     }
 
