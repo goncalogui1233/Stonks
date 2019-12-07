@@ -65,12 +65,12 @@ public class DashboardControllerTest {
         //goal not accomplished and deadline passed
         GoalModel model6 = new GoalModel("PC", 100, LocalDate.of(2010, Month.MARCH, 1));
 
-        data.getAuthProfile().getGoals().add(model1);
-        data.getAuthProfile().getGoals().add(model2);
-        data.getAuthProfile().getGoals().add(model3);
-        data.getAuthProfile().getGoals().add(model4);
-        data.getAuthProfile().getGoals().add(model5);
-        data.getAuthProfile().getGoals().add(model6);
+        data.getAuthProfile().getGoals().put(model1.getId(), model1);
+        data.getAuthProfile().getGoals().put(model2.getId(), model2);
+        data.getAuthProfile().getGoals().put(model3.getId(), model3);
+        data.getAuthProfile().getGoals().put(model4.getId(), model4);
+        data.getAuthProfile().getGoals().put(model5.getId(), model5);
+        data.getAuthProfile().getGoals().put(model6.getId(), model6);
 
         //Goal already achived
         model1.getWallet().setSavedMoney(100);
@@ -103,12 +103,12 @@ public class DashboardControllerTest {
         //goal deadline already pass
         GoalModel model6 = new GoalModel("Bike-2", 100, LocalDate.of(2019, Month.MARCH, 1));
 
-        data.getAuthProfile().getGoals().add(model1);
-        data.getAuthProfile().getGoals().add(model2);
-        data.getAuthProfile().getGoals().add(model3);
-        data.getAuthProfile().getGoals().add(model4);
-        data.getAuthProfile().getGoals().add(model5);
-        data.getAuthProfile().getGoals().add(model6);
+        data.getAuthProfile().getGoals().put(model1.getId(), model1);
+        data.getAuthProfile().getGoals().put(model2.getId(), model2);
+        data.getAuthProfile().getGoals().put(model3.getId(), model3);
+        data.getAuthProfile().getGoals().put(model4.getId(), model4);
+        data.getAuthProfile().getGoals().put(model5.getId(), model5);
+        data.getAuthProfile().getGoals().put(model6.getId(), model6);
 
         //Goal already achived
         model1.getWallet().setSavedMoney(200);
@@ -143,12 +143,12 @@ public class DashboardControllerTest {
         GoalModel model5 = new GoalModel("Carro-2", 200, null);
         GoalModel model6 = new GoalModel("Carro-3", 200, null);
 
-        data.getAuthProfile().getGoals().add(model1);
-        data.getAuthProfile().getGoals().add(model2);
-        data.getAuthProfile().getGoals().add(model3);
-        data.getAuthProfile().getGoals().add(model4);
-        data.getAuthProfile().getGoals().add(model5);
-        data.getAuthProfile().getGoals().add(model6);
+        data.getAuthProfile().getGoals().put(model1.getId(),model1);
+        data.getAuthProfile().getGoals().put(model2.getId(),model2);
+        data.getAuthProfile().getGoals().put(model3.getId(),model3);
+        data.getAuthProfile().getGoals().put(model4.getId(),model4);
+        data.getAuthProfile().getGoals().put(model5.getId(),model5);
+        data.getAuthProfile().getGoals().put(model6.getId(),model6);
 
         model1.getWallet().setSavedMoney(200);
         //Goal almost achived
@@ -195,10 +195,10 @@ public class DashboardControllerTest {
         GoalModel model3 = new GoalModel("Carro-2", 200, null);
         GoalModel model4 = new GoalModel("Carro-3", 200, null);
 
-        data.getAuthProfile().getGoals().add(model1);
-        data.getAuthProfile().getGoals().add(model2);
-        data.getAuthProfile().getGoals().add(model3);
-        data.getAuthProfile().getGoals().add(model4);
+        data.getAuthProfile().getGoals().put(model1.getId(),model1);
+        data.getAuthProfile().getGoals().put(model2.getId(),model2);
+        data.getAuthProfile().getGoals().put(model3.getId(),model3);
+        data.getAuthProfile().getGoals().put(model4.getId(),model4);
 
         model1.getWallet().setSavedMoney(200); //Achived
         model2.getWallet().setSavedMoney(190); //Not Achived
@@ -272,7 +272,7 @@ public class DashboardControllerTest {
         filtersPreviousMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
         assertEquals(filtersPreviousMonthActualYear,
                 dashboardController.CalculateGoalsStatistics("2019", "March"));
-        
+
         //Fiilter with actual month  and actual year
         Map<Integer, String> filtersActualMonthActualYear = new HashMap<>();
 
@@ -281,7 +281,7 @@ public class DashboardControllerTest {
         filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "4");
         filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "425€");
         filtersActualMonthActualYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "800€");
-                assertEquals(filtersActualMonthActualYear,
+        assertEquals(filtersActualMonthActualYear,
                 dashboardController.CalculateGoalsStatistics("2019", "December"));
 
         //Fiilter with previous month And previous year
@@ -292,7 +292,7 @@ public class DashboardControllerTest {
         filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
         filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
         filtersPreviousMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
-                assertEquals(filtersPreviousMonthPreviousYear,
+        assertEquals(filtersPreviousMonthPreviousYear,
                 dashboardController.CalculateGoalsStatistics("2018", "March"));
 
         //Fiilter with actual month  and previous year
@@ -303,7 +303,7 @@ public class DashboardControllerTest {
         filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
         filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
         filtersActualMonthPreviousYear.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
-        
+
         assertEquals(filtersActualMonthPreviousYear,
                 dashboardController.CalculateGoalsStatistics("2018", "December"));
 

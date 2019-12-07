@@ -23,7 +23,7 @@ public class DashboardController implements Constants {
     public int getCurrentySaved() {
         int sum = 0;
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.getGoalProgress() < 100 //dont count progress of goals achived
                     && obj.getWallet().getSavedMoney() >= 0) // dont add negative values
             {
@@ -44,11 +44,7 @@ public class DashboardController implements Constants {
         Map<String, String> returnData = new HashMap<>();;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        for (Object goal : data.getAuthProfile().getGoals()) {
-            
-        }
-        
-        for (Ent GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.hasDeadline()
                     && obj.getGoalProgress() < 100) //dont count goals already accomplished
             { //goals 
@@ -64,7 +60,7 @@ public class DashboardController implements Constants {
     public Map<String, Integer> getListOfUncomplichedGoals() {
         Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.getGoalProgress() < 100) {
                 String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
                 allData.put(text, obj.getGoalProgress());
@@ -180,7 +176,7 @@ public class DashboardController implements Constants {
     private List<GoalModel> getListOfGoalsByYearAndMonth(int year, String month) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.getCreationDate()
                     .getMonth().toString().equals(month) //Same Month and Year
                     && obj.getCreationDate()
@@ -194,7 +190,7 @@ public class DashboardController implements Constants {
     private List<GoalModel> getListOfGoalsByYear(int year) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.getCreationDate().getYear() == year) {
                 listOfAllGoals.add(obj);
             }
@@ -205,7 +201,7 @@ public class DashboardController implements Constants {
     private List<GoalModel> getListOfGoalsByMonth(String month) {
         List<GoalModel> listOfAllGoals = new ArrayList<>();
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
             if (obj.getCreationDate()
                     .getMonth().toString().equals(month)) {
                 listOfAllGoals.add(obj);
