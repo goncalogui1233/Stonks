@@ -397,14 +397,17 @@ public class GoalForm implements Constants {
                     if (hasDeadline.isSelected()) {
                         if (goalId > 0) {
                             try {
-
-                                DBOX_CONTENT content;
-                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
-                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
-                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
-                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                    goalForm.close();
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getObjective()) {
+                                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
+                                } else {
+                                    DBOX_CONTENT content;
+                                    content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                    content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                    if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                                        goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
+                                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                        goalForm.close();
+                                    }
                                 }
 
                             } catch (AuthenticationException ex) {
@@ -425,13 +428,17 @@ public class GoalForm implements Constants {
                     } else {
                         if (goalId > 0) {
                             try {
-                                DBOX_CONTENT content;
-                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
-                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
-                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
-                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                    goalForm.close();
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getObjective()) {
+                                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
+                                } else {
+                                    DBOX_CONTENT content;
+                                    content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                    content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                    if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                                        goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                                        DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                        goalForm.close();
+                                    }
                                 }
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
