@@ -1,16 +1,18 @@
+/*
+* TODO: tem uma lista de goalBoxs, em vez de estar sempre a fazer new GoalBox(). Quando cria goal, adiciona goalBox na lista 
+        Recebe notificações das goalBox, percorre a lista e faz add no goalsContainer
+
+        Managefunds - enviar o accomplished em vez do valor do input
+*/
+
 package views;
 
-import controllers.GoalController;
-import exceptions.AuthenticationException;
-import exceptions.GoalNotFoundException;
-import gui_components.DialogBox;
+
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
