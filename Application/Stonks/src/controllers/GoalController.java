@@ -4,6 +4,7 @@ import exceptions.AuthenticationException;
 import exceptions.EmptyDepositException;
 import exceptions.GoalNotFoundException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import stonks.StonksData;
 import models.GoalModel;
@@ -177,12 +178,13 @@ public class GoalController implements Constants {
         }
     }
 
-    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
+    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException{
         GoalModel goal = getGoal(id);
-        
-        if(updateValue < 0 || updateValue > goal.getObjective())
+
+        if (updateValue < 0 || updateValue > goal.getObjective()) {
             return false;
-        
+        }
+
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();
 
@@ -200,38 +202,27 @@ public class GoalController implements Constants {
         goal.getWallet().setSavedMoney(updateValue);
 
         data.updateDatabase();
-        
+
         return true;
     }
 
-    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
-
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException, ArithmeticException{
         GoalModel goal = getGoal(id);
 
         /*Saving Rate*/
-        LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
         LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
+        LocalDate now = LocalDate.now();
+        
         int savedMoney = goal.getWallet().getSavedMoney();
-
-        long rate = ChronoUnit.DAYS.between(firstDeposit, lastDeposit) / savedMoney;
+        float daysPassed = (float) ChronoUnit.DAYS.between(firstDeposit, now);
 
         /*Date Estimation*/
-        int savedIncrement = savedMoney;
         int objective = goal.getObjective();
-        long countDays = 0;
+        float moneyPerDay = (savedMoney / daysPassed);
+        int daysToComplete = (int) Math.ceil((objective / moneyPerDay) - daysPassed);
 
-        /*Cycle to increment number of days until the value of objective*/
-        while (savedIncrement <= objective) {
-            savedIncrement += rate;
-            countDays++;
-        }
-
-        /*Add the estimated days to today's date in order to get the estimated date*/
-        LocalDate today = LocalDate.now();
-
-        today.plusDays(countDays);
-
-        return today;
+        now.plusDays(daysToComplete);
+        return now;
 
     }
 }
