@@ -397,7 +397,7 @@ public class GoalForm implements Constants {
                     if (hasDeadline.isSelected()) {
                         if (goalId > 0) {
                             try {
-                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getObjective()) {
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getWallet().getSavedMoney()) {
                                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
                                 } else {
                                     DBOX_CONTENT content;
@@ -428,7 +428,7 @@ public class GoalForm implements Constants {
                     } else {
                         if (goalId > 0) {
                             try {
-                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getObjective()) {
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getWallet().getSavedMoney()) {
                                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
                                 } else {
                                     DBOX_CONTENT content;
