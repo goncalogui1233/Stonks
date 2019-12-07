@@ -44,7 +44,11 @@ public class DashboardController implements Constants {
         Map<String, String> returnData = new HashMap<>();;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        for (GoalModel obj : data.getAuthProfile().getGoals()) {
+        for (Object goal : data.getAuthProfile().getGoals()) {
+            
+        }
+        
+        for (Ent GoalModel obj : data.getAuthProfile().getGoals()) {
             if (obj.hasDeadline()
                     && obj.getGoalProgress() < 100) //dont count goals already accomplished
             { //goals 
