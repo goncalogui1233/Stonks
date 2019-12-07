@@ -20,4 +20,12 @@ public class StonksObservable extends PropertyChangeSupport implements Constants
     public HashMap<Integer, ProfileModel> getListProfiles() {
         return data.getListProfiles();
     }
+    
+    public ProfileModel getAuthProfile(){
+        return data.getAuthProfile();
+    }
+  
+    public void firePropertyChange(STONKS_EVENT event){
+        firePropertyChange(event.name(), null, null);
+    }
 }

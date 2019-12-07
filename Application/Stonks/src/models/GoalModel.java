@@ -1,15 +1,15 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import stonks.StonksData;
 
-public class GoalModel {
+public class GoalModel implements Serializable {
 
     private static int idCounter = 0;
     private static StonksData data;
 
-    private final int id;
+    private int id;
     private final LocalDate creationDate;
     private LocalDate achievementDate;
     private String name;
@@ -37,6 +37,10 @@ public class GoalModel {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getCreationDate() {
