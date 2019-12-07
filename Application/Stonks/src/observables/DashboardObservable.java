@@ -38,4 +38,8 @@ public class DashboardObservable  extends PropertyChangeSupport implements Const
         return cDashboard.getGoalsWithDeadline();
     }
     
+    public int moneySaved()
+    {
+        return cDashboard.getCurrentlySaved();
+    }
 }

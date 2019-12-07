@@ -20,7 +20,7 @@ public class DashboardController implements Constants {
         this.data = data;
     }
 
-    public int getCurrentySaved() {
+    public int getCurrentlySaved() {
         int sum = 0;
 
         try {

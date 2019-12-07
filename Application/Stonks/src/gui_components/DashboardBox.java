@@ -5,7 +5,6 @@
  */
 package gui_components;
 
-import controllers.GoalController;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

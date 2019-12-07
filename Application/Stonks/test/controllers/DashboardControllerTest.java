@@ -84,7 +84,7 @@ public class DashboardControllerTest {
         model6.getWallet().setSavedMoney(10);
 
         //Expected Result = 190 + 20 + 10  = 220
-        assertEquals(220, dashboardController.getCurrentySaved());
+        assertEquals(220, dashboardController.getCurrentlySaved());
 
     }
 
