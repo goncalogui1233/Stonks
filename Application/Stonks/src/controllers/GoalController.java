@@ -178,7 +178,7 @@ public class GoalController implements Constants {
         }
     }
 
-    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException{
+    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
         GoalModel goal = getGoal(id);
 
         if (updateValue < 0 || updateValue > goal.getObjective()) {
@@ -206,23 +206,22 @@ public class GoalController implements Constants {
         return true;
     }
 
-    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException, ArithmeticException{
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException, ArithmeticException {
         GoalModel goal = getGoal(id);
 
         /*Saving Rate*/
         LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
         LocalDate now = LocalDate.now();
-        
+
         int savedMoney = goal.getWallet().getSavedMoney();
-        float daysPassed = (float) ChronoUnit.DAYS.between(firstDeposit, now);
+        float daysPassed = (float) ChronoUnit.DAYS.between(firstDeposit, now) + 1;
 
         /*Date Estimation*/
         int objective = goal.getObjective();
         float moneyPerDay = (savedMoney / daysPassed);
         int daysToComplete = (int) Math.ceil((objective / moneyPerDay) - daysPassed);
 
-        now.plusDays(daysToComplete);
-        return now;
+        return now.plusDays(daysToComplete);
 
     }
 }

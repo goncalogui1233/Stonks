@@ -4,10 +4,14 @@ TODO: Recebe lista de goalBoxes, remove-se da lista, edita as info de si própio
 package gui_components;
 
 import exceptions.AuthenticationException;
+import exceptions.EmptyDepositException;
 import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -148,8 +152,17 @@ public class GoalBox implements Constants, PropertyChangeListener{
         if (goal.getWallet().getSavedMoney() > 0) {
             estimationTitle = new Label("ESTIMATION: ");
 
-            estimation = new Label("22/11/2019");
-            //estimation = new Label(goalsObs.getEstimatedDate(goal.getId()).getDayOfMonth() + "/" + goalsObs.getEstimatedDate(goal.getId()).getMonthValue() + "/" + goalsObs.getEstimatedDate(goal.getId()).getYear());
+            try {
+                //estimation = new Label("22/11/2019");
+                LocalDate estimationDate = goalsObs.getEstimatedDate(goal.getId());
+                estimation = new Label(estimationDate.getDayOfMonth() + "/" + estimationDate.getMonthValue() + "/" + estimationDate.getYear());
+            } catch (AuthenticationException ex) {
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+            } catch (GoalNotFoundException ex) {
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+            } catch (EmptyDepositException ex) {
+                System.out.println(ex);
+            }
             estimation.getStyleClass().addAll("lblValue");
 
             datesContainer.getChildren().addAll(estimationTitle, estimation);
