@@ -2,6 +2,8 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 public class GoalModel implements Serializable {
 
@@ -94,5 +96,17 @@ public class GoalModel implements Serializable {
         }
 
         return false;
+    }
+    
+    public static List<GoalModel> orderListByProgress(List<GoalModel> list){
+        for(int i = 0; i < list.size(); i++){
+            for(int j = i+1; j < list.size(); j++){
+                if(list.get(i).getProgress() < list.get(j).getProgress()){
+                    Collections.swap(list, i, j);
+                }
+            }
+        }
+        
+        return list;
     }
 }

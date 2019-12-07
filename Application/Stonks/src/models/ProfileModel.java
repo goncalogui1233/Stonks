@@ -1,11 +1,10 @@
 package models;
 
-import exceptions.EmptyGoalListException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import stonks.StonksData;
 
 public class ProfileModel implements Serializable {
 
@@ -148,24 +147,48 @@ public class ProfileModel implements Serializable {
 
     @Override
     public String toString() {
-        return "ProfileModel{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + ", password=" + password + ", color=" + color + ", goals=" + goalList + '}';
+        return "ProfileModel{" + "id=" + id
+                + ", firstName=" + firstName
+                + ", lastName=" + lastName
+                + ", securityQuestion=" + securityQuestion
+                + ", securityAnswer=" + securityAnswer
+                + ", password=" + password
+                + ", color=" + color
+                + ", goals=" + goalList + '}';
     }
 
-    /*INCOMPLETE*/
-    public List<GoalModel> getTopGoals(int quant) throws EmptyGoalListException{
-        List<GoalModel> tempList = new ArrayList();
-        
-        try{
-            for (GoalModel newGoal : goalList.values()) {
-                if (tempList.size() < quant) {
-                    tempList.add(newGoal);
-                } else {
+    public List<GoalModel> getTopGoals(int quant) {
+        if (quant <= 0) {
+            return null;
+        }
+
+        List<GoalModel> topGoals = new ArrayList();
+
+        for (GoalModel newGoal : goalList.values()) {
+            /*Doesn't show complete goals*/
+            if (newGoal.isCompleted()) {
+                continue; //Goes to the next iteration
+            }
+
+            /*While list has less items than desired quantity (quant)*/
+            if (topGoals.size() < quant) {
+                topGoals.add(newGoal);
+                continue; //Goes to the next iteration
+            }
+
+            GoalModel smallestIn = topGoals.get(0);
+            for(GoalModel insertedGoal : topGoals){
+                if(insertedGoal.getProgress() < smallestIn.getProgress()){
+                    smallestIn = insertedGoal;
                 }
             }
-        }catch(NullPointerException ex){
-            throw new EmptyGoalListException();
-        }
             
-        return tempList;
+            if(newGoal.getProgress() > smallestIn.getProgress()){
+                topGoals.remove(smallestIn);
+                topGoals.add(newGoal);
+            }
+        }
+        
+        return GoalModel.orderListByProgress(topGoals);
     }
 }
