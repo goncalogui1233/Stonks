@@ -1,23 +1,17 @@
-/*
-* TODO: tem uma lista de goalBoxs, em vez de estar sempre a fazer new GoalBox(). Quando cria goal, adiciona goalBox na lista 
-        Recebe notificações das goalBox, percorre a lista e faz add no goalsContainer
-
-        Managefunds - enviar o accomplished em vez do valor do input
-*/
-
 package views;
-
 
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -29,6 +23,7 @@ import stonks.Constants;
 public class GoalView implements Constants, PropertyChangeListener {
 
     private boolean showCompleted;
+    private HashMap<Integer, GoalBox> goalsList;
 
     //Containers 
     private VBox viewContent;
@@ -45,23 +40,25 @@ public class GoalView implements Constants, PropertyChangeListener {
 
     //Buttons 
     private Button btnAdd;
-    private ToggleButton tbtnFilter;
+
+    //Checkbox
+    private CheckBox cbFilter;
 
     private GoalsObservable goalsObs;
     private final HBox root;
     private GoalForm form;
 
     public GoalView(GoalsObservable goalsObs) {
-
         this.goalsObs = goalsObs;
         showCompleted = false;
+        goalsList = new HashMap<>();
 
         root = new HBox();
         root.setId("goalView");
         root.setMinSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
         root.setMaxSize(GOAL_VIEW_WIDTH, GOAL_VIEW_HEIGHT);
 
-        form = new GoalForm(goalsObs);
+        form = new GoalForm(goalsObs, goalsList);
 
         setupPropertyChangeListeners();
         setupGoalView();
@@ -72,10 +69,9 @@ public class GoalView implements Constants, PropertyChangeListener {
     }
 
     private void setupPropertyChangeListeners() {
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.CREATE_GOAL.name(), this);
+        form.addPropertyChangeListener(GOAL_EVENT.CREATE_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.EDIT_GOAL.name(), this);
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.UPDATE_WALLET.name(), this);
+        goalsObs.addPropertyChangeListener(GOAL_EVENT.GOAL_COMPLETED.name(), this);
         goalsObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
     }
 
@@ -95,16 +91,15 @@ public class GoalView implements Constants, PropertyChangeListener {
         btnAdd = new Button("Add goal");
         btnAdd.getStyleClass().addAll("btn-default");
 
-        tbtnFilter = new ToggleButton("Show Completed");
-        tbtnFilter.getStyleClass().addAll("lala");
+        cbFilter = new CheckBox("Show Completed");
+        cbFilter.setIndeterminate(false);
 
-        tbtnFilter.setOnAction(e -> {
-
+        cbFilter.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
             showCompleted = !showCompleted;
             displayProfileGoals();
         });
 
-        topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
+        topContainerButtons.getChildren().addAll(cbFilter, btnAdd);
 
         topContainer.setLeft(viewTitle);
         topContainer.setRight(topContainerButtons);
@@ -114,7 +109,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         middleContainer.setId("goalsMiddleContainer");
 
         //No goals message 
-        lblNoGoalsMsg = new Label("This profile doesn’t have any goals. Add a new goal and let us help you achieve it!");
+        lblNoGoalsMsg = new Label("This profile doesn't have any goals. Add a new goal and let us help you achieve it!");
         lblNoGoalsMsg.setId("noGoalsMsg");
 
         //Only has completed goals Mgs
@@ -175,10 +170,11 @@ public class GoalView implements Constants, PropertyChangeListener {
                     Label divider = new Label();
                     divider.getStyleClass().addAll("divider");
                     if (showCompleted) {
-                        goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                        goalsContainer.getChildren().addAll(goalsList.get(goal.getId()).getRoot(), divider);
                     } else {
                         if (!goal.isCompleted()) {
-                            goalsContainer.getChildren().addAll(new GoalBox(goal, goalsObs).getRoot(), divider);
+                            System.out.println(goalsList.size());
+                            goalsContainer.getChildren().addAll(goalsList.get(goal.getId()).getRoot(), divider);
                         }
 
                     }
@@ -189,10 +185,17 @@ public class GoalView implements Constants, PropertyChangeListener {
         }
     }
 
+    private void setupGoalBoxes() {
+        for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
+            goalsList.put(goal.getId(), new GoalBox(goal, goalsObs, goalsList));
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            setupGoalBoxes();
             displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.CREATE_GOAL.name())) {
@@ -201,10 +204,7 @@ public class GoalView implements Constants, PropertyChangeListener {
         if (evt.getPropertyName().equals(GOAL_EVENT.DELETE_GOAL.name())) {
             displayProfileGoals();
         }
-        if (evt.getPropertyName().equals(GOAL_EVENT.EDIT_GOAL.name())) {
-            displayProfileGoals();
-        }
-        if (evt.getPropertyName().equals(GOAL_EVENT.UPDATE_WALLET.name())) {
+        if (evt.getPropertyName().equals(GOAL_EVENT.GOAL_COMPLETED.name())) {
             displayProfileGoals();
         }
     }

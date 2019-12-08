@@ -25,26 +25,24 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     }
 
     /*Methods*/
-    public StonksObservable getStonksObs(){
+    public StonksObservable getStonksObs() {
         return stonksObs;
     }
-    
+
     public <T> VALIDATE verifyData(GOAL_FIELD field, T value) {
         return cGoal.verifyData(field, value);
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
+    public GoalModel createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
 
-        boolean ans = cGoal.createGoal(name, objective, deadline);
+        GoalModel newGoal = cGoal.createGoal(name, objective, deadline);
 
-        System.out.println(ans);
-
-        if (ans) {
+        if (newGoal != null) {
             firePropertyChange(GOAL_EVENT.CREATE_GOAL.name(), null, null);
             stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
 
-        return ans;
+        return newGoal;
     }
 
     public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
@@ -58,36 +56,37 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
         return ans;
     }
 
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
+    public GoalModel editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
-        boolean ans = cGoal.editGoal(id, name, objective, deadline);
+        GoalModel newGoal = cGoal.editGoal(id, name, objective, deadline);
 
-        System.out.println(ans);
-
-        if (ans) {
+        if (newGoal != null) {
             firePropertyChange(GOAL_EVENT.EDIT_GOAL.name(), null, null);
             stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
         }
 
-        return ans;
+        return newGoal;
     }
-    
-    public boolean updateWallet(int id, int value){
+
+    public boolean updateWallet(int id, int value) {
         boolean ans = false;
         try {
             ans = cGoal.manageGoalFunds(id, value);
+            if (ans) {
+                stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
+
+                if (getGoal(id).isCompleted()) {
+                    firePropertyChange(GOAL_EVENT.GOAL_COMPLETED.name(), null, null);
+                }
+
+            }
         } catch (AuthenticationException ex) {
             Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GoalNotFoundException ex) {
             Logger.getLogger(GoalsObservable.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(ans){
-            firePropertyChange(GOAL_EVENT.UPDATE_WALLET.name(), null, null);
-            stonksObs.firePropertyChange(STONKS_EVENT.GOAL_STATE_CHANGED.name(), null, null);
-        }
-        
-        return ans;  
+
+        return ans;
     }
 
     /*Getters*/
@@ -98,10 +97,10 @@ public class GoalsObservable extends PropertyChangeSupport implements Constants 
     public GoalModel getGoal(int id) throws AuthenticationException, GoalNotFoundException {
         return cGoal.getGoal(id);
     }
-    
-     public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException{
-         return cGoal.getGoal(id).getProgress();
-     }
+
+    public double getGoalProgress(int id) throws AuthenticationException, GoalNotFoundException {
+        return cGoal.getGoal(id).getProgress();
+    }
 
     public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
         return cGoal.getEstimatedDate(id);
