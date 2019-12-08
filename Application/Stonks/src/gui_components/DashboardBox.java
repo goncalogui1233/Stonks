@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui_components;
 
 import java.util.Map;
@@ -14,10 +9,6 @@ import javafx.scene.layout.VBox;
 import observables.DashboardObservable;
 import stonks.Constants;
 
-/**
- *
- * @author Bizarro
- */
 public class DashboardBox implements Constants {
 
     private VBox root;
@@ -55,7 +46,7 @@ public class DashboardBox implements Constants {
     private void populateGoals(){
         //pieChart = generatePieChart(dashObs.dataForPieChart());
         Map<String, String> goalsWithDeadline = dashObs.goalsWithDeadline();
-        Map<String, Integer> goalsUncomplished = dashObs.dataForPieChart();
+        Map<String, Double> goalsUncomplished = dashObs.dataForPieChart();
         
         Label lbDeadlineGoal, lbDeadlineDate;
         if (goalsWithDeadline != null) {
@@ -75,9 +66,9 @@ public class DashboardBox implements Constants {
         else{}//No data avaiabel for user        
     }
 
-    private PieChart generatePieChart(Map<String, Integer> goals) {
+    private PieChart generatePieChart(Map<String, Double> goals) {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
-        for (Map.Entry<String, Integer> entry : goals.entrySet()) {
+        for (Map.Entry<String, Double> entry : goals.entrySet()) {
             PieChart.Data p = new PieChart.Data(entry.getKey(), entry.getValue());
             data.add(p);
         }

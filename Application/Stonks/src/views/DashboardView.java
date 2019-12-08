@@ -23,8 +23,8 @@ public class DashboardView implements Constants, PropertyChangeListener {
     //Containers
     private final HBox root;
     
-    public DashboardView(DashboardObservable dashboardobservable) {
-        this.dashObs = dashboardobservable;
+    public DashboardView(DashboardObservable dashObs) {
+        this.dashObs = dashObs;
 
         this.root = new HBox();
         this.root.setId("dashboardView");
@@ -40,7 +40,7 @@ public class DashboardView implements Constants, PropertyChangeListener {
         statisticsBox = new StatisticsBox(dashObs);
 
 
-        root.getChildren().addAll(new SideMenu().getRoot(),
+        root.getChildren().addAll(new SideMenu(dashObs.getStonksObs()).getRoot(),
                 dashboardBox.getRoot(),statisticsBox.getRoot());
 
     }

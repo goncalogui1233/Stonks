@@ -25,7 +25,7 @@ public class DashboardController implements Constants {
 
         try {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-                if (obj.getGoalProgress() < 100 //dont count progress of goals achived
+                if (obj.getProgress() < 1 //dont count progress of goals achived
                         && obj.getWallet().getSavedMoney() >= 0) // dont add negative values
                 {
                     if (obj.hasDeadline()) { //verify if deadline already passed
@@ -51,7 +51,7 @@ public class DashboardController implements Constants {
         try {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
                 if (obj.hasDeadline()
-                        && obj.getGoalProgress() < 100) //dont count goals already accomplished
+                        && obj.getProgress() < 1) //dont count goals already accomplished
                 { //goals 
                     returnData.put(obj.getName(), obj.getDeadlineDate().format(formatter));
                 }
@@ -64,16 +64,16 @@ public class DashboardController implements Constants {
 
     //Know issue when the NAME OF A GOAL AND TTHE GOAL PROGRESS IS DUPLICATED
     //THE LAST ONE WILL OVERRIDE DE LASTONE
-    public Map<String, Integer> getListOfUncomplichedGoals() {
-        Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
+    public Map<String, Double> getListOfUncomplichedGoals() {
+        Map<String, Double> allData = new TreeMap<>(Collections.reverseOrder());
 
         try {
 
         } catch (Exception e) {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
-                if (obj.getGoalProgress() < 100) {
-                    String text = Integer.toString(obj.getGoalProgress()) + "% - " + obj.getName();
-                    allData.put(text, obj.getGoalProgress());
+                if (obj.getProgress() < 1) {
+                    String text = Double.toString(obj.getProgress()) + "% - " + obj.getName();
+                    allData.put(text, obj.getProgress());
                 }
             }
         }
@@ -85,10 +85,10 @@ public class DashboardController implements Constants {
         return null;
     }
 
-    private static Map<String, Integer> putFirstEntries(int max, Map<String, Integer> source) {
+    private static Map<String, Double> putFirstEntries(int max, Map<String, Double> source) {
         int count = 0;
-        Map<String, Integer> target = new TreeMap<>();
-        for (Map.Entry<String, Integer> entry : source.entrySet()) {
+        Map<String, Double> target = new TreeMap<>();
+        for (Map.Entry<String, Double> entry : source.entrySet()) {
             if (count >= max) {
                 break;
             }
@@ -162,7 +162,7 @@ public class DashboardController implements Constants {
                 totalObjective += obj.getObjective();
                 savedMoney += obj.getWallet().getSavedMoney();
 
-                if (obj.getGoalProgress() >= 100) { //Goal completed
+                if (obj.getProgress() >= 1) { //Goal completed
                     GoalsComplete++;
                 } else {
                     GoalsIncomplete++;

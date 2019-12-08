@@ -27,6 +27,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private Scene authScene;
     private Scene profileScene;
     private Scene goalScene;
+    private Scene dashScene;
 
     /*Observables*/
     private StonksObservable stonksObs;
@@ -91,6 +92,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         authScene = new Scene(authenticationView.getRoot());
         profileScene = new Scene(profileView.getRoot());
         goalScene = new Scene(goalView.getRoot());
+        dashScene = new Scene(dashView.getRoot());
 
     }
 
@@ -113,6 +115,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), this);
     }
 
     @Override
@@ -124,6 +127,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
             window.setScene(profileScene);
         }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())) {
             window.setScene(authScene);
+        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
+            window.setScene(dashScene);
         }
     }
 

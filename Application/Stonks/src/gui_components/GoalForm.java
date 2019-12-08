@@ -440,6 +440,7 @@ public class GoalForm extends PropertyChangeSupport implements Constants {
 
                                 if (newGoal != null) {
                                     goalsList.put(newGoal.getId(), new GoalBox(newGoal, goalsObs, goalsList));
+                                    firePropertyChange(GOAL_EVENT.CREATE_GOAL.name(), null, null);
                                     DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
                                     goalForm.close();
                                 }
