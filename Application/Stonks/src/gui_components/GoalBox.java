@@ -1,25 +1,26 @@
 /* 
- * To change this license header, choose License Headers in Project Properties. 
- * To change this template file, choose Tools | Templates 
- * and open the template in the editor. 
+TODO: Recebe lista de goalBoxes, remove-se da lista, edita as info de si proprio, notifica a vista
  */
 package gui_components;
 
 import exceptions.AuthenticationException;
+import exceptions.EmptyDepositException;
 import exceptions.GoalNotFoundException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import models.GoalModel;
 import observables.GoalsObservable;
@@ -31,15 +32,16 @@ import stonks.Constants;
  */
 public class GoalBox implements Constants {
 
-    GoalModel goal;
-    GoalsObservable goalsObs;
+    private GoalModel goal;
+    private GoalsObservable goalsObs;
+    private HashMap<Integer, GoalBox> goalsList;
 
     //Containers 
     private VBox root;
     private VBox topContainer;
 
     //Progress bar
-    ProgressBar pbGoalProgress;
+    private ProgressBar pbGoalProgress;
 
     //First row container 
     private BorderPane firstRow;
@@ -75,10 +77,11 @@ public class GoalBox implements Constants {
 
     private ManageFundsForm form;
 
-    public GoalBox(GoalModel goal, GoalsObservable goalsObs) {
+    public GoalBox(GoalModel goal, GoalsObservable goalsObs, HashMap<Integer, GoalBox> goalsList) {
 
         this.goal = goal;
         this.goalsObs = goalsObs;
+        this.goalsList = goalsList;
 
         root = new VBox();
         root.setId("goalBox");
@@ -88,6 +91,10 @@ public class GoalBox implements Constants {
         root.setMaxSize(GOAL_BOX_WIDTH, GOAL_BOX_HEIGHT);
 
         setupGoalBox();
+    }
+
+    public void setGoal(GoalModel goal) {
+        this.goal = goal;
     }
 
     public void setupGoalBox() {
@@ -128,30 +135,46 @@ public class GoalBox implements Constants {
         firstRow.setId("firstRow");
         firstRow.getStyleClass().add("row");
 
-        //First row dates 
-        estimationTitle = new Label("ESTIMATION: ");
-        estimation = new Label("22/11/2019");
-        //estimation = new Label(goalsObs.getEstimatedDate(goal.getId()).getDayOfMonth() + "/" + goalsObs.getEstimatedDate(goal.getId()).getMonthValue() + "/" + goalsObs.getEstimatedDate(goal.getId()).getYear()); 
-        estimation.getStyleClass().addAll("lblValue");
+        //First row - dates 
+        datesContainer = new HBox();
 
+        //Created date
         createdTitle = new Label("CREATED: ");
         created = new Label(goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getMonthValue() + "/" + goal.getCreationDate().getYear());
         created.getStyleClass().addAll("lblValue");
 
-        if (goal.hasDeadline()) {
-            deadlineTitle = new Label("DEADLINE: ");
-            deadline = new Label(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getMonthValue() + "/" + goal.getDeadlineDate().getYear());
-            deadline.getStyleClass().addAll("lblValue");
+        datesContainer.getChildren().addAll(createdTitle, created);
+
+        //Estimation date
+        estimationTitle = new Label("ESTIMATION: ");
+        estimation = new Label();
+        estimation.getStyleClass().addAll("lblValue");
+
+        if (goal.getWallet().getSavedMoney() > 0) {
+            try {
+                LocalDate estimationDate = goalsObs.getEstimatedDate(goal.getId());
+                estimation.setText(estimationDate.getDayOfMonth() + "/" + estimationDate.getMonthValue() + "/" + estimationDate.getYear());
+            } catch (AuthenticationException ex) {
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
+            } catch (GoalNotFoundException ex) {
+                DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+            } catch (EmptyDepositException ex) {
+                System.out.println(ex);
+            }
+
+            datesContainer.getChildren().addAll(estimationTitle, estimation);
         }
 
-        datesContainer = new HBox();
-        datesContainer.getChildren().addAll(createdTitle, created, estimationTitle, estimation);
-
+        //Deadline date
+        deadlineTitle = new Label("DEADLINE: ");
+        deadline = new Label();
+        deadline.getStyleClass().addAll("lblValue");
         if (goal.hasDeadline()) {
+            deadline.setText(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getMonthValue() + "/" + goal.getDeadlineDate().getYear());
             datesContainer.getChildren().addAll(deadlineTitle, deadline);
         }
 
-        //First row buttons 
+        //First row - buttons 
         btnDelete = new Button("DELETE");
         btnEdit = new Button("EDIT");
 
@@ -165,18 +188,18 @@ public class GoalBox implements Constants {
         firstRow.setRight(buttonsContainer);
         firstRow.setLeft(datesContainer);
 
-        //Second Row 
+        //Second Row - money 
         secondRow = new BorderPane();
         secondRow.setId("secondRow");
         secondRow.getStyleClass().add("row");
 
         //Second row money 
         objectiveTitle = new Label("Goal: ");
-        objective = new Label(goal.getObjective() + "€");
+        objective = new Label(Integer.toString(goal.getObjective()) + " €");
         objective.getStyleClass().addAll("lblValue");
 
         accomplishedTitle = new Label("Accomplished: ");
-        accomplished = new Label(goal.getWallet().getSavedMoney() + "€");
+        accomplished = new Label(Integer.toString(goal.getWallet().getSavedMoney()) + " €");
         accomplished.getStyleClass().addAll("lblValue");
 
         moneyContainer = new HBox();
@@ -184,7 +207,7 @@ public class GoalBox implements Constants {
 
         secondRow.setLeft(moneyContainer);
 
-        //Second row button 
+        //Second row - buttons
         btnFunds = new Button("MANAGE FUNDS");
         btnFunds.getStyleClass().addAll("btn", "btn-success");
 
@@ -200,9 +223,12 @@ public class GoalBox implements Constants {
 
             if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
                 boolean isGoalDeleted = false;
+                int id = goal.getId();
 
                 try {
+
                     isGoalDeleted = goalsObs.removeGoal(goal.getId());
+
                 } catch (AuthenticationException ex) {
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                 } catch (GoalNotFoundException ex) {
@@ -210,6 +236,7 @@ public class GoalBox implements Constants {
                 }
 
                 if (isGoalDeleted) {
+                    goalsList.remove(id);
                     DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
                 } else {
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
@@ -223,21 +250,26 @@ public class GoalBox implements Constants {
             content = DBOX_CONTENT.CONFIRM_GOAL_DELETE;
             content.setSubExtra(goal.getName());
 
-            GoalForm form = new GoalForm(goalsObs);
-            form.display(goal.getId());
+            GoalForm form = new GoalForm(goalsObs, goalsList);
+            if (form.display(goal.getId())) {
+                root.getChildren().removeAll(root.getChildren());
+                this.setupGoalBox();
+            }
+
         });
 
         //Manage Funds of Goal
-        btnFunds.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                ManageFundsForm f = new ManageFundsForm(goalsObs);
-                f.display(goal.getId());
-            }
+        btnFunds.setOnAction(e -> {
+            ManageFundsForm f = new ManageFundsForm(goalsObs);
+            f.display(goal.getId());
+            root.getChildren().removeAll(root.getChildren());
+            this.setupGoalBox();
+
         });
     }
 
     public VBox getRoot() {
         return root;
     }
+
 }

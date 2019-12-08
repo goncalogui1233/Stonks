@@ -516,7 +516,12 @@
 
 }
 
-#goalView #goalViewContent .goalsTopContainer .button, *.toggle-button{
+#goalView #goalViewContent .goalsTopContainer .check-box{
+    -fx-font-size: 16px;
+    -fx-padding:5px;
+}
+
+#goalView #goalViewContent .goalsTopContainer .button{
     -fx-font-size: 16px;
     -fx-text-fill: white;
     
@@ -656,9 +661,9 @@
     -fx-padding: 0;
 }
 .progress-bar > .track {
-      -fx-background-color: 
-          -fx-shadow-highlight-color,
-          linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border);
+    -fx-background-color: 
+        -fx-shadow-highlight-color,
+        linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }

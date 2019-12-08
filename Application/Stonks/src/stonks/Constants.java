@@ -29,6 +29,7 @@ public interface Constants {
         ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while processing your request. The goal wasn't created."),
         ERROR_GOAL_DELETE("Unable to delete the goal", "An error occurred while processing your request. The goal wasn't deleted."),
         ERROR_GOAL_EDIT("Unable to edit the goal", "An error occurred while processing your request. The goal wasn't edited."),
+        ERROR_GOAL_EDIT_OBJECTIVE("Unable to edit the goal", "The objective value of the goal cannot be inferior than the accomplished value."),
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
         ERROR_LOGIN("Invalid password", "Try again"),
         /*SUCCESS MESSAGES*/
@@ -191,7 +192,7 @@ public interface Constants {
         CREATE_GOAL, 
         EDIT_GOAL,
         DELETE_GOAL, 
-        UPDATE_WALLET
+        GOAL_COMPLETED
     };
 
     public static enum PROFILE_EVENT {

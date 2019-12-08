@@ -4,6 +4,7 @@ import exceptions.AuthenticationException;
 import exceptions.EmptyDepositException;
 import exceptions.GoalNotFoundException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import stonks.StonksData;
 import models.GoalModel;
@@ -64,7 +65,7 @@ public class GoalController implements Constants {
         }
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
+    public GoalModel createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
 
         /*Validates if the inputs recevied by argument are in the correct format*/
         if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
@@ -74,7 +75,7 @@ public class GoalController implements Constants {
             if (deadline != null) {
                 /*If the deadline isn't in the correct format, the goal isn't created*/
                 if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -86,13 +87,13 @@ public class GoalController implements Constants {
             /*UPDATE DATABASE*/
             data.updateDatabase();
 
-            return true;
+            return newGoal;
         }
 
-        return false;
+        return null;
     }
 
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
+    public GoalModel editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
         /*Checks if the inputs recevied by argument are in the correct format*/
         if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
@@ -102,7 +103,7 @@ public class GoalController implements Constants {
             if (deadline != null) {
                 /*If the deadline isn't in the correct format, the goal isn't edited*/
                 if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -113,10 +114,10 @@ public class GoalController implements Constants {
 
             /*UPDATE DATABASE*/
             data.updateDatabase();
-            return true;
+            return getGoal(id);
         }
 
-        return false;
+        return null;
     }
 
     public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
@@ -179,10 +180,11 @@ public class GoalController implements Constants {
 
     public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
         GoalModel goal = getGoal(id);
-        
-        if(updateValue < 0 || updateValue > goal.getObjective())
+
+        if (updateValue < 0 || updateValue > goal.getObjective()) {
             return false;
-        
+        }
+
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();
 
@@ -200,38 +202,26 @@ public class GoalController implements Constants {
         goal.getWallet().setSavedMoney(updateValue);
 
         data.updateDatabase();
-        
+
         return true;
     }
 
-    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException {
-
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException, ArithmeticException {
         GoalModel goal = getGoal(id);
 
         /*Saving Rate*/
-        LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
         LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
-        int savedMoney = goal.getWallet().getSavedMoney();
+        LocalDate now = LocalDate.now();
 
-        long rate = ChronoUnit.DAYS.between(firstDeposit, lastDeposit) / savedMoney;
+        int savedMoney = goal.getWallet().getSavedMoney();
+        float daysPassed = (float) ChronoUnit.DAYS.between(firstDeposit, now) + 1;
 
         /*Date Estimation*/
-        int savedIncrement = savedMoney;
         int objective = goal.getObjective();
-        long countDays = 0;
+        float moneyPerDay = (savedMoney / daysPassed);
+        int daysToComplete = (int) Math.ceil((objective / moneyPerDay) - daysPassed);
 
-        /*Cycle to increment number of days until the value of objective*/
-        while (savedIncrement <= objective) {
-            savedIncrement += rate;
-            countDays++;
-        }
-
-        /*Add the estimated days to today's date in order to get the estimated date*/
-        LocalDate today = LocalDate.now();
-
-        today.plusDays(countDays);
-
-        return today;
+        return now.plusDays(daysToComplete);
 
     }
 }

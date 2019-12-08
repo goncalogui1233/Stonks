@@ -7,6 +7,9 @@ package gui_components;
 
 import exceptions.AuthenticationException;
 import exceptions.GoalNotFoundException;
+import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -27,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import models.GoalModel;
 import observables.GoalsObservable;
 import stonks.Constants;
 
@@ -34,11 +38,12 @@ import stonks.Constants;
  *
  * @author Tiago
  */
-public class GoalForm implements Constants {
+public class GoalForm extends PropertyChangeSupport implements Constants {
 
     private int goalId = 0;
     private final GoalsObservable goalsObs;
     private Stage goalForm;
+    private HashMap<Integer, GoalBox> goalsList;
 
     //Containers 
     private BorderPane rootLayout;
@@ -72,11 +77,13 @@ public class GoalForm implements Constants {
     //Buttons 
     private Button btnSubmit;
 
-    public GoalForm(GoalsObservable goalsObs) {
+    public GoalForm(GoalsObservable goalsObs, HashMap<Integer, GoalBox> goalsList) {
+        super(goalsObs);
         this.goalsObs = goalsObs;
+        this.goalsList = goalsList;
     }
 
-    public void display(int goalId) {
+    public boolean display(int goalId) {
         this.goalId = goalId;
         goalForm = new Stage();
 
@@ -90,11 +97,15 @@ public class GoalForm implements Constants {
         /*Cant be onfocused (application wise)*/
 
         if (!setupForm(goalId)) {
-            return;
+            return false;
         }
+
         setupEventListeners();
 
         goalForm.showAndWait();
+
+        return true;
+
     }
 
     public boolean setupForm(int goalId) {
@@ -393,18 +404,29 @@ public class GoalForm implements Constants {
 
             if (errors == 0) {
 
+                GoalModel newGoal;
+
                 try {
                     if (hasDeadline.isSelected()) {
                         if (goalId > 0) {
                             try {
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getWallet().getSavedMoney()) {
+                                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
+                                } else {
+                                    DBOX_CONTENT content;
+                                    content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                    content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                    if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
 
-                                DBOX_CONTENT content;
-                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
-                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
-                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
-                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                    goalForm.close();
+                                        newGoal = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
+
+                                        if (newGoal != null) {
+                                            goalsList.get(goalId).setGoal(newGoal);
+                                            DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                            goalForm.close();
+                                        }
+
+                                    }
                                 }
 
                             } catch (AuthenticationException ex) {
@@ -414,9 +436,14 @@ public class GoalForm implements Constants {
                             }
                         } else {
                             try {
-                                goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
-                                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
-                                goalForm.close();
+                                newGoal = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), dpDeadline.getValue());
+
+                                if (newGoal != null) {
+                                    goalsList.put(newGoal.getId(), new GoalBox(newGoal, goalsObs, goalsList));
+                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
+                                    goalForm.close();
+                                }
+
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             }
@@ -425,13 +452,21 @@ public class GoalForm implements Constants {
                     } else {
                         if (goalId > 0) {
                             try {
-                                DBOX_CONTENT content;
-                                content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
-                                content.setSubExtra(goalsObs.getGoal(goalId).getName());
-                                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
-                                    goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
-                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
-                                    goalForm.close();
+                                if (Integer.parseInt(txfObjective.getText()) < goalsObs.getGoal(goalId).getWallet().getSavedMoney()) {
+                                    DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_EDIT_OBJECTIVE);
+                                } else {
+                                    DBOX_CONTENT content;
+                                    content = DBOX_CONTENT.CONFIRM_GOAL_EDIT;
+                                    content.setSubExtra(goalsObs.getGoal(goalId).getName());
+                                    if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                                        newGoal = goalsObs.editGoal(goalId, txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                                        if (newGoal != null) {
+                                            goalsList.get(goalId).setGoal(newGoal);
+                                            DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_EDIT);
+                                            goalForm.close();
+                                        }
+
+                                    }
                                 }
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
@@ -440,9 +475,13 @@ public class GoalForm implements Constants {
                             }
                         } else {
                             try {
-                                goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
-                                DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
-                                goalForm.close();
+                                newGoal = goalsObs.createGoal(txfName.getText(), Integer.parseInt(txfObjective.getText()), null);
+                                if (newGoal != null) {
+                                    goalsList.put(newGoal.getId(), new GoalBox(newGoal, goalsObs, goalsList));
+                                    firePropertyChange(GOAL_EVENT.CREATE_GOAL.name(), null, null);
+                                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_CREATE);
+                                    goalForm.close();
+                                }
                             } catch (AuthenticationException ex) {
                                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                             }
