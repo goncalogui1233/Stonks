@@ -16,6 +16,14 @@
     -fx-background-color: #fafafa;
 }
 
+#divider-5{
+    -fx-padding:2.5px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
+#divider-18{
+    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
 /*FORM*/
 .stonks-box{
     -fx-border-width: 1px;
@@ -268,6 +276,39 @@
     -fx-border-width: 0;
 }
 
+#sideMenu #goalDiv{
+    -fx-alignment:top-center;
+}
+
+#sideMenu #goalDiv #miniGoalBox{
+    -fx-padding: 18px 0px 0px 0px;
+}
+
+#sideMenu #goalDiv .stonks-box{
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0), 0, 0, 0, 0);
+}
+
+#sideMenu #goalDiv .boxName{
+    -fx-padding:5px 5px 2px 5px;
+}
+
+#sideMenu #goalDiv .label{
+    -fx-text-fill: #424242;
+    -fx-font-weight: bold;
+}
+
+#sideMenu #infoLabel{
+    -fx-text-fill: #424242;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+#sideMenu #goalDiv .progress-bar > .bar,
+#sideMenu #goalDiv .progress-bar > .track{
+    -fx-background-radius:0px 0px 3px 3px;
+    -fx-border-radius:0px 0px 3px 3px;
+}
+
 /*SideProfileBar*/
 #sideProfileBar{
     -fx-border-width: 0px 1px 0px 0px;
@@ -294,10 +335,6 @@
     -fx-border-width: 5px;
     -fx-border-radius: 100px;
     -fx-border-insets: 2px;
-}
-
-#sideProfileBar #divider-18{
-    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
 }
 
 
