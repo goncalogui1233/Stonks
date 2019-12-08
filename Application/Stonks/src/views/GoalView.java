@@ -5,8 +5,10 @@ import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import javafx.css.PseudoClass;
 import java.util.HashMap;
+import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -81,6 +83,8 @@ public class GoalView implements Constants, PropertyChangeListener {
         form.addPropertyChangeListener(GOAL_EVENT.CREATE_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
         goalsObs.addPropertyChangeListener(GOAL_EVENT.GOAL_COMPLETED.name(), this);
+        goalsObs.addPropertyChangeListener(GOAL_EVENT.EDIT_GOAL.name(), this);
+        goalsObs.addPropertyChangeListener(GOAL_EVENT.GOAL_MANAGE_FUNDS.name(), this);
         goalsObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
     }
 
@@ -211,7 +215,9 @@ public class GoalView implements Constants, PropertyChangeListener {
                 middleContainer.getChildren().add(lblOnlyCompletedGoals);
             } else {
                 middleContainer.getChildren().add(goalsScrollPane);
-                for (GoalModel goal : goalsObs.getAuthProfile().getGoals().values()) {
+                List<GoalModel> listGoals = new ArrayList<>(goalsObs.getAuthProfile().getGoals().values());
+                GoalModel.orderListByProgress(listGoals);
+                for (GoalModel goal : listGoals) {
                     Label divider = new Label();
                     divider.getStyleClass().addAll("divider");
                     if (showCompleted) {
@@ -250,6 +256,12 @@ public class GoalView implements Constants, PropertyChangeListener {
             displayProfileGoals();
         }
         if (evt.getPropertyName().equals(GOAL_EVENT.GOAL_COMPLETED.name())) {
+            displayProfileGoals();
+        }
+        if (evt.getPropertyName().equals(GOAL_EVENT.EDIT_GOAL.name())) {
+            displayProfileGoals();
+        }
+        if (evt.getPropertyName().equals(GOAL_EVENT.GOAL_MANAGE_FUNDS.name())) {
             displayProfileGoals();
         }
     }

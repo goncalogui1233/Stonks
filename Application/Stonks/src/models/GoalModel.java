@@ -98,7 +98,7 @@ public class GoalModel implements Serializable {
         return false;
     }
     
-    public static List<GoalModel> orderListByProgress(List<GoalModel> list){
+    public static void orderListByProgress(List<GoalModel> list){
         for(int i = 0; i < list.size(); i++){
             for(int j = i+1; j < list.size(); j++){
                 if(list.get(i).getProgress() < list.get(j).getProgress()){
@@ -106,7 +106,5 @@ public class GoalModel implements Serializable {
                 }
             }
         }
-        
-        return list;
     }
 }
