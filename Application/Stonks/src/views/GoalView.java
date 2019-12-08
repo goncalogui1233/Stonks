@@ -1,17 +1,13 @@
 package views;
 
-import controllers.GoalController;
-import exceptions.AuthenticationException;
-import exceptions.GoalNotFoundException;
-import gui_components.DialogBox;
 import gui_components.GoalBox;
 import gui_components.GoalForm;
 import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -45,9 +41,16 @@ public class GoalView implements Constants, PropertyChangeListener {
     private Button btnAdd;
     private ToggleButton tbtnFilter;
 
-    private GoalsObservable goalsObs;
+    //Toggle
+    private Label toggleLabel;
+    private VBox toggleDiv;
+    private Label toggleButton;
+    
+    private PseudoClass show;
+    
+    private final GoalsObservable goalsObs;
     private final HBox root;
-    private GoalForm form;
+    private final GoalForm form;
 
     public GoalView(GoalsObservable goalsObs) {
 
@@ -93,16 +96,51 @@ public class GoalView implements Constants, PropertyChangeListener {
         btnAdd = new Button("Add goal");
         btnAdd.getStyleClass().addAll("btn-default");
 
-        tbtnFilter = new ToggleButton("Show Completed");
-        tbtnFilter.getStyleClass().addAll("lala");
-
-        tbtnFilter.setOnAction(e -> {
-
+        //Toggle Stuff
+        show = PseudoClass.getPseudoClass("show");
+        
+        toggleLabel = new Label("Completed");
+        toggleLabel.setMinHeight(35);
+        toggleLabel.setMaxHeight(35);
+        toggleLabel.setId("toggleLabel");
+        
+        toggleDiv = new VBox();
+        toggleDiv.setMinSize(90, 32);
+        toggleDiv.setMaxHeight(32);
+        toggleDiv.setPickOnBounds(true);
+        toggleDiv.setId("toggleDiv");
+        
+        toggleButton = new Label();
+        toggleButton.setMinSize(50, 32);
+        toggleButton.setMaxHeight(32);
+        toggleButton.getStyleClass().addAll("button", "btn-default");
+        toggleDiv.pseudoClassStateChanged(show, showCompleted);
+        
+        if(showCompleted){
+            toggleButton.setText("Hide");
+            toggleDiv.setAlignment(Pos.CENTER_RIGHT);
+        }else{
+            toggleButton.setText("Show");
+            toggleDiv.setAlignment(Pos.CENTER_LEFT);
+        }
+        
+        toggleDiv.setOnMouseClicked(e -> {
             showCompleted = !showCompleted;
+            toggleDiv.pseudoClassStateChanged(show, showCompleted);
+            
+            if(showCompleted){
+                toggleButton.setText("Hide");
+                toggleDiv.setAlignment(Pos.CENTER_RIGHT);
+            }else{
+                toggleButton.setText("Show");
+                toggleDiv.setAlignment(Pos.CENTER_LEFT);
+            }
+            
             displayProfileGoals();
         });
-
-        topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
+        
+        toggleDiv.getChildren().add(toggleButton);
+        topContainerButtons.getChildren().addAll(toggleLabel, toggleDiv, btnAdd);
 
         topContainer.setLeft(viewTitle);
         topContainer.setRight(topContainerButtons);
