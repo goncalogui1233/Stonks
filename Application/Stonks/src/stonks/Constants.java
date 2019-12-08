@@ -148,6 +148,17 @@ public interface Constants {
     public static final int PROFILE_AUTH_BOX_RECOVER_PASSWORD_HEIGHT = 300;
 
     /*Dashboard*/
+    public static final int DASHBOARD_VIEW_WIDTH = APP_WIDTH - SIDEMENU_WIDTH;
+    public static final int DASHBOARD_VIEW_HEIGHT = APP_HEIGHT;
+    public static final int DASHBOARD_STATISTICS_TOTAL_GOALS = 1;
+    public static final int DASHBOARD_STATISTICS_GOALS_COMPLETE = 2;
+    public static final int DASHBOARD_STATISTICS_TOTAL_INCOMPLETE = 3;
+    public static final int DASHBOARD_STATISTICS_SAVED_MONEY = 4;
+    public static final int DASHBOARD_STATISTICS_TOTAL_OBJECTIVE = 5;
+
+    public static final String[] DASHBOARD_STATISTICS_MONTH = {"Month",
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"};
 
     /*Goal*/
     public static enum GOAL_FIELD {
@@ -203,5 +214,6 @@ public interface Constants {
     };
 
     public static enum DASHBOARD_EVENT {
+        CALCULATE_STATISTICS
     };
 }

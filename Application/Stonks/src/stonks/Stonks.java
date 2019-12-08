@@ -10,10 +10,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import observables.AuthenticationObservable;
+import observables.DashboardObservable;
 import observables.GoalsObservable;
 import observables.ProfileObservable;
 import observables.StonksObservable;
 import views.AuthenticationView;
+import views.DashboardView;
 import views.GoalView;
 import views.ProfileView;
 
@@ -31,6 +33,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private AuthenticationObservable authObs;
     private ProfileObservable profileObs;
     private GoalsObservable goalsObs;
+     private DashboardObservable dashObs;
 
     /*Controllers*/
     private ProfileController cProfile;
@@ -41,7 +44,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private AuthenticationView authenticationView;
     private ProfileView profileView;
     private GoalView goalView;
-
+    private DashboardView dashView;
+  
     public static void main(String[] args) {
         launch(args);
     }
@@ -67,6 +71,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cProfile = new ProfileController(data);
         cDashboard = new DashboardController(data);
         cGoal = new GoalController(data);
+        cDashboard = new DashboardController(data);
 
 //        populateApp(); /*Remove later*/
         //ProfileModel.setData(data);
@@ -75,10 +80,13 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
+        dashObs = new DashboardObservable(cDashboard, stonksObs);
 
+        
         authenticationView = new AuthenticationView(authObs);
         profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
+        dashView = new DashboardView(dashObs);
 
         authScene = new Scene(authenticationView.getRoot());
         profileScene = new Scene(profileView.getRoot());
