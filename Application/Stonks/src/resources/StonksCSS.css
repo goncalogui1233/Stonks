@@ -1,12 +1,12 @@
 /*DEBUG CSS ID CHUNKS*/
 .BACKGROUND_RED{
-    -fx-background-color: #AA0000;
+    -fx-background-color: #AA0000 !important;
 }
 .BACKGROUND_GREEN{
-    -fx-background-color: #00AA00;
+    -fx-background-color: #00AA00 !important;
 }
 .BACKGROUND_BLUE{
-    -fx-background-color: #0000AA;
+    -fx-background-color: #0000AA !important;
 }
 
 /*GENERAL*/
@@ -16,8 +16,16 @@
     -fx-background-color: #fafafa;
 }
 
+#divider-5{
+    -fx-padding:2.5px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
+#divider-18{
+    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
+}
+
 /*FORM*/
-.box{
+.stonks-box{
     -fx-border-width: 1px;
     -fx-border-color: #bdbdbd;
     -fx-border-radius: 5px;
@@ -27,17 +35,18 @@
 }
 
 .form{
-    -fx-padding: 5px;
+    -fx-padding:20px;
 }
 
-/*.form .fieldDiv{
-    
-}*/
+.form .fieldDiv{
+    -fx-padding: 0 0 10 0;
+}
 
 .form .fieldDiv .fieldTitle{
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: #424242;
-    -fx-padding: 0px 0px 5px 0px;
+    -fx-padding: 0 0 5 0;
 }
 
 .form .fieldDiv .fieldInput{
@@ -58,10 +67,22 @@
 }
 
 .form .fieldDiv .fieldError{
-    -fx-font-size: 12px;
+    -fx-font-size: 11.5px;
     -fx-font-weight: bold;
     -fx-text-fill: #d32f2f;
     -fx-padding: 3px 2px 2px 0px;
+}
+
+.link{
+    -fx-font-size: 12px;
+    -fx-text-fill: #1976d2;
+    -fx-padding: 10px;
+    -fx-cursor:hand;
+}
+
+.link:hover{
+    -fx-text-fill: #2196f3;
+    -fx-underline: true;
 }
 
 /*BUTTONS*/
@@ -105,12 +126,18 @@
     -fx-background-color:#212121;
 }
 
-
 .btn-form{
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding:10px 20px 10px 20px;
     -fx-background-radius: 5px 0px 5px 0px !important;
+}
+
+.btn-form-sharp{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding:10px 20px 10px 20px;
+    -fx-background-radius: 0px 0px 0px 0px !important;
 }
 
 /*DIALOG BOX*/
@@ -183,36 +210,103 @@
     -fx-border-width: 0 1 0 0;
     -fx-border-color: #bdbdbd;
 }
-#sideMenu #profileDiv{
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: #333;
+#sideMenu #profile{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #bdbdbd;
     -fx-padding: 17px;
 }
-#sideMenu #profileDiv #profileIcon{
+#sideMenu #profile #profileIcon{
     -fx-alignment: center;
     -fx-font-weight: bold;
-    -fx-font-size: 25px;
+    -fx-font-size: 20px;
 }
-#sideMenu #profileDiv #profileLinkDiv *{
-    -fx-font-weight: bold;
+#sideMenu #profile #profileIcon:selected_black{
+    -fx-border-color: #333;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 5px;
+}
+#sideMenu #profile #profileIcon:selected_white{
+    -fx-border-color: #eee;
+    -fx-border-width: 5px;
+    -fx-border-radius: 100px;
+    -fx-border-insets: 5px;
+}
+#sideMenu #profile #profileInfo{
     -fx-font-size: 15px;
+    -fx-font-weight: bold;
     -fx-padding: 10px 10px 10px 20px;
 }
+#sideMenu #profile #profileInfo #lastName{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+#sideMenu #profile #profileInfo #logout{
+    -fx-padding: 10px 0px 0px 0px;
+}
 #sideMenu #linkDiv{
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: #333;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #bdbdbd;
 }
 #sideMenu #linkDiv *{
     -fx-font-weight: bold;
     -fx-font-size: 15px;
     -fx-padding: 0px 17px 0px 17px;
-    -fx-border-width: 0 0 2 0;
+    -fx-border-width: 0 0 1 0;
     -fx-border-radius: 0px;
-    -fx-border-color: #DDD;
+    -fx-border-color: #bdbdbd;
     -fx-text-alignment: center;
 }
+
+#sideMenu #linkDiv *:hover{
+    -fx-background-color:#bdbdbd !important;
+    -fx-cursor: hand;
+}
+
+#sideMenu #linkDiv *:pressed{
+    -fx-background-color:#adadad !important;
+}
+
+#sideMenu #linkDiv *:active{
+    -fx-background-color:#d4d4d4;
+}
+
+
 #sideMenu #linkDiv *:last{
     -fx-border-width: 0;
+}
+
+#sideMenu #goalDiv{
+    -fx-alignment:top-center;
+}
+
+#sideMenu #goalDiv #miniGoalBox{
+    -fx-padding: 18px 0px 0px 0px;
+}
+
+#sideMenu #goalDiv .stonks-box{
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0), 0, 0, 0, 0);
+}
+
+#sideMenu #goalDiv .boxName{
+    -fx-padding:5px 5px 2px 5px;
+}
+
+#sideMenu #goalDiv .label{
+    -fx-text-fill: #424242;
+    -fx-font-weight: bold;
+}
+
+#sideMenu #infoLabel{
+    -fx-text-fill: #424242;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+#sideMenu #goalDiv .progress-bar > .bar,
+#sideMenu #goalDiv .progress-bar > .track{
+    -fx-background-radius:0px 0px 3px 3px;
+    -fx-border-radius:0px 0px 3px 3px;
 }
 
 /*SideProfileBar*/
@@ -226,6 +320,7 @@
     -fx-alignment: center;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
+    -fx-cursor:hand;
 }
 
 #sideProfileBar #profileIcon:selected_black{
@@ -242,30 +337,46 @@
     -fx-border-insets: 2px;
 }
 
-#sideProfileBar #divider-18{
-    -fx-padding:9px/*TOP and BOTTOM OR LEFT and RIGHT*/;
-}
-
 
 
 /*Auth*/
-#authBox{
-    
-}
-
-#authBox .titleBox{
+#authBox .titleBox, 
+#profileBox .titleBox{
     -fx-alignment: center; 
-    -fx-padding: 15 0 10 0;
-}
-
-#authBox .titleBox *{
+    -fx-padding: 15 15 10 15;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
 }
 
-#authBox .formBox{
+#authBox .titleBox #titleProfile{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-size: 12px;
 }
 
+#authBox #messageDiv{
+    -fx-alignment:CENTER;
+}
+
+#authBox #messageDiv #welcomeMessage,
+#authBox #messageDiv #subMessage{
+    -fx-text-alignment:CENTER;
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+#authBox #messageDiv #subMessage{
+    -fx-padding: 30px;
+    -fx-font-size: 16px;
+}
+
+#profileBox .titleBox{
+    -fx-alignment: CENTER_LEFT; 
+}
+
+#profileBox .titleBox #titleProfile{
+    -fx-padding: 5px 0px 0px 0px;
+    -fx-font-size: 12px;
+}
 
 /*
 #registerVbox {
@@ -439,9 +550,45 @@
 
 }
 
-#goalView #goalViewContent .goalsTopContainer .button, *.toggle-button{
+#goalView #goalViewContent .goalsTopContainer .check-box{
+    -fx-font-size: 16px;
+    -fx-padding:5px;
+}
+
+#goalView #goalViewContent .goalsTopContainer .button{
     -fx-font-size: 16px;
     -fx-text-fill: white;
+    
+}
+    
+#goalView #goalViewContent .goalsTopContainer #toggleDiv{
+    -fx-border-width: 1px;
+    -fx-border-color: #bdbdbd;
+    -fx-border-radius: 100px;
+    -fx-background-radius: 100px;
+    -fx-border-insets: 2px;
+    -fx-background-insets: 5px;
+    -fx-padding:-2px;
+    -fx-background-color:#c9c9c9;
+}
+    
+#goalView #goalViewContent .goalsTopContainer #toggleDiv:show{
+    -fx-background-color:#28a745;
+}
+
+#goalView #goalViewContent .goalsTopContainer #toggleLabel{
+    -fx-alignment:center;
+    -fx-text-fill: #424242;
+    -fx-font-size: 16px;
+}
+
+#goalView #goalViewContent .goalsTopContainer #toggleDiv .button.btn-toggle{
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+    -fx-padding: 3px;
+    -fx-background-radius: 0px 0px 2px 2px;
+    -fx-background-color:#424242;
 }
 
 #goalView #goalViewContent #goalsMiddleContainer{
@@ -470,13 +617,13 @@
     -fx-padding: 0 0 50 0;
 }
 
-#goalForm{
+/*#goalForm{
     -fx-background-color: white;
     -fx-border-width: 1;
     -fx-border-color:black;
     -fx-background-radius: 3;
     -fx-border-radius: 3;
-}
+}*/
 
 #goalForm .topLayout{
     -fx-padding:20px;
@@ -488,19 +635,9 @@
     -fx-font-weight: bold;
 }
 
-.form{
-    -fx-padding:20px;
-}
-
-.fieldDiv{
-    -fx-padding: 0 0 10 0;
-}
-
-.form .fieldTitle{
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #424242;
-    -fx-padding: 0 0 10 0;
+#goalForm .topLayout .subtitle{
+    -fx-font-size: 14px;
+    -fx-text-fill: #616161;
 }
 
 #goalForm .form .currency{
@@ -510,31 +647,60 @@
     -fx-padding: 2 0 0 7;
 }
 
-#goalForm .submit{
+/*#goalForm .submit{
     -fx-text-fill: white;
     -fx-font-size: 16px;
-}
-
-#goalBox{
-    -fx-background-color: #f5f5f5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 1, 1);
-    -fx-background-radius: 5px;
-}
+}*/
 
 #goalBox #topContainer{
-    -fx-padding:10px;
-    -fx-background-color: #fafafa;
+    /*-fx-padding:10px;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color:#e0e0e0;
+    -fx-border-color:#e0e0e0;*/
+    -fx-padding: 10 0 0 0;
+    -fx-background-color: #fafafa;
     -fx-background-radius: 5px 5px 0 0;
 }
 
 #goalBox #topContainer .title{
+    -fx-padding: 10 0 10 10;
     -fx-font-size: 14px;
     -fx-text-fill: #616161;
     -fx-font-weight: bold;
 }
 
+#goalBox #topContainer .percentage{
+    -fx-padding: 0 0 10 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #616161;
+}
+
+/*#goalBox #topContainer .progress-bar > *{
+    -fx-accent: #66bb6a;
+    -fx-padding: 8 0 0 0;
+    -fx-border-width:0 0 0 0;
+    -fx-border-color:#e0e0e0;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}*/
+.progress-bar {
+    -fx-indeterminate-bar-length: 0;
+    -fx-indeterminate-bar-escape: false;
+    -fx-indeterminate-bar-flip: false;
+    -fx-indeterminate-bar-animation-time: 0;
+}
+.progress-bar > .bar {
+    -fx-background-color: #28a745;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+.progress-bar > .track {
+    -fx-background-color: 
+        -fx-shadow-highlight-color,
+        linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
 #goalBox .row{
     -fx-padding:10px;
 }
@@ -571,4 +737,63 @@
     -fx-font-size: 16px;
     -fx-font-weight: 700;
 }
+
+/*Datepicker*/
+.date-picker{
+    -fx-padding:1 5 1 0 !important;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: white white white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}
+
+.date-picker:focused > .text-field,
+.date-picker > .text-field:focused {
+    -fx-background-color: white white white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}
+
+
+.date-picker > .arrow-button {
+    -fx-background-color: white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+    -fx-padding:0 !important;
+
+}
+
+.date-picker:focused > .arrow-button,
+.date-picker > .arrow-button:focused {
+    -fx-background-color: white !important;
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+}
+
+.date-picker > .arrow-button * {
+    -fx-padding:6 !important;
+}
+
+#fundsForm .topLayout{
+    -fx-padding:20px;
+}
+
+#fundsForm .topLayout .title{
+    -fx-font-size: 16px;
+    -fx-text-fill: #616161;
+    -fx-font-weight: bold;
+}
+
+#fundsForm .form .fieldDiv .value{
+    -fx-padding: 5px;
+    -fx-background-radius: 0px;
+    -fx-background-color: #1976d2, white, white;
+    -fx-background-insets: 0 -1 -1.5 -1, 0 0 0 0, 0 -1 0 -1;
+}
+
+
 

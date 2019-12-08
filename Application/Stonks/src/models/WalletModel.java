@@ -1,14 +1,16 @@
 package models;
 
+import exceptions.EmptyDepositException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import stonks.StonksData;
 
-public class WalletModel implements Serializable{
+public class WalletModel implements Serializable {
+
     private static int idCounter = 0;
     private static StonksData data;
-    
+
     private final int id;
     private int savedMoney;
     private LocalDate firstDepositDate;
@@ -21,10 +23,10 @@ public class WalletModel implements Serializable{
         lastDepositDate = null;
     }
 
-    public static void setData(StonksData data){
+    public static void setData(StonksData data) {
         WalletModel.data = data;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -45,7 +47,11 @@ public class WalletModel implements Serializable{
         this.firstDepositDate = firstDepositDate;
     }
 
-    public LocalDate getLastDepositDate() {
+    public LocalDate getLastDepositDate() throws EmptyDepositException {
+        if (lastDepositDate == null) {
+            throw new EmptyDepositException();
+        }
+
         return lastDepositDate;
     }
 
@@ -53,4 +59,12 @@ public class WalletModel implements Serializable{
         this.lastDepositDate = lastDepositDate;
     }
     
+    public void addMoney(int quant){
+        this.savedMoney += quant;
+    }
+    
+    public void removeMoney(int quant){
+        this.savedMoney -= quant;
+    }
+
 }

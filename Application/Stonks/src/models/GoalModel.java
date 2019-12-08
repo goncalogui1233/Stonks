@@ -2,12 +2,10 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import stonks.StonksData;
+import java.util.Collections;
+import java.util.List;
 
 public class GoalModel implements Serializable {
-
-    private static int idCounter = 0;
-    private static StonksData data;
 
     private int id;
     private final LocalDate creationDate;
@@ -18,21 +16,17 @@ public class GoalModel implements Serializable {
 
     private final WalletModel wallet;
 
-    public GoalModel(String name, int objective, LocalDate deadline) {
+    public GoalModel(int id, String name, int objective, LocalDate deadline) {
+        this.id = id;
         this.name = name;
         this.objective = objective;
         if (deadline != null) {
             this.deadlineDate = deadline;
         }
 
-        id = idCounter++;
         creationDate = LocalDate.now();
 
         wallet = new WalletModel();
-    }
-
-    public static void setData(StonksData data) {
-        GoalModel.data = data;
     }
 
     public int getId() {
@@ -90,15 +84,29 @@ public class GoalModel implements Serializable {
 
         return false;
     }
-    
-    public int getGoalProgress()
-    {
-        if (getObjective() <= 0)
-        {
-            return 0;
+  
+    public double getProgress() {
+        /*Returns the value from a range of 0 to 1*/
+        return (Double.valueOf(wallet.getSavedMoney()) / Double.valueOf(objective));
+    }
+  
+    public boolean isCompleted() {
+        if (this.objective == this.wallet.getSavedMoney()) {
+            return true;
         }
-        //To remove Trunc of integer
-       return (int) ((getWallet().getSavedMoney() * 1.0 / getObjective())*100); 
+
+        return false;
     }
     
+    public static List<GoalModel> orderListByProgress(List<GoalModel> list){
+        for(int i = 0; i < list.size(); i++){
+            for(int j = i+1; j < list.size(); j++){
+                if(list.get(i).getProgress() < list.get(j).getProgress()){
+                    Collections.swap(list, i, j);
+                }
+            }
+        }
+        
+        return list;
+    }
 }

@@ -70,6 +70,7 @@ public class DialogBox implements Constants{
         });
         
         Label lblSubTitle = new Label(subTitle);
+        lblSubTitle.wrapTextProperty().setValue(true);
         
         Label lblText = new Label(text);
         lblText.setWrapText(true);

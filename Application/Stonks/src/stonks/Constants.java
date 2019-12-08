@@ -7,7 +7,7 @@ public interface Constants {
     public static final int APP_WIDTH = 1280;
     public static final int APP_HEIGHT = 720;
     public static final int APP_REAL_HEIGHT = APP_HEIGHT - 25/*Height of windows bar*/;
-    
+
     /*DialogBox window properties*/
     public static final int DBOX_WIDTH = 400;
     public static final int DBOX_HEIGHT = 200;
@@ -23,28 +23,35 @@ public interface Constants {
 
     public static enum DBOX_CONTENT {
         /*ERROR MESSAGES*/
+        ERROR_AUTH("Unable to fulfill your request", "Your profile isn't authenticated, please sign in to perform your action"),
+        ERROR_GOAL_NOTFOUND("Unable to fulfill your request", "The requested goal doesn't exist"),
         ERROR_PROFILE_LIMIT("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
         ERROR_GOAL_CREATE("Unable to create the goal", "An error occurred while processing your request. The goal wasn't created."),
         ERROR_GOAL_DELETE("Unable to delete the goal", "An error occurred while processing your request. The goal wasn't deleted."),
+        ERROR_GOAL_EDIT("Unable to edit the goal", "An error occurred while processing your request. The goal wasn't edited."),
+        ERROR_GOAL_EDIT_OBJECTIVE("Unable to edit the goal", "The objective value of the goal cannot be inferior than the accomplished value."),
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
         ERROR_LOGIN("Invalid password", "Try again"),
-      
         /*SUCCESS MESSAGES*/
-        /*To be changed*/ SUCCESS_CREATE_PROFILE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        /*To be changed*/ SUCCESS_PROFILE_CREATE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        SUCCESS_PROFILE_EDIT("Profile edited", "Your profile was successfully edited"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
+        SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
+        SUCCESS_WALLET_UPDATE("Wallet Updated", "The value has been updated succesfully"),
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
-        CONFIRM_DELETE_GOAL("Deleting goal \"{}\"", "This action will delete this goal permanently...");
+        CONFIRM_GOAL_DELETE("Deleting goal \"{}\"", "This action will delete this goal permanently..."),
+        CONFIRM_GOAL_EDIT("Editing goal \"{}\"", "This action will edit this goal permanently...");
 
         private final String subTitle;
         private String newSubTitle;
         private final String text;
         private String newText;
-        
-        DBOX_CONTENT(String subTitle, String text){
+
+        DBOX_CONTENT(String subTitle, String text) {
             this.subTitle = newSubTitle = subTitle;
             this.text = newText = text;
         }
@@ -52,13 +59,13 @@ public interface Constants {
         public String getSubTitle() {
             return newSubTitle;
         }
-      
-        public String getText(){
+
+        public String getText() {
             return newText;
         }
-        
-        public String setSubExtra(String extra){
-            if(!subTitle.contains("{}")){
+
+        public String setSubExtra(String extra) {
+            if (!subTitle.contains("{}")) {
                 return null;
             }
 
@@ -66,13 +73,14 @@ public interface Constants {
 
             return newSubTitle;
         }
-        
-        public String setTextExtra(String extra){
-            if(!text.contains("{}"))
+
+        public String setTextExtra(String extra) {
+            if (!text.contains("{}")) {
                 return null;
-            
+            }
+
             newText = text.replace("{}", extra);
-            
+
             return newText;
         }
     }
@@ -80,12 +88,15 @@ public interface Constants {
     /*SideMenu properties*/
     public static final int SIDEMENU_WIDTH = 256;
     public static final int SIDEMENU_HEIGHT = APP_REAL_HEIGHT;
-    
+
     /*SideProfileBar properties*/
     public static final int SIDEPROFILEBAR_WIDTH = 115;
     public static final int SIDEPROFILEBAR_HEIGHT = APP_REAL_HEIGHT;
 
     /*General*/
+    public static final String AUTH_WELCOME_MESSAGE = "Welcome to Stonks";
+    public static final String AUTH_WELCOME_SUBMESSAGE_WITH_PROFILES = "Please sign-in a profile and let us help you achieve your goals!";
+    public static final String AUTH_WELCOME_SUBMESSAGE_WITHOUT_PROFILES = "Please register a profile and let us help you achieve your goals!";
     public static final int MAX_PROFILES = 6;
 
     public static enum VALIDATE {
@@ -153,7 +164,7 @@ public interface Constants {
     public static enum GOAL_FIELD {
         NAME, OBJECTIVE, DEADLINE
     };
-    
+
     public static final int GOAL_NAME_MAXCHARS = 50;
     public static final int GOAL_NAME_MINCHARS = 1;
     public static final int GOAL_OBJECTIVE_MINVALUE = 1;
@@ -162,14 +173,47 @@ public interface Constants {
     public static final int GOAL_VIEW_HEIGHT = APP_HEIGHT;
     public static final int GOALS_CONTAINER_WIDTH = GOAL_VIEW_WIDTH - 160 - 10;
     public static final int GOAL_BOX_WIDTH = GOALS_CONTAINER_WIDTH - 40;
-    public static final int GOAL_BOX_HEIGHT = 125;
+    public static final int GOAL_BOX_HEIGHT = 180;
 
     /*Wallet*/
 
     /*Property Change Events*/
-    public static enum STONKS_EVENT {GOTO_GOAL_VIEW};
-    public static enum AUTH_EVENT {CREATE_PROFILE, UPDATE_SELECTION, GOTO_LOGIN, GOTO_REGISTER, GOTO_RECOVER_PASSWORD};
-    public static enum GOAL_EVENT {CREATE_GOAL, DELETE_GOAL};
-    public static enum PROFILE_EVENT {};
-    public static enum DASHBOARD_EVENT { CALCULATE_STATISTICS};
+    public static enum STONKS_EVENT {
+        /*GENERAL GOTO EVENTS*/
+        GOTO_AUTHENTICATION_VIEW, 
+        GOTO_PROFILE_VIEW, 
+        GOTO_GOAL_VIEW, 
+        GOTO_DASHBOARD_VIEW,
+        /*GENERAL EVENTS*/
+        PROFILE_HAS_BEEN_EDITED,
+        PROFILE_HAS_BEEN_AUTH,
+        GOAL_STATE_CHANGED
+    };
+
+    public static enum AUTH_EVENT {
+        /*AUTH GOTO EVENTS*/
+        GOTO_REGISTER, 
+        GOTO_LOGIN, 
+        GOTO_RECOVER_PASSWORD,
+        
+        /*AUTH EVENTS*/
+        CREATE_PROFILE, 
+        UPDATE_SELECTION
+    };
+
+    public static enum GOAL_EVENT {
+        /*GOAL CUD EVENTS*/
+        CREATE_GOAL, 
+        EDIT_GOAL,
+        DELETE_GOAL, 
+        GOAL_COMPLETED
+    };
+
+    public static enum PROFILE_EVENT {
+        UPDATE_PROFILE_VIEW
+    };
+
+    public static enum DASHBOARD_EVENT {
+        CALCULATE_STATISTICS
+    };
 }

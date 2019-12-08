@@ -1,117 +1,254 @@
 package gui_components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import models.GoalModel;
+import models.ProfileModel;
+import observables.StonksObservable;
 import stonks.Constants;
 
-public class SideMenu implements Constants{
-    VBox rootDiv;
+public class SideMenu implements Constants, PropertyChangeListener {
+
+    private final StonksObservable stonksObs;
+    private final VBox rootDiv;
+
+    private HBox profileDiv;
+    private VBox linkDiv;
+    private StackPane goalDiv;
+    private VBox topGoalsDiv;
+    private BorderPane labelDiv;
+    private Label profileIcon;
+    private Color profileColor;
+    private Color textColor;
+    private VBox profileInfoDiv;
+    private Label profileFirstName;
+    private Label profileLastName;
+    private Label profileLink;
+    private Label logoutLink;
+    private Label dashboardLink;
+    private Label goalLink;
+    private PseudoClass last;
+    private PseudoClass active;
+
+    private List<MiniGoalBox> topGoals;
+    private Label lblNoGoalsToShow;
     
-    HBox profileDiv;
-    VBox linkDiv;
-    VBox goalDiv;
-    
-    public SideMenu() {
+    private final PseudoClass selected_black;
+    private final PseudoClass selected_white;
+
+    public SideMenu(StonksObservable stonksObs) {
+        this.stonksObs = stonksObs;
         rootDiv = new VBox();
-        
+
         rootDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT);
         rootDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT);
-        
+
         rootDiv.setId("sideMenu");
         
-        setupSideMenu();
-    }
-    
-    private void setupSideMenu(){
+        selected_black = PseudoClass.getPseudoClass("selected_black");
+        selected_white = PseudoClass.getPseudoClass("selected_white");
+
         setupProfileDiv();
         setupLinkDiv();
         setupGoalDiv();
+        setupEventListeners();
+        setupPropertyChangeListeners();
     }
-    
-    private void setupProfileDiv(){
+
+    private void setupPropertyChangeListeners() {
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOAL_STATE_CHANGED.name(), this);
+    }
+
+    private void setupProfileDiv() {
         profileDiv = new HBox();
-        
         profileDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
         profileDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
-        profileDiv.setId("profileDiv");
-        
-        Label profileIcon = new Label("U1"/*ADD PROFILE INITIALS*/);
-        
-        profileIcon.setMinSize(75, 75);
+        profileDiv.setId("profile");
+
+        profileIcon = new Label();
+        profileIcon.setMinSize(70, 70);
         profileIcon.setId("profileIcon");
+
+        profileInfoDiv = new VBox();
+        profileInfoDiv.setId("profileInfo");
+        profileFirstName = new Label();
+        profileFirstName.setId("firstName");
+        profileLastName = new Label();
+        profileLastName.setId("lastName");
+        logoutLink = new Label("Logout");
+        logoutLink.setId("logout");
+        logoutLink.getStyleClass().addAll("link");
         
-        Color profileColor = Color.DARKBLUE /*ADD PROFILE COLOR*/;
+        profileInfoDiv.getChildren().addAll(profileFirstName, profileLastName, logoutLink);
         
-        System.out.println((profileColor.getRed() * 0.333) + 
-                (profileColor.getGreen() * 0.333) + 
-                (profileColor.getBlue() * 0.333));
-        
-        Color textColor;
-        if(((profileColor.getRed() * 0.299) + 
-                (profileColor.getGreen() * 0.587) + 
-                (profileColor.getBlue() * 0.114)) > 0.2){
-            textColor = Color.valueOf("#000"); 
-        }else{
-            textColor = Color.valueOf("#FFF"); 
-        }
-        profileIcon.setTextFill(textColor);
-        profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), new Insets(3))));
-        profileIcon.setBorder(new Border(new BorderStroke(Color.valueOf("#111"), BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(5))));
-        
-        VBox profileLinkDiv = new VBox();
-        profileLinkDiv.setId("profileLinkDiv");
-        
-        Label profileLink = new Label("Profile");
-        Label logoutLink = new Label("Logout");
-        profileLinkDiv.getChildren().addAll(profileLink, logoutLink);
-        profileDiv.getChildren().addAll(profileIcon, profileLinkDiv);
-        
+        profileDiv.getChildren().addAll(profileIcon, profileInfoDiv);
+
         rootDiv.getChildren().add(profileDiv);
     }
-    
-    private void setupLinkDiv(){
+
+    private void setupLinkDiv() {
         linkDiv = new VBox();
-        
-        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.10);
-        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.50);
+
+        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
+        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
         linkDiv.setId("linkDiv");
-        
-        Label dashboardLink = new Label("Dashboard");
-        dashboardLink.setMinWidth(SIDEMENU_WIDTH-2);
+
+        last = PseudoClass.getPseudoClass("last");
+        active = PseudoClass.getPseudoClass("active");
+
+        profileLink = new Label("Profile");
+        profileLink.setMinWidth(SIDEMENU_WIDTH);
+        profileLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
+
+        dashboardLink = new Label("Dashboard");
+        dashboardLink.setMinWidth(SIDEMENU_WIDTH);
         dashboardLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
-        
-        PseudoClass last = PseudoClass.getPseudoClass("last");
-        Label goalLink = new Label("Goals");
-        goalLink.setMinWidth(SIDEMENU_WIDTH-2);
+
+        goalLink = new Label("Goals");
+        goalLink.setMinWidth(SIDEMENU_WIDTH);
         goalLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         goalLink.pseudoClassStateChanged(last, true);
-        
-        linkDiv.getChildren().addAll(dashboardLink, goalLink);
-        
+
+        linkDiv.getChildren().addAll(profileLink, dashboardLink, goalLink);
+
         rootDiv.getChildren().add(linkDiv);
     }
 
     private void setupGoalDiv() {
-        goalDiv = new VBox();
+        goalDiv = new StackPane();
+        goalDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
+        goalDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
         
-        /*ToDo*/
+        topGoalsDiv = new VBox();
+        labelDiv = new BorderPane();
         
+        lblNoGoalsToShow = new Label("No goals in progress...");
+        lblNoGoalsToShow.setId("infoLabel");
+        labelDiv.setCenter(lblNoGoalsToShow);
+
+        topGoalsDiv.setId("goalDiv");
+        
+        topGoals = new ArrayList<>();
+        MiniGoalBox tempMGB;
+        for(int i = 0; i < 5; i++){
+            tempMGB = new MiniGoalBox();
+            topGoalsDiv.getChildren().addAll(tempMGB.getRoot());
+            topGoals.add(tempMGB);
+        }
+        
+        goalDiv.getChildren().addAll(topGoalsDiv, labelDiv);
         rootDiv.getChildren().add(goalDiv);
     }
-    
-    public Pane getRoot(){
+
+    public Pane getRoot() {
         return rootDiv;
+    }
+
+    private void setupEventListeners() {
+        logoutLink.setOnMouseClicked(e -> {
+            stonksObs.logout();
+        });
+        profileLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), null, null);
+        });
+        dashboardLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), null, null);
+        });
+        goalLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW.name(), null, null);
+        });
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
+            resetPseudoClasses();
+            profileLink.pseudoClassStateChanged(active, true);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
+            resetPseudoClasses();
+            goalLink.pseudoClassStateChanged(active, true);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
+            resetPseudoClasses();
+            dashboardLink.pseudoClassStateChanged(active, true);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name())) {
+            updateSideMenu();
+            updateMiniGoalBoxes();
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_EDITED.name())) {
+            updateSideMenu();
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOAL_STATE_CHANGED.name())) {
+            updateMiniGoalBoxes();
+        }
+    }
+
+    private void resetPseudoClasses(){
+        profileLink.pseudoClassStateChanged(active, false);
+        goalLink.pseudoClassStateChanged(active, false);
+        dashboardLink.pseudoClassStateChanged(active, false);
+    }
+    
+    private void updateSideMenu() {
+        ProfileModel authProfile = stonksObs.getAuthProfile();
+
+        profileFirstName.setText(authProfile.getFirstName());
+        profileLastName.setText(authProfile.getLastName());
+        
+        profileIcon.setText(""
+                + authProfile.getFirstName().charAt(0)
+                + authProfile.getLastName().charAt(0));
+
+        profileColor = Color.valueOf(authProfile.getColor());
+
+        if (((profileColor.getRed() * 0.333)
+                + (profileColor.getGreen() * 0.333)
+                + (profileColor.getBlue() * 0.333)) > 0.3) {
+            profileIcon.pseudoClassStateChanged(selected_black, true);
+            profileIcon.pseudoClassStateChanged(selected_white, false);
+            textColor = Color.valueOf("#111");
+        } else {
+            profileIcon.pseudoClassStateChanged(selected_black, false);
+            profileIcon.pseudoClassStateChanged(selected_white, true);
+            textColor = Color.valueOf("#eee");
+        }
+        profileIcon.setTextFill(textColor);
+        profileIcon.setBackground(new Background(new BackgroundFill(profileColor, new CornerRadii(100), Insets.EMPTY)));
+    }
+
+    private void updateMiniGoalBoxes() {
+        List<GoalModel> topGoalModels = stonksObs.getTopGoals();
+        
+        if(topGoalModels.isEmpty()){
+            lblNoGoalsToShow.setVisible(true);
+        }else{
+            lblNoGoalsToShow.setVisible(false);
+        }
+        
+        int i = 0;
+        for(i = 0; i < topGoalModels.size(); i++){
+            topGoals.get(i).getRoot().setVisible(true);
+            topGoals.get(i).setName(topGoalModels.get(i).getName());
+            topGoals.get(i).setProgress(topGoalModels.get(i).getProgress());
+        }
+        for(; i < 5; i++){
+            topGoals.get(i).getRoot().setVisible(false);
+        }
     }
 }

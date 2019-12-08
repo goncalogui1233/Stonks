@@ -53,6 +53,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.CREATE_PROFILE.name(), this);
         authObs.addPropertyChangeListener(AUTH_EVENT.UPDATE_SELECTION.name(), this);
+        authObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), this);
     }
 
     private void setupProfileIcons(HashMap<Integer, ProfileModel> listProfiles) {
@@ -65,6 +66,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
 
             profileIcon = new Label(profileInitials);
             profileIcon.setMinSize(60, 60);
+            profileIcon.setPickOnBounds(false);
 
             profileColor = Color.valueOf(profile.getColor());
 
@@ -73,10 +75,10 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
                     + (profileColor.getGreen() * 0.333)
                     + (profileColor.getBlue() * 0.333)) > 0.3) {
                 profileIcon.getProperties().put("blackBorder", true);
-                textColor = Color.valueOf("#000");
+                textColor = Color.valueOf("#111");
             } else {
                 profileIcon.getProperties().put("blackBorder", false);
-                textColor = Color.valueOf("#FFF");
+                textColor = Color.valueOf("#eee");
             }
 
             /*Set node properties*/
@@ -107,6 +109,7 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
     private void setupRegisterButton() {
         registerButton = new Label("+");
         registerButton.setMinSize(70, 70);
+        registerButton.setPickOnBounds(false);
 
         /*Set node properties*/
         registerButton.setTextFill(Color.valueOf("#333"));
@@ -132,7 +135,9 @@ public class SideProfileBar implements Constants, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(AUTH_EVENT.CREATE_PROFILE.name())) {
             setupProfileIcons(authObs.getListProfiles());
-        } else if (evt.getPropertyName().equals(AUTH_EVENT.UPDATE_SELECTION.name())) {
+        } else if(evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())){
+            setupProfileIcons(authObs.getListProfiles());
+        }else if (evt.getPropertyName().equals(AUTH_EVENT.UPDATE_SELECTION.name())) {
             boolean blackBorder;
             for (Node node : root.getChildren()) {
                 node.pseudoClassStateChanged(selected_black, false);

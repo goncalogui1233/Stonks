@@ -18,6 +18,10 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     }
     
     /*Bridge Methods*/
+    public StonksObservable getStonksObs(){
+        return stonksObs;
+    }
+    
     public HashMap<Integer, ProfileModel> getListProfiles() {
         return stonksObs.getListProfiles();
     }
@@ -32,6 +36,10 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
     
     public boolean hasMaxProfiles(){
         return cProfile.hasMaxProfiles();
+    }
+    
+    public boolean hasNoProfiles(){
+        return cProfile.hasNoProfiles();
     }
     
     public <T> VALIDATE verifyData(PROFILE_FIELD field, T value){
@@ -56,7 +64,8 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         boolean resp = cProfile.loginProfile(id, password);
         
         if(resp){
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW);
+            stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW.name(), null, null);
         }
         
         return resp;

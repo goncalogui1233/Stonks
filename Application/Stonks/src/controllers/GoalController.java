@@ -1,6 +1,10 @@
 package controllers;
 
+import exceptions.AuthenticationException;
+import exceptions.EmptyDepositException;
+import exceptions.GoalNotFoundException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import stonks.StonksData;
 import models.GoalModel;
@@ -18,34 +22,30 @@ public class GoalController implements Constants {
         this.data = data;
     }
 
-    public int getNextId() {
+    public int getNextId() throws AuthenticationException {
 
-        try {
-            /*Check if the authenticated profile has goals*/
-            if (data.getAuthProfile().hasGoals()) {
+        /*Check if the authenticated profile has goals*/
+        if (data.getAuthProfile().hasGoals()) {
 
-                int biggest = 1;
+            int biggest = 1;
 
-                /*Searches on the list of goals for the biggest goal id*/
-                for (Integer id : data.getAuthProfile().getGoals().keySet()) {
-                    if (id > biggest) {
-                        biggest = id;
-                    }
+            /*Searches on the list of goals for the biggest goal id*/
+            for (Integer id : data.getAuthProfile().getGoals().keySet()) {
+                if (id > biggest) {
+                    biggest = id;
                 }
-
-                /*Returns the bigest goal id + 1*/
-                return ++biggest;
             }
 
-            /*If the authenticated profile doesn't have any goals, the id will be 1*/
-            return 1;
-        } catch (Exception ex) {
-            return -1;
+            /*Returns the bigest goal id + 1*/
+            return ++biggest;
         }
+
+        /*If the authenticated profile doesn't have any goals, the id will be 1*/
+        return 1;
 
     }
 
-    public GoalModel getGoal(int id) {
+    public GoalModel getGoal(int id) throws AuthenticationException, GoalNotFoundException {
         /*If the authenticated profile has goals*/
         try {
             if (data.getAuthProfile().hasGoals()) {
@@ -55,95 +55,79 @@ public class GoalController implements Constants {
                         return goal;
                     }
                 }
+
             }
-        } catch (Exception ex) {
-            return null;
+
+            throw new GoalNotFoundException();
+
+        } catch (NullPointerException ex) {
+            throw new AuthenticationException();
+        }
+    }
+
+    public GoalModel createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
+
+        /*Validates if the inputs recevied by argument are in the correct format*/
+        if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
+                && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
+
+            /*If the goal will have a deadline, checks if the deadline is in the correct format*/
+            if (deadline != null) {
+                /*If the deadline isn't in the correct format, the goal isn't created*/
+                if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
+                    return null;
+                }
+            }
+
+            /*Creates a goal and assign an id*/
+            GoalModel newGoal = new GoalModel(getNextId(), name, objective, deadline);
+
+            /*Adds the goal to the current profile goals list*/
+            data.getAuthProfile().getGoals().put(newGoal.getId(), newGoal);
+            /*UPDATE DATABASE*/
+            data.updateDatabase();
+
+            return newGoal;
         }
 
-        /*If the goal wasn't found returns null*/
         return null;
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) {
+    public GoalModel editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
-        /*A profile must be authenticated to create a goal*/
-        try {
+        /*Checks if the inputs recevied by argument are in the correct format*/
+        if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
+                && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
 
-            /*Validates if the inputs recevied by argument are in the correct format*/
-            if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
-                    && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
-
-                /*If the goal will have a deadline, checks if the deadline is in the correct format*/
-                if (deadline != null) {
-                    /*If the deadline isn't in the correct format, the goal isn't created*/
-                    if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                        return false;
-                    }
+            /*If the goal has deadline, checks if it is in the correct format*/
+            if (deadline != null) {
+                /*If the deadline isn't in the correct format, the goal isn't edited*/
+                if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
+                    return null;
                 }
-
-                /*Creates a goal and assign an id*/
-                GoalModel newGoal = new GoalModel(name, objective, deadline);
-                newGoal.setId(this.getNextId());
-
-                /*Adds the goal to the current profile goals list*/
-                data.getAuthProfile().getGoals().put(newGoal.getId(), newGoal);
-
-                /*UPDATE DATABASE*/
-                data.updateDatabase();
-
-                return true;
             }
 
-        } catch (Exception ex) {
-            /*If the profile isn't authenticated, it will catch a NullPointerException*/
-            return false;
-        }
-
-        return false;
-    }
-
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) {
-
-        try {
-            /*Checks if the inputs recevied by argument are in the correct format*/
-            if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
-                    && verifyData(GOAL_FIELD.OBJECTIVE, objective) == VALIDATE.OK) {
-
-                /*If the goal has deadline, checks if it is in the correct format*/
-                if (deadline != null) {
-                    /*If the deadline isn't in the correct format, the goal isn't edited*/
-                    if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                        return false;
-                    }
-                }
-
-                /*Edits the goal information*/
-                getGoal(id).setName(name);
-                getGoal(id).setObjective(objective);
-                getGoal(id).setDeadlineDate(deadline);
-
-                /*UPDATE DATABASE*/
-                data.updateDatabase();
-                return true;
-            }
-        } catch (Exception ex) {
-            return false;
-        }
-
-        return false;
-    }
-
-    public boolean removeGoal(int id) {
-        try {
-
-            data.getAuthProfile().getGoals().remove(id);
+            /*Edits the goal information*/
+            getGoal(id).setName(name);
+            getGoal(id).setObjective(objective);
+            getGoal(id).setDeadlineDate(deadline);
 
             /*UPDATE DATABASE*/
             data.updateDatabase();
-            return true;
-        } catch (NullPointerException ex) {
-            return false;
+            return getGoal(id);
         }
+
+        return null;
+    }
+
+    public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
+
+        data.getAuthProfile().getGoals().remove(getGoal(id).getId());
+
+        /*UPDATE DATABASE*/
+        data.updateDatabase();
+        return true;
+
     }
 
     /*Validates the fields of a goal*/
@@ -194,75 +178,50 @@ public class GoalController implements Constants {
         }
     }
 
-    public int getGoalProgress(int id) {
-        try {
-            int objective = getGoal(id).getObjective();
-            int currentSavedMoney = getGoal(id).getWallet().getSavedMoney();
+    public boolean manageGoalFunds(int id, int updateValue) throws AuthenticationException, GoalNotFoundException {
+        GoalModel goal = getGoal(id);
 
-            /*Returns the value in percentage (%)*/
-            return (currentSavedMoney * objective) / 100;
-
-        } catch (NullPointerException ex) {
-            /*If the goals doesnt exist*/
-            return -1;
-
+        if (updateValue < 0 || updateValue > goal.getObjective()) {
+            return false;
         }
-    }
 
-    public boolean manageGoalFunds(int id, int updateValue) {
         /*Manages the money saved of a goal (add or remove money)*/
         LocalDate date = LocalDate.now();
 
-        try {
-            getGoal(id).getWallet().setSavedMoney(updateValue);
-            /*If a deposit was never made*/
-            if (getGoal(id).getWallet().getFirstDepositDate() == null) {
-                /*Updates the first deposit date*/
-                getGoal(id).getWallet().setFirstDepositDate(date);
-                /*And the last deposit date*/
-                getGoal(id).getWallet().setLastDepositDate(date);
-
-            } else {
-                /*If the first deposit was already made, only the updates last deposit date*/
-                getGoal(id).getWallet().setLastDepositDate(date);
-
-            }
-            return true;
-        } catch (NullPointerException ex) {
-            return false;
+        /*If a deposit was never made*/
+        if (goal.getWallet().getFirstDepositDate() == null) {
+            /*Updates the first deposit date*/
+            goal.getWallet().setFirstDepositDate(date);
+            /*And the last deposit date*/
+            goal.getWallet().setLastDepositDate(date);
+        } else {
+            /*If the first deposit was already made, only the updates last deposit date*/
+            goal.getWallet().setLastDepositDate(date);
         }
+
+        goal.getWallet().setSavedMoney(updateValue);
+
+        data.updateDatabase();
+
+        return true;
     }
 
-    public LocalDate getEstimatedDate(int id) {
-        try {
-            GoalModel goal = getGoal(id);
-            
-            /*Saving Rate*/
-            LocalDate lastDeposit = goal.getWallet().getLastDepositDate();
-            LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
-            int savedMoney = goal.getWallet().getSavedMoney();
+    public LocalDate getEstimatedDate(int id) throws AuthenticationException, GoalNotFoundException, EmptyDepositException, ArithmeticException {
+        GoalModel goal = getGoal(id);
 
-            long rate = ChronoUnit.DAYS.between(firstDeposit, lastDeposit) / savedMoney;
+        /*Saving Rate*/
+        LocalDate firstDeposit = goal.getWallet().getFirstDepositDate();
+        LocalDate now = LocalDate.now();
 
-            /*Date Estimation*/
-            int savedIncrement = savedMoney;
-            int objective = goal.getObjective();
-            long countDays = 0;
+        int savedMoney = goal.getWallet().getSavedMoney();
+        float daysPassed = (float) ChronoUnit.DAYS.between(firstDeposit, now) + 1;
 
-            /*Cycle to increment number of days until the value of objective*/
-            while (savedIncrement <= objective) {
-                savedIncrement += rate;
-                countDays++;
-            }
+        /*Date Estimation*/
+        int objective = goal.getObjective();
+        float moneyPerDay = (savedMoney / daysPassed);
+        int daysToComplete = (int) Math.ceil((objective / moneyPerDay) - daysPassed);
 
-            /*Add the estimated days to today's date in order to get the estimated date*/
-            LocalDate today = LocalDate.now();
+        return now.plusDays(daysToComplete);
 
-            today.plusDays(countDays);
-
-            return today;
-        } catch (NullPointerException ex) { }
-
-        return null;
     }
 }

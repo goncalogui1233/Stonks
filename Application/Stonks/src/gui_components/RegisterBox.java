@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -24,11 +23,11 @@ public class RegisterBox implements Constants, PropertyChangeListener{
 
     //Containers
     private BorderPane authBox;
+    private HBox hbTitle;
     private VBox formContainer;
     private BorderPane hbSignUp;
-    private HBox hbTitle;
 
-    //Input divs
+    //Input Divs
     private VBox firstNameDiv;
     private VBox lastNameDiv;      
     private VBox passwordDiv;
@@ -61,7 +60,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
     private Label errorSecurityAnswer;
     private Label errorColor;
 
-    //Label Buttons
+    //Buttons
     private Button btnSignUp;
 
     public RegisterBox(AuthenticationObservable authObs) {
@@ -129,19 +128,18 @@ public class RegisterBox implements Constants, PropertyChangeListener{
 
         /*Initialize error labels*/
         errorFirstName = new Label("errorFirstName");
-        errorFirstName.setVisible(true);
+        errorFirstName.setVisible(false);
         errorLastName = new Label("errorLastName");
-        errorLastName.setVisible(true);
+        errorLastName.setVisible(false);
         errorPassword = new Label("errorPassword");
-        errorPassword.setVisible(true);
+        errorPassword.setVisible(false);
         errorSecurityQuestion = new Label("errorSecurityQuestion");
-        errorSecurityQuestion.setVisible(true);
+        errorSecurityQuestion.setVisible(false);
         errorSecurityAnswer = new Label("errorSecurityAnswer");
-        errorSecurityAnswer.setVisible(true);
+        errorSecurityAnswer.setVisible(false);
         errorColor = new Label("errorColor");
-        errorColor.setVisible(true);
+        errorColor.setVisible(false);
         
-
         /*Initialize divs*/
         firstNameDiv = new VBox();
         lastNameDiv = new VBox();
@@ -176,7 +174,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         cpPickColor.setId("colorPicker");
 
         /*Set CSS Classes to nodes*/
-        authBox.getStyleClass().add("box");
+        authBox.getStyleClass().add("stonks-box");
         formContainer.getStyleClass().add("form");
         hbTitle.getStyleClass().add("titleBox");
         
@@ -208,13 +206,104 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         errorSecurityAnswer.getStyleClass().addAll("fieldError");
         errorColor.getStyleClass().addAll("fieldError");
         
-        btnSignUp.getStyleClass().addAll("button", "btn-default", "btn-form");
+        btnSignUp.getStyleClass().addAll("btn-default", "btn-form");
 
         /*Add register container into the root pane*/
         root.setCenter(authBox);
-        BorderPane.setAlignment(authBox, Pos.CENTER);
     }
 
+    private int validateInputs(){
+        int errorCounter = 0;
+
+        switch(authObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())){
+            case EMPTY:
+                errorFirstName.setText("First Name cannot be empty");
+                errorFirstName.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorFirstName.setText("First Name has a maximum of 50 characters");
+                errorFirstName.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorFirstName.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())){
+            case EMPTY:
+                errorLastName.setText("Last Name cannot be empty");
+                errorLastName.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorLastName.setText("Last Name has a maximum of 50 characters");
+                errorLastName.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorLastName.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())){
+            case MIN_CHAR:
+                errorPassword.setText("Password has a minimum of 6 characters");
+                errorPassword.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorPassword.setText("Password has a maximum of 50 characters");
+                errorPassword.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorPassword.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_QUESTION, cbSecurityQuestion.getValue().toString())){
+            case INVALID_QUESTION:
+                errorSecurityQuestion.setText("Select a question");
+                errorSecurityQuestion.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityQuestion.setVisible(false);
+                break;
+        }
+
+        switch(authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txfSecurityAnswer.getText())){
+            case EMPTY:
+                errorSecurityAnswer.setText("Security Answer cannot be empty");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            case MAX_CHAR:
+                errorSecurityAnswer.setText("Security Answer has a maximum of 50 characters");
+                errorSecurityAnswer.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorSecurityAnswer.setVisible(false);
+                break;
+        }
+
+        switch (authObs.verifyData(PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
+            case FORMAT:
+                errorColor.setText("Select a color");
+                errorColor.setVisible(true);
+                errorCounter++;
+                break;
+            default:
+                errorColor.setVisible(false);
+                break;
+        }
+        
+        return errorCounter;
+    }
+    
     private void setupEventListeners() {
         btnSignUp.setOnMouseClicked(e -> {
             if (authObs.hasMaxProfiles()) {
@@ -222,67 +311,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
                 return;
             }
 
-            int errorCounter = 0;
-
-            switch (authObs.verifyData(PROFILE_FIELD.FIRST_NAME, txfFirstName.getText())) {
-                case MIN_CHAR:
-                    System.out.println("FIRST_NAME - MIN_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    System.out.println("FIRST_NAME - MAX_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.LAST_NAME, txfLastName.getText())) {
-                case MIN_CHAR:
-                    System.out.println("LAST_NAME - MIN_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    System.out.println("LAST_NAME - MAX_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.SECURITY_QUESTION, cbSecurityQuestion.getValue().toString())) {
-                case INVALID_QUESTION:
-                    System.out.println("SECURITY_QUESTION - INVALID_QUESTION");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.SECURITY_ANSWER, txfSecurityAnswer.getText())) {
-                case MIN_CHAR:
-                    System.out.println("SECURITY_ANSWER - MIN_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    System.out.println("SECURITY_ANSWER - MAX_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.PASSWORD, txfPassword.getText())) {
-                case MIN_CHAR:
-                    System.out.println("PASSWORD - MIN_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-                case MAX_CHAR:
-                    System.out.println("PASSWORD - MAX_CHAR");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            switch (authObs.verifyData(PROFILE_FIELD.COLOR, String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255)))) {
-                case FORMAT:
-                    System.out.println("COLOR - FORMAT");/*ERROR LABEL CODE HERE*/
-                    errorCounter++;
-                    break;
-            }
-
-            if (errorCounter == 0) {
+            if (validateInputs() == 0) {
                 if (authObs.createProfile(txfFirstName.getText(),
                         txfLastName.getText(),
                         cbSecurityQuestion.getValue().toString(),
@@ -290,7 +319,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
                         txfPassword.getText(),
                         String.format("#%02X%02X%02X", (int) (cpPickColor.getValue().getRed() * 255), (int) (cpPickColor.getValue().getGreen() * 255), (int) (cpPickColor.getValue().getBlue() * 255))
                 )) {
-                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_CREATE_PROFILE);
+                    DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_PROFILE_CREATE);
                     resetFields();
                 }
             }
@@ -311,5 +340,12 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         txfPassword.setText("");
         txfSecurityAnswer.setText("");
         cpPickColor.setValue(Color.WHITE);
+        
+        errorFirstName.setVisible(false);
+        errorLastName.setVisible(false);
+        errorPassword.setVisible(false);
+        errorSecurityQuestion.setVisible(false);
+        errorSecurityAnswer.setVisible(false);
+        errorColor.setVisible(false);
     }
 }
