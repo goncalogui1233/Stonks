@@ -1,25 +1,19 @@
 package gui_components;
 
-import exceptions.EmptyGoalListException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import models.GoalModel;
@@ -34,7 +28,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
 
     private HBox profileDiv;
     private VBox linkDiv;
-    private VBox goalDiv;
+    private StackPane goalDiv;
+    private VBox topGoalsDiv;
+    private BorderPane labelDiv;
     private Label profileIcon;
     private Color profileColor;
     private Color textColor;
@@ -48,6 +44,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private PseudoClass last;
     private PseudoClass active;
 
+    private List<MiniGoalBox> topGoals;
+    private Label lblNoGoalsToShow;
+    
     private final PseudoClass selected_black;
     private final PseudoClass selected_white;
 
@@ -80,7 +79,6 @@ public class SideMenu implements Constants, PropertyChangeListener {
     }
 
     private void setupProfileDiv() {
-        
         profileDiv = new HBox();
         profileDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
         profileDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.15);
@@ -136,12 +134,28 @@ public class SideMenu implements Constants, PropertyChangeListener {
     }
 
     private void setupGoalDiv() {
-        goalDiv = new VBox();
-
+        goalDiv = new StackPane();
         goalDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
         goalDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
         
-        /*ToDo*/
+        topGoalsDiv = new VBox();
+        labelDiv = new BorderPane();
+        
+        lblNoGoalsToShow = new Label("No goals in progress...");
+        lblNoGoalsToShow.setId("infoLabel");
+        labelDiv.setCenter(lblNoGoalsToShow);
+
+        topGoalsDiv.setId("goalDiv");
+        
+        topGoals = new ArrayList<>();
+        MiniGoalBox tempMGB;
+        for(int i = 0; i < 5; i++){
+            tempMGB = new MiniGoalBox();
+            topGoalsDiv.getChildren().addAll(tempMGB.getRoot());
+            topGoals.add(tempMGB);
+        }
+        
+        goalDiv.getChildren().addAll(topGoalsDiv, labelDiv);
         rootDiv.getChildren().add(goalDiv);
     }
 
@@ -219,14 +233,22 @@ public class SideMenu implements Constants, PropertyChangeListener {
     }
 
     private void updateMiniGoalBoxes() {
-        goalDiv.getChildren().clear();
+        List<GoalModel> topGoalModels = stonksObs.getTopGoals();
         
-        try {
-            for(GoalModel goal:stonksObs.getTopGoals()){
-                goalDiv.getChildren().add(new Label(goal.getName() + " - " + goal.getProgress()));
-            }
-        } catch (EmptyGoalListException ex) {
-            goalDiv.getChildren().add(new Label("There are no pending goals"));
+        if(topGoalModels.isEmpty()){
+            lblNoGoalsToShow.setVisible(true);
+        }else{
+            lblNoGoalsToShow.setVisible(false);
+        }
+        
+        int i = 0;
+        for(i = 0; i < topGoalModels.size(); i++){
+            topGoals.get(i).getRoot().setVisible(true);
+            topGoals.get(i).setName(topGoalModels.get(i).getName());
+            topGoals.get(i).setProgress(topGoalModels.get(i).getProgress());
+        }
+        for(; i < 5; i++){
+            topGoals.get(i).getRoot().setVisible(false);
         }
     }
 }
