@@ -8,6 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import observables.AuthenticationObservable;
 import observables.DashboardObservable;
@@ -94,6 +95,7 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         goalScene = new Scene(goalView.getRoot());
         dashScene = new Scene(dashView.getRoot());
 
+        window.getIcons().add(new Image("/resources/stonks_icon.png"));
     }
 
     public void setupWindow() {
