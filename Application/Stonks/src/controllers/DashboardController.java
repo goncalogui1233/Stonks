@@ -59,7 +59,7 @@ public class DashboardController implements Constants {
         } catch (Exception e) {
         }
 
-        return returnData.isEmpty() ? null : returnData;
+        return returnData;
     }
 
     //Know issue when the NAME OF A GOAL AND TTHE GOAL PROGRESS IS DUPLICATED
@@ -82,7 +82,7 @@ public class DashboardController implements Constants {
             return putFirstEntries(4, allData);
         }
 
-        return null;
+        return allData;
     }
 
     private static Map<String, Double> putFirstEntries(int max, Map<String, Double> source) {
