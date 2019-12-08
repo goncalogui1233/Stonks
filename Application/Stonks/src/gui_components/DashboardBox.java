@@ -1,5 +1,7 @@
 package gui_components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +12,7 @@ import javafx.scene.layout.VBox;
 import observables.DashboardObservable;
 import stonks.Constants;
 
-public class DashboardBox implements Constants {
+public class DashboardBox implements Constants, PropertyChangeListener {
 
     private final VBox root;
     private final DashboardObservable dashObs;
@@ -46,6 +48,7 @@ public class DashboardBox implements Constants {
         populateGoals();
         generateDeadlinesLabel();
         hbPieChartContainer.getChildren().addAll(pieChart,vbPieChartLabels);
+        setupPropertyChangeListeners();
     }
 
     private void setupLabels() {
@@ -64,8 +67,8 @@ public class DashboardBox implements Constants {
         //pieChart = generatePieChart(dashObs.dataForPieChart());
         Map<String, String> goalsWithDeadline = dashObs.goalsWithDeadline();
         Map<String, Double> goalsUncomplished = dashObs.dataForPieChart();
-        goalsUncomplished.put("aaa", 23.0);
-        goalsUncomplished.put("Bbb", 23.0);
+//        goalsUncomplished.put("aaa", 23.0);
+//        goalsUncomplished.put("Bbb", 23.0);
 
         Label lbDeadlineGoal, lbDeadlineDate;
         if (goalsWithDeadline != null) {
@@ -98,8 +101,8 @@ public class DashboardBox implements Constants {
 
     private void generateDeadlinesLabel() {
         Map<String, String> goals = dashObs.goalsWithDeadline();
-        goals.put("gola1", "20/12/12");
-        goals.put("gola13", "20/12/12");
+//        goals.put("gola1", "20/12/12");
+//        goals.put("gola13", "20/12/12");
         Label lbNameGoal, lbDate;
         HBox line;
 
@@ -110,12 +113,14 @@ public class DashboardBox implements Constants {
                 line = new HBox();
                 line.getChildren().addAll(lbNameGoal, lbDate);
 
+                vbDeadLines.getChildren().clear();
                 vbDeadLines.getChildren().addAll(line);
             }
         }
         else
         {
             lbNameGoal = new Label("No Data Avaible");
+            vbDeadLines.getChildren().clear();
             vbDeadLines.getChildren().add(lbNameGoal);
         }
 
@@ -123,5 +128,21 @@ public class DashboardBox implements Constants {
 
     public VBox getRoot() {
         return root;
+    }
+
+    private void setupPropertyChangeListeners() {
+        dashObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), this);
+        dashObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOAL_STATE_CHANGED.name(), this);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        populateGoals();
+        generateDeadlinesLabel();
+//        if(evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH)){
+//            
+//        }else if(evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH)){
+//            
+//        }
     }
 }
