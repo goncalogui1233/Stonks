@@ -27,8 +27,8 @@ public class DashboardBox implements Constants {
 
     //Containers
     private VBox vbDeadLines;
-    private HBox hbPieChart;
-    private VBox vbPieChartLabes;
+    private HBox hbPieChartContainer;
+    private VBox vbPieChartLabels;
 
     //Labels
     private Label lbTitle;
@@ -41,17 +41,21 @@ public class DashboardBox implements Constants {
         this.dashObs = dashObs;
 
         root = new VBox();
-
+        vbDeadLines = new VBox();
+        hbPieChartContainer = new HBox();
+        vbPieChartLabels = new VBox();
+        
         root.setMinWidth(DASHBOARD_VIEW_WIDTH / 2);
         root.setMaxWidth(DASHBOARD_VIEW_WIDTH / 2);
 
         setupLabels();
-        vbDeadLines = new VBox();
         vbDeadLines.getChildren().add(lbDeadlines);
 
-        root.getChildren().addAll(lbTitle, lbSavings, lbDeadlinesTitle, vbDeadLines);
+        root.getChildren().addAll(lbTitle, lbSavings, hbPieChartContainer,lbDeadlinesTitle, vbDeadLines);
+        
         populateGoals();
         generateDeadlinesLabel();
+        hbPieChartContainer.getChildren().addAll(pieChart,vbPieChartLabels);
     }
 
     private void setupLabels() {
@@ -70,6 +74,8 @@ public class DashboardBox implements Constants {
         //pieChart = generatePieChart(dashObs.dataForPieChart());
         Map<String, String> goalsWithDeadline = dashObs.goalsWithDeadline();
         Map<String, Integer> goalsUncomplished = dashObs.dataForPieChart();
+        goalsUncomplished.put("aaa", 23);
+        goalsUncomplished.put("Bbb", 23);
 
         Label lbDeadlineGoal, lbDeadlineDate;
         if (goalsWithDeadline != null) {

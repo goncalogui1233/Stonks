@@ -82,7 +82,7 @@ public class DashboardController implements Constants {
             return putFirstEntries(4, allData);
         }
 
-        return null;
+        return allData;
     }
 
     private static Map<String, Integer> putFirstEntries(int max, Map<String, Integer> source) {
