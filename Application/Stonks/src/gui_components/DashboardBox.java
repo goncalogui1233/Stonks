@@ -37,13 +37,14 @@ public class DashboardBox implements Constants {
         root.setPrefHeight(DASHBOARD_VIEW_HEIGHT);
 
         lbTitle = new Label("Active Goals Statistics");
-        lbTitle.getStyleClass().addAll("dashboardTitle");
+        lbTitle.getStyleClass().addAll("dashboardTitle","dashboard");
         lbSavings = new Label("Savings");
-        lbSavings.getStyleClass().add("dashboardSubTitle");
+        lbSavings.getStyleClass().addAll("dashboardSubTitle","dashboard");
         lbDeadlinesTitle = new Label("Deadlines");
-        lbDeadlinesTitle.getStyleClass().add("dashboardSubTitle");
+        lbDeadlinesTitle.getStyleClass().addAll("dashboardSubTitle","dashboard");
 
         lbDeadlines = new Label();
+        lbDeadlines.getStyleClass().addAll("dashboardLabel");
         //lbDeadlines = generateDeadlinesLabel(controller.getGoalsWithDeadline()); //from controller
 
        populateGoals();
