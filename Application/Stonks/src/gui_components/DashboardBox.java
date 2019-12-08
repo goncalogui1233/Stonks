@@ -37,8 +37,11 @@ public class DashboardBox implements Constants {
         root.setPrefHeight(DASHBOARD_VIEW_HEIGHT);
 
         lbTitle = new Label("Active Goals Statistics");
+        lbTitle.getStyleClass().addAll("dashboardTitle");
         lbSavings = new Label("Savings");
+        lbSavings.getStyleClass().add("dashboardSubTitle");
         lbDeadlinesTitle = new Label("Deadlines");
+        lbDeadlinesTitle.getStyleClass().add("dashboardSubTitle");
 
         lbDeadlines = new Label();
         //lbDeadlines = generateDeadlinesLabel(controller.getGoalsWithDeadline()); //from controller
@@ -62,7 +65,7 @@ public class DashboardBox implements Constants {
         }
         else
         {}    //Não existe deadlines
-            
+        
         if (goalsUncomplished != null) {
             pieChart = generatePieChart(goalsUncomplished);
             root.getChildren().add(pieChart);

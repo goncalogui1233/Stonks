@@ -400,7 +400,25 @@
     -fx-alignment: center-right;
 }*/
 
+/*Dashboard*/
+
+.dashboardTitle{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+    -fx-padding: 6 0 0 0;
+}
+
+.dashboardSubTitle{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+    -fx-padding: 6 0 0 0;
+}
+
 /*Goals*/
+
+
 #goalView #goalViewContent{
     -fx-padding: 50 50 50 50;
     -fx-display: inline-block;

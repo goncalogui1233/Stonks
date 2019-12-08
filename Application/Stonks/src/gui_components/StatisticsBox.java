@@ -59,6 +59,7 @@ public class StatisticsBox implements Constants, PropertyChangeListener {
         }        
         cbMonth.setValue(DASHBOARD_STATISTICS_MONTH[0]);
         
+        
         // Switch 0's to values from controller
         lbTotalGoals = generateTotalGoalsLabel(0);
         lbCompletedGoals = generateCompleteGoalsLabel(0);

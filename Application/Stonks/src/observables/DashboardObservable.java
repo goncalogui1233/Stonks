@@ -48,4 +48,6 @@ public class DashboardObservable  extends PropertyChangeSupport implements Const
     public Map<Integer, String> goalsFiltered(String year, String month){
         return cDashboard.CalculateGoalsStatistics(year, month);
     }
+    
+    
 }

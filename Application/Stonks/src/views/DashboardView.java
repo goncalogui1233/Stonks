@@ -32,7 +32,6 @@ public class DashboardView implements Constants, PropertyChangeListener{
         //statisticsBox = new StatisticsBox(controller);
         root.setPrefColumns(2);
         root.setPrefTileWidth(DASHBOARD_VIEW_WIDTH/2);
-        root.setId("dashboardView");
         root.setMinSize(DASHBOARD_VIEW_WIDTH, DASHBOARD_VIEW_HEIGHT);
         root.setMaxSize(DASHBOARD_VIEW_WIDTH, DASHBOARD_VIEW_HEIGHT);
         root.getChildren().addAll(dashboardBox.getRoot(),statisticsBox.getRoot());
