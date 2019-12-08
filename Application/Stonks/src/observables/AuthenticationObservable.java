@@ -65,7 +65,7 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         
         if(resp){
             stonksObs.firePropertyChange(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), null, null);
-            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_GOAL_VIEW.name(), null, null);
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), null, null);
         }
         
         return resp;
