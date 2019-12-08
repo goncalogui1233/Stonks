@@ -1,5 +1,5 @@
 /* 
-TODO: Recebe lista de goalBoxes, remove-se da lista, edita as info de si própio, notifica a vista
+TODO: Recebe lista de goalBoxes, remove-se da lista, edita as info de si proprio, notifica a vista
  */
 package gui_components;
 
@@ -10,6 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -28,17 +30,18 @@ import stonks.Constants;
  *
  * @author Utilizador
  */
-public class GoalBox implements Constants, PropertyChangeListener{
+public class GoalBox implements Constants {
 
-    GoalModel goal;
-    GoalsObservable goalsObs;
+    private GoalModel goal;
+    private GoalsObservable goalsObs;
+    private HashMap<Integer, GoalBox> goalsList;
 
     //Containers 
     private VBox root;
     private VBox topContainer;
 
     //Progress bar
-    ProgressBar pbGoalProgress;
+    private ProgressBar pbGoalProgress;
 
     //First row container 
     private BorderPane firstRow;
@@ -74,10 +77,11 @@ public class GoalBox implements Constants, PropertyChangeListener{
 
     private ManageFundsForm form;
 
-    public GoalBox(GoalModel goal, GoalsObservable goalsObs) {
+    public GoalBox(GoalModel goal, GoalsObservable goalsObs, HashMap<Integer, GoalBox> goalsList) {
 
         this.goal = goal;
         this.goalsObs = goalsObs;
+        this.goalsList = goalsList;
 
         root = new VBox();
         root.setId("goalBox");
@@ -89,12 +93,8 @@ public class GoalBox implements Constants, PropertyChangeListener{
         setupGoalBox();
     }
 
-    private void setupPropertyChangeListeners() {
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.CREATE_GOAL.name(), this);
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.DELETE_GOAL.name(), this);
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.EDIT_GOAL.name(), this);
-        goalsObs.addPropertyChangeListener(GOAL_EVENT.UPDATE_WALLET.name(), this);
-        goalsObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_GOAL_VIEW.name(), this);
+    public void setGoal(GoalModel goal) {
+        this.goal = goal;
     }
 
     public void setupGoalBox() {
@@ -136,26 +136,24 @@ public class GoalBox implements Constants, PropertyChangeListener{
         firstRow.getStyleClass().add("row");
 
         //First row - dates 
+        datesContainer = new HBox();
+
+        //Created date
         createdTitle = new Label("CREATED: ");
         created = new Label(goal.getCreationDate().getDayOfMonth() + "/" + goal.getCreationDate().getMonthValue() + "/" + goal.getCreationDate().getYear());
         created.getStyleClass().addAll("lblValue");
 
-        if (goal.hasDeadline()) {
-            deadlineTitle = new Label("DEADLINE: ");
-            deadline = new Label(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getMonthValue() + "/" + goal.getDeadlineDate().getYear());
-            deadline.getStyleClass().addAll("lblValue");
-        }
-
-        datesContainer = new HBox();
         datesContainer.getChildren().addAll(createdTitle, created);
 
-        if (goal.getWallet().getSavedMoney() > 0) {
-            estimationTitle = new Label("ESTIMATION: ");
+        //Estimation date
+        estimationTitle = new Label("ESTIMATION: ");
+        estimation = new Label();
+        estimation.getStyleClass().addAll("lblValue");
 
+        if (goal.getWallet().getSavedMoney() > 0) {
             try {
-                //estimation = new Label("22/11/2019");
                 LocalDate estimationDate = goalsObs.getEstimatedDate(goal.getId());
-                estimation = new Label(estimationDate.getDayOfMonth() + "/" + estimationDate.getMonthValue() + "/" + estimationDate.getYear());
+                estimation.setText(estimationDate.getDayOfMonth() + "/" + estimationDate.getMonthValue() + "/" + estimationDate.getYear());
             } catch (AuthenticationException ex) {
                 DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
             } catch (GoalNotFoundException ex) {
@@ -163,16 +161,16 @@ public class GoalBox implements Constants, PropertyChangeListener{
             } catch (EmptyDepositException ex) {
                 System.out.println(ex);
             }
-            estimation.getStyleClass().addAll("lblValue");
 
             datesContainer.getChildren().addAll(estimationTitle, estimation);
         }
 
+        //Deadline date
+        deadlineTitle = new Label("DEADLINE: ");
+        deadline = new Label();
+        deadline.getStyleClass().addAll("lblValue");
         if (goal.hasDeadline()) {
-            datesContainer.getChildren().addAll(deadlineTitle, deadline);
-        }
-
-        if (goal.hasDeadline()) {
+            deadline.setText(goal.getDeadlineDate().getDayOfMonth() + "/" + goal.getDeadlineDate().getMonthValue() + "/" + goal.getDeadlineDate().getYear());
             datesContainer.getChildren().addAll(deadlineTitle, deadline);
         }
 
@@ -197,11 +195,11 @@ public class GoalBox implements Constants, PropertyChangeListener{
 
         //Second row money 
         objectiveTitle = new Label("Goal: ");
-        objective = new Label(goal.getObjective() + "€");
+        objective = new Label(Integer.toString(goal.getObjective()));
         objective.getStyleClass().addAll("lblValue");
 
         accomplishedTitle = new Label("Accomplished: ");
-        accomplished = new Label(goal.getWallet().getSavedMoney() + "€");
+        accomplished = new Label(Integer.toString(goal.getWallet().getSavedMoney()));
         accomplished.getStyleClass().addAll("lblValue");
 
         moneyContainer = new HBox();
@@ -225,9 +223,12 @@ public class GoalBox implements Constants, PropertyChangeListener{
 
             if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
                 boolean isGoalDeleted = false;
+                int id = goal.getId();
 
                 try {
+
                     isGoalDeleted = goalsObs.removeGoal(goal.getId());
+
                 } catch (AuthenticationException ex) {
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_AUTH);
                 } catch (GoalNotFoundException ex) {
@@ -235,6 +236,7 @@ public class GoalBox implements Constants, PropertyChangeListener{
                 }
 
                 if (isGoalDeleted) {
+                    goalsList.remove(id);
                     DialogBox.display(DBOX_TYPE.SUCCESS, DBOX_CONTENT.SUCCESS_GOAL_DELETE);
                 } else {
                     DialogBox.display(DBOX_TYPE.ERROR, DBOX_CONTENT.ERROR_GOAL_CREATE);
@@ -248,17 +250,21 @@ public class GoalBox implements Constants, PropertyChangeListener{
             content = DBOX_CONTENT.CONFIRM_GOAL_DELETE;
             content.setSubExtra(goal.getName());
 
-            GoalForm form = new GoalForm(goalsObs);
-            form.display(goal.getId());
+            GoalForm form = new GoalForm(goalsObs, goalsList);
+            if (form.display(goal.getId())) {
+                root.getChildren().removeAll(root.getChildren());
+                this.setupGoalBox();
+            }
+
         });
 
         //Manage Funds of Goal
-        btnFunds.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                ManageFundsForm f = new ManageFundsForm(goalsObs);
-                f.display(goal.getId());
-            }
+        btnFunds.setOnAction(e -> {
+            ManageFundsForm f = new ManageFundsForm(goalsObs);
+            f.display(goal.getId());
+            root.getChildren().removeAll(root.getChildren());
+            this.setupGoalBox();
+
         });
     }
 
@@ -266,8 +272,4 @@ public class GoalBox implements Constants, PropertyChangeListener{
         return root;
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

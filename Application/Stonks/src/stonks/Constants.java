@@ -192,7 +192,7 @@ public interface Constants {
         CREATE_GOAL, 
         EDIT_GOAL,
         DELETE_GOAL, 
-        UPDATE_WALLET
+        GOAL_COMPLETED
     };
 
     public static enum PROFILE_EVENT {

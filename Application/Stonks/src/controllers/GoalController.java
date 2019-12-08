@@ -65,7 +65,7 @@ public class GoalController implements Constants {
         }
     }
 
-    public boolean createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
+    public GoalModel createGoal(String name, int objective, LocalDate deadline) throws AuthenticationException {
 
         /*Validates if the inputs recevied by argument are in the correct format*/
         if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
@@ -75,7 +75,7 @@ public class GoalController implements Constants {
             if (deadline != null) {
                 /*If the deadline isn't in the correct format, the goal isn't created*/
                 if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -87,13 +87,13 @@ public class GoalController implements Constants {
             /*UPDATE DATABASE*/
             data.updateDatabase();
 
-            return true;
+            return newGoal;
         }
 
-        return false;
+        return null;
     }
 
-    public boolean editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
+    public GoalModel editGoal(int id, String name, int objective, LocalDate deadline) throws AuthenticationException, GoalNotFoundException {
 
         /*Checks if the inputs recevied by argument are in the correct format*/
         if (verifyData(GOAL_FIELD.NAME, name) == VALIDATE.OK
@@ -103,7 +103,7 @@ public class GoalController implements Constants {
             if (deadline != null) {
                 /*If the deadline isn't in the correct format, the goal isn't edited*/
                 if (verifyData(GOAL_FIELD.DEADLINE, deadline) != VALIDATE.OK) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -114,10 +114,10 @@ public class GoalController implements Constants {
 
             /*UPDATE DATABASE*/
             data.updateDatabase();
-            return true;
+            return getGoal(id);
         }
 
-        return false;
+        return null;
     }
 
     public boolean removeGoal(int id) throws AuthenticationException, GoalNotFoundException {
