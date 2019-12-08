@@ -23,11 +23,7 @@ import javafx.stage.StageStyle;
 import observables.GoalsObservable;
 import stonks.Constants;
 
-/**
- *
- * @author Gonçalo
- */
-public class ManageFundsForm {
+public class ManageFundsForm implements Constants {
 
     private int goalID = 0;
     private final GoalsObservable goalsObs;
@@ -267,7 +263,7 @@ public class ManageFundsForm {
                         valueForAccom -= goalsObs.getGoal(goalID).getWallet().getSavedMoney();  //than he take off what is already saved
                     }
                     goalsObs.updateWallet(goalID, Integer.parseInt(accomplishedValue.getText()));
-
+                    goalsObs.firePropertyChange(GOAL_EVENT.GOAL_MANAGE_FUNDS.name(), null, null);
                     DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCCESS_WALLET_UPDATE);
 
                     fundsForm.close();

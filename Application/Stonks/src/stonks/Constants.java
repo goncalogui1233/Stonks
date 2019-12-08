@@ -206,7 +206,8 @@ public interface Constants {
         CREATE_GOAL, 
         EDIT_GOAL,
         DELETE_GOAL, 
-        GOAL_COMPLETED
+        GOAL_COMPLETED,
+        GOAL_MANAGE_FUNDS
     };
 
     public static enum PROFILE_EVENT {

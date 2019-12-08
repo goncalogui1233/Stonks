@@ -188,7 +188,7 @@ public class ProfileModel implements Serializable {
                 topGoals.add(newGoal);
             }
         }
-        
-        return GoalModel.orderListByProgress(topGoals);
+        GoalModel.orderListByProgress(topGoals);
+        return topGoals;
     }
 }
