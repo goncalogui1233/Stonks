@@ -94,6 +94,9 @@ public interface Constants {
     public static final int SIDEPROFILEBAR_HEIGHT = APP_REAL_HEIGHT;
 
     /*General*/
+    public static final String AUTH_WELCOME_MESSAGE = "Welcome to Stonks";
+    public static final String AUTH_WELCOME_SUBMESSAGE_WITH_PROFILES = "Please sign-in a profile and let us help you achieve your goals!";
+    public static final String AUTH_WELCOME_SUBMESSAGE_WITHOUT_PROFILES = "Please register a profile and let us help you achieve your goals!";
     public static final int MAX_PROFILES = 6;
 
     public static enum VALIDATE {

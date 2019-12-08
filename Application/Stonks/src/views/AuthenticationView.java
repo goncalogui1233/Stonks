@@ -4,6 +4,7 @@ import gui_components.LoginBox;
 import gui_components.PasswordRecoveryBox;
 import gui_components.RegisterBox;
 import gui_components.SideProfileBar;
+import gui_components.WelcomeBox;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ public class AuthenticationView implements Constants, PropertyChangeListener{
     private final AuthenticationObservable authObs;
     
     private SideProfileBar sideProfileBarContainer;
+    private WelcomeBox welcomeContainer;
     private RegisterBox registerContainer;
     private LoginBox loginContainer;
     private PasswordRecoveryBox recoverPasswordContainer;
@@ -37,18 +39,20 @@ public class AuthenticationView implements Constants, PropertyChangeListener{
     
     private void setupContainers(){
         sideProfileBarContainer = new SideProfileBar(authObs);
+        welcomeContainer = new WelcomeBox(authObs);
         registerContainer = new RegisterBox(authObs);
         loginContainer = new LoginBox(authObs);
         recoverPasswordContainer = new PasswordRecoveryBox(authObs);
         
         root.getChildren().add(sideProfileBarContainer.getRoot());
-        root.getChildren().add(registerContainer.getRoot());
+        root.getChildren().add(welcomeContainer.getRoot());
     }
     
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_LOGIN.name(), this);
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_REGISTER.name(), this);
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), this);
+        authObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), this);
     }
 
     @Override
@@ -63,6 +67,8 @@ public class AuthenticationView implements Constants, PropertyChangeListener{
             root.getChildren().add(registerContainer.getRoot());
         }else if(evt.getPropertyName().equals(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name())){
             root.getChildren().add(recoverPasswordContainer.getRoot());
+        }else if(evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())){
+            root.getChildren().add(welcomeContainer.getRoot());
         }
     }
 }

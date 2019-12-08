@@ -38,6 +38,10 @@ public class AuthenticationObservable extends PropertyChangeSupport implements C
         return cProfile.hasMaxProfiles();
     }
     
+    public boolean hasNoProfiles(){
+        return cProfile.hasNoProfiles();
+    }
+    
     public <T> VALIDATE verifyData(PROFILE_FIELD field, T value){
         return cProfile.verifyData(field, value);
     }

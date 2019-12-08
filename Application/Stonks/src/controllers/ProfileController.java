@@ -240,7 +240,7 @@ public class ProfileController implements Constants {
             if (profile != null) {
 
                 //If the profile doesnt have a password, logs in the profile. 
-                if (password == null && profile.getPassword() == null) {
+                if (password == null && (profile.getPassword() == null || profile.getPassword().isEmpty())) {
                     data.setAuthProfile(profile);
                     return true;
                 }
