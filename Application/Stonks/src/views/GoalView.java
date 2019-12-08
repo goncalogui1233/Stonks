@@ -1,9 +1,3 @@
-/*
-* TODO: tem uma lista de goalBoxs, em vez de estar sempre a fazer new GoalBox(). Quando cria goal, adiciona goalBox na lista 
-        Recebe notificaÃ§Ãµes das goalBox, percorre a lista e faz add no goalsContainer
-
-        Managefunds - enviar o accomplished em vez do valor do input
- */
 package views;
 
 import gui_components.GoalBox;
@@ -12,11 +6,12 @@ import gui_components.SideMenu;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -45,7 +40,9 @@ public class GoalView implements Constants, PropertyChangeListener {
 
     //Buttons 
     private Button btnAdd;
-    private ToggleButton tbtnFilter;
+
+    //Checkbox
+    private CheckBox cbFilter;
 
     private GoalsObservable goalsObs;
     private final HBox root;
@@ -94,16 +91,15 @@ public class GoalView implements Constants, PropertyChangeListener {
         btnAdd = new Button("Add goal");
         btnAdd.getStyleClass().addAll("btn-default");
 
-        tbtnFilter = new ToggleButton("Show Completed");
-        tbtnFilter.getStyleClass().addAll("lala");
+        cbFilter = new CheckBox("Show Completed");
+        cbFilter.setIndeterminate(false);
 
-        tbtnFilter.setOnAction(e -> {
-
+        cbFilter.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
             showCompleted = !showCompleted;
             displayProfileGoals();
         });
 
-        topContainerButtons.getChildren().addAll(tbtnFilter, btnAdd);
+        topContainerButtons.getChildren().addAll(cbFilter, btnAdd);
 
         topContainer.setLeft(viewTitle);
         topContainer.setRight(topContainerButtons);

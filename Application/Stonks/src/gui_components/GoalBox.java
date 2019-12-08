@@ -195,11 +195,11 @@ public class GoalBox implements Constants {
 
         //Second row money 
         objectiveTitle = new Label("Goal: ");
-        objective = new Label(Integer.toString(goal.getObjective()));
+        objective = new Label(Integer.toString(goal.getObjective()) + " €");
         objective.getStyleClass().addAll("lblValue");
 
         accomplishedTitle = new Label("Accomplished: ");
-        accomplished = new Label(Integer.toString(goal.getWallet().getSavedMoney()));
+        accomplished = new Label(Integer.toString(goal.getWallet().getSavedMoney()) + " €");
         accomplished.getStyleClass().addAll("lblValue");
 
         moneyContainer = new HBox();
