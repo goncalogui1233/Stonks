@@ -41,6 +41,8 @@ public class StatisticsBox implements Constants, PropertyChangeListener {
         this.dashObs = dashboardobservable;
 
         root = new VBox();
+        root.setMinWidth(DASHBOARD_VIEW_WIDTH/2);
+        root.setMaxWidth(DASHBOARD_VIEW_WIDTH/2);
 
         lbTitle = new Label("All Time Statistics");
         lbTitle.getStyleClass().addAll("dashboardTitle","dashboard");

@@ -33,8 +33,9 @@ public class DashboardBox implements Constants {
         this.dashObs = dashObs;
 
         root = new VBox();
-        root.setPrefHeight(DASHBOARD_VIEW_WIDTH / 2);
-        root.setPrefHeight(DASHBOARD_VIEW_HEIGHT);
+        root.setMinWidth(DASHBOARD_VIEW_WIDTH/2);
+        root.setMaxWidth(DASHBOARD_VIEW_WIDTH/2);
+
 
         lbTitle = new Label("Active Goals Statistics");
         lbTitle.getStyleClass().addAll("dashboardTitle","dashboard");
