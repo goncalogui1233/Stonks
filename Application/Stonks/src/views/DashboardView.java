@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import observables.DashboardObservable;
 import stonks.Constants;
 
-public class DashboardView implements Constants, PropertyChangeListener {
+public class DashboardView implements Constants {
 
     private final DashboardObservable dashObs;
 
@@ -32,7 +32,6 @@ public class DashboardView implements Constants, PropertyChangeListener {
         root.setMaxSize(DASHBOARD_VIEW_WIDTH, DASHBOARD_VIEW_HEIGHT);
 
         setupContainers();
-        setupPropertyChangeListeners();
     }
 
     private void setupContainers() {
@@ -42,20 +41,9 @@ public class DashboardView implements Constants, PropertyChangeListener {
 
         root.getChildren().addAll(new SideMenu(dashObs.getStonksObs()).getRoot(),
                 dashboardBox.getRoot(),statisticsBox.getRoot());
-
     }
 
     public HBox getRoot() {
         return root;
     }
-
-    private void setupPropertyChangeListeners() {
-        dashObs.addPropertyChangeListener(DASHBOARD_EVENT.CALCULATE_STATISTICS.name(), this);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

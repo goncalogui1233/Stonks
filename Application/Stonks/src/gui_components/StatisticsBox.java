@@ -23,7 +23,7 @@ import stonks.Constants;
  *
  * @author Bizarro
  */
-public class StatisticsBox implements Constants, PropertyChangeListener {
+public class StatisticsBox implements Constants {
 
     private final DashboardObservable dashObs;
 
@@ -77,7 +77,6 @@ public class StatisticsBox implements Constants, PropertyChangeListener {
         root.getChildren().add(hbChoice);
         root.getChildren().add(vbLabels);
 
-        setupPropertyChangeListeners();
         setupEventListeners();
         populateLabels();
     }
@@ -131,19 +130,6 @@ public class StatisticsBox implements Constants, PropertyChangeListener {
 
     public VBox getRoot() {
         return root;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName()
-                .equals(DASHBOARD_EVENT.CALCULATE_STATISTICS.CALCULATE_STATISTICS.name())) {
-
-        }
-    }
-
-    private void setupPropertyChangeListeners() {
-        dashObs.addPropertyChangeListener(
-                DASHBOARD_EVENT.CALCULATE_STATISTICS.name(), this);
     }
 
     private void setupEventListeners() {

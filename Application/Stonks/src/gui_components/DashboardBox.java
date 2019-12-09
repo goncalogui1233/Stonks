@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,9 +19,9 @@ public class DashboardBox implements Constants, PropertyChangeListener {
     private final DashboardObservable dashObs;
 
     //Containers
-    private VBox vbDeadLines;
-    private HBox hbPieChartContainer;
-    private VBox vbPieChartLabels;
+    private final VBox vbDeadLines;
+    private final HBox hbPieChartContainer;
+    private final VBox vbPieChartLabels;
 
     //Labels
     private Label lbTitle;
@@ -47,7 +48,6 @@ public class DashboardBox implements Constants, PropertyChangeListener {
         
         populateGoals();
         generateDeadlinesLabel();
-        hbPieChartContainer.getChildren().addAll(pieChart,vbPieChartLabels);
         setupPropertyChangeListeners();
     }
 
@@ -67,8 +67,6 @@ public class DashboardBox implements Constants, PropertyChangeListener {
         //pieChart = generatePieChart(dashObs.dataForPieChart());
         Map<String, String> goalsWithDeadline = dashObs.goalsWithDeadline();
         Map<String, Double> goalsUncomplished = dashObs.dataForPieChart();
-//        goalsUncomplished.put("aaa", 23.0);
-//        goalsUncomplished.put("Bbb", 23.0);
 
         Label lbDeadlineGoal, lbDeadlineDate;
         if (goalsWithDeadline != null) {
@@ -82,27 +80,34 @@ public class DashboardBox implements Constants, PropertyChangeListener {
 
         if (goalsUncomplished != null) {
             pieChart = generatePieChart(goalsUncomplished);
+            pieChart.setLabelsVisible(false);
+            pieChart.setLegendSide(Side.RIGHT);
             root.getChildren().add(pieChart);
         } else {
             //Label lbNoData = new Label("No Data Avaiable");
             //root.getChildren().add(lbNoData);
         }//No data avaiabel for user        
+        
+        hbPieChartContainer.getChildren().clear();
+        hbPieChartContainer.getChildren().addAll(pieChart,vbPieChartLabels);
     }
 
-    private PieChart generatePieChart(Map<String, Double> goals) {
+    private PieChart generatePieChart(Map<String, Double >goals) {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        
         for (Map.Entry<String, Double> entry : goals.entrySet()) {
+            int intAux = new Double(entry.getValue()* 100.0).intValue();
             PieChart.Data p
-                    = new PieChart.Data(entry.getKey(), entry.getValue());
+                    = new PieChart.Data(entry.getKey(), 
+                            new Double(intAux));
             data.add(p);
         }
+        
         return new PieChart(data);
     }
 
     private void generateDeadlinesLabel() {
         Map<String, String> goals = dashObs.goalsWithDeadline();
-//        goals.put("gola1", "20/12/12");
-//        goals.put("gola13", "20/12/12");
         Label lbNameGoal, lbDate;
         HBox line;
 
