@@ -55,7 +55,6 @@ public class DashboardView implements Constants, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
            statisticsBox.populateLabels();
-           System.out.println("er");
         }
     }
 }

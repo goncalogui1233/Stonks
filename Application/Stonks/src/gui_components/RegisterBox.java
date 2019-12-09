@@ -2,12 +2,15 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -47,7 +50,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
     //Field Inputs
     private TextField txfFirstName;
     private TextField txfLastName;
-    private TextField txfPassword;
+    private PasswordField  txfPassword;
     private TextField txfSecurityAnswer;
     private ChoiceBox cbSecurityQuestion;
     private ColorPicker cpPickColor;
@@ -73,12 +76,40 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         setupRegisterForm();
         setupEventListeners();
         setupPropertyChangeListeners();
+        setupInputFieldsListeners();
     }
 
     public Pane getRoot() {
         return root;
     }
 
+    private void setupInputFieldsListeners(){
+        txfFirstName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfFirstName.setText(txfFirstName.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
+        txfLastName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfLastName.setText(txfLastName.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
+        txfSecurityAnswer.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfSecurityAnswer.setText(txfSecurityAnswer.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
+    }
+    
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_REGISTER.name(), this);
     }
@@ -100,7 +131,7 @@ public class RegisterBox implements Constants, PropertyChangeListener{
         txfLastName = new TextField();
 
         lblPassword = new Label("Password");
-        txfPassword = new TextField();
+        txfPassword = new PasswordField();
 
         lblSecurtyQuestion = new Label("Security Question");
 

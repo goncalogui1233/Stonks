@@ -2,10 +2,13 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -42,7 +45,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener {
     //Field Inputs
     private TextField txfFirstName;
     private TextField txfLastName;
-    private TextField txfPassword;
+    private PasswordField txfPassword;
     private ColorPicker cpPickColor;
 
     //Error Labels
@@ -65,10 +68,30 @@ public class ProfileEditBox implements Constants, PropertyChangeListener {
         setupProfileEditBox();
         setupEventListeners();
         setupPropertyChangeListeners();
+        setupInputFieldsListeners();
     }
 
     public BorderPane getRoot() {
         return root;
+    }
+
+    private void setupInputFieldsListeners(){
+        txfFirstName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfFirstName.setText(txfFirstName.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
+        txfLastName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txfLastName.setText(txfLastName.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
     }
 
     private void setupPropertyChangeListeners() {
@@ -92,7 +115,7 @@ public class ProfileEditBox implements Constants, PropertyChangeListener {
         txfLastName = new TextField();
 
         lblPassword = new Label("Password");
-        txfPassword = new TextField();
+        txfPassword = new PasswordField();
 
         lblColor = new Label("Color");
         cpPickColor = new ColorPicker();

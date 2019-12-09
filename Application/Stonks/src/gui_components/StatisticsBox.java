@@ -43,6 +43,7 @@ public class StatisticsBox implements Constants {
         this.dashObs = dashboardobservable;
 
         root = new VBox();
+        root.setId("statisticsBox");
         vbLabels = new VBox();
         root.setMinWidth(DASHBOARD_VIEW_WIDTH / 2);
         root.setMaxWidth(DASHBOARD_VIEW_WIDTH / 2);
@@ -56,6 +57,7 @@ public class StatisticsBox implements Constants {
         HBox hbChoice = new HBox();
 
         cbYear = new ChoiceBox();
+        cbYear.getStyleClass().add("fieldInput");
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         cbYear.getItems().add("Year");
 
@@ -65,11 +67,13 @@ public class StatisticsBox implements Constants {
         cbYear.setValue("Year");
 
         cbMonth = new ChoiceBox();
+        cbMonth.getStyleClass().add("fieldInput");
         for (String month : DASHBOARD_STATISTICS_MONTH) {
             cbMonth.getItems().add(month);
         }
         cbMonth.setValue(DASHBOARD_STATISTICS_MONTH[0]);
 
+        hbChoice.setSpacing(10);
         hbChoice.getChildren().addAll(cbYear, cbMonth);
         hbChoice.setPadding(new Insets(0, 0, 0, 20));
 

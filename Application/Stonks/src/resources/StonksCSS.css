@@ -16,6 +16,10 @@
     -fx-background-color: #fafafa;
 }
 
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
 #divider-5{
     -fx-padding:2.5px/*TOP and BOTTOM OR LEFT and RIGHT*/;
 }
@@ -527,6 +531,18 @@
     -fx-padding: 0 0 10 20;
 }
 
+#statisticsBox .fieldInput{
+    -fx-padding: 5px;
+    -fx-background-radius: 0px;
+    -fx-background-color: #1976d2, white, white;
+    -fx-background-insets: 0 -1 -1.5 -1, 0 0 0 0, 0 -1 0 -1;
+}
+
+#statisticsBox .fieldInput:focused {
+    -fx-background-radius: 0px;
+    -fx-background-insets: 0 -1 -3 -1, 0 0 0 0, 0 -1 0 -1;
+}
+
 /*Goals*/
 
 
@@ -558,9 +574,9 @@
 #goalView #goalViewContent .goalsTopContainer .button{
     -fx-font-size: 16px;
     -fx-text-fill: white;
-    
+
 }
-    
+
 #goalView #goalViewContent .goalsTopContainer #toggleDiv{
     -fx-border-width: 1px;
     -fx-border-color: #bdbdbd;
@@ -571,7 +587,7 @@
     -fx-padding:-2px;
     -fx-background-color:#c9c9c9;
 }
-    
+
 #goalView #goalViewContent .goalsTopContainer #toggleDiv:show{
     -fx-background-color:#28a745;
 }

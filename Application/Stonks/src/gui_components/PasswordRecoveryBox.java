@@ -2,6 +2,8 @@ package gui_components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -51,12 +53,24 @@ public class PasswordRecoveryBox implements Constants, PropertyChangeListener{
         setupRecoverPasswordForm();
         setupEventListeners();
         setupPropertyChangeListeners();
+        setupInputFieldsListeners();
     }
 
     public BorderPane getRoot() {
         return root;
     }
 
+    private void setupInputFieldsListeners(){
+        txtSecurityAnswer.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    txtSecurityAnswer.setText(txtSecurityAnswer.getText().replaceAll("\\s+", " ").trim());
+                }
+            }
+        });
+    }
+    
     private void setupPropertyChangeListeners() {
         authObs.addPropertyChangeListener(AUTH_EVENT.GOTO_RECOVER_PASSWORD.name(), this);
     }

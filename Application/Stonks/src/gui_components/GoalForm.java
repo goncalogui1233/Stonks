@@ -1,15 +1,10 @@
-/* 
- * To change this license header, choose License Headers in Project Properties. 
- * To change this template file, choose Tools | Templates 
- * and open the template in the editor. 
- */
+
 package gui_components;
 
 import exceptions.AuthenticationException;
 import exceptions.GoalNotFoundException;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
-import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -34,10 +29,6 @@ import models.GoalModel;
 import observables.GoalsObservable;
 import stonks.Constants;
 
-/**
- *
- * @author Tiago
- */
 public class GoalForm extends PropertyChangeSupport implements Constants {
 
     private int goalId = 0;
@@ -208,7 +199,7 @@ public class GoalForm extends PropertyChangeSupport implements Constants {
         objectiveDiv = new VBox();
         objectiveDiv.getStyleClass().addAll("fieldDiv");
 
-        lblObjective = new Label("Objective (€)");
+        lblObjective = new Label("Objective (â‚¬)");
         lblObjective.getStyleClass().addAll("fieldTitle");
 
         txfObjective = new TextField();

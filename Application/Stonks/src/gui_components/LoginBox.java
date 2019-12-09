@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -31,7 +32,7 @@ public class LoginBox implements Constants, PropertyChangeListener {
     private Label lblPassword;
 
     //Field Inputs
-    private TextField txtPassword;
+    private PasswordField txtPassword;
 
     //Error Labels
     private Label errorPassword;
@@ -104,7 +105,7 @@ public class LoginBox implements Constants, PropertyChangeListener {
         formContainer = new VBox();
 
         lblPassword = new Label("Password");
-        txtPassword = new TextField();
+        txtPassword = new PasswordField();
 
         linkForgotPassword = new Label("I forgot my password");
         linkForgotPassword.setOnMouseClicked(e -> {

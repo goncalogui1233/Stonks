@@ -2,6 +2,7 @@ package observables;
 
 import controllers.DashboardController;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 import java.util.Map;
 import stonks.Constants;
 
@@ -27,12 +28,12 @@ public class DashboardObservable  extends PropertyChangeSupport implements Const
         firePropertyChange(DASHBOARD_EVENT.CALCULATE_STATISTICS.name(), null, null);
     }
     
-    public Map<String, Double> dataForPieChart()
+    public Map<String, Integer> dataForPieChart()
     {
         return cDashboard.getListOfUncomplichedGoals();
     }
     
-    public  Map<String, String> goalsWithDeadline()
+    public  List<String> goalsWithDeadline()
     {
         return cDashboard.getGoalsWithDeadline();
     }
