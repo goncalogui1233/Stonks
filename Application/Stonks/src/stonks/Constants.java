@@ -40,11 +40,13 @@ public interface Constants {
         SUCCESS_GOAL_EDIT("Goal Edited", "Your goal was successfully edited!"),
         SUCCESS_RECOVER_PASSWORD("Valid answer", "Your password is: \"{}\""),
         SUCCESS_WALLET_UPDATE("Wallet Updated", "The value has been updated succesfully"),
+        ERROR_WALLET_UPDATE("Unable to updated the funds", "An error occurred while processing your request. The funds weren't updated."),
         
         /*CONFIRM MESSAGES*/
         CONFIRM_DELETE_PROFILE("Deleting profile \"{}\"", "This action will delete this profile permanently..."),
         CONFIRM_GOAL_DELETE("Deleting goal \"{}\"", "This action will delete this goal permanently..."),
-        CONFIRM_GOAL_EDIT("Editing goal \"{}\"", "This action will edit this goal permanently...");
+        CONFIRM_GOAL_EDIT("Editing goal \"{}\"", "This action will edit this goal permanently..."),
+        CONFIRM_WALLET_UPDATE("Updating \"{}\" funds", "This action will update this goal funds permanently...");
 
         private final String subTitle;
         private String newSubTitle;
@@ -174,8 +176,12 @@ public interface Constants {
     public static final int GOALS_CONTAINER_WIDTH = GOAL_VIEW_WIDTH - 160 - 10;
     public static final int GOAL_BOX_WIDTH = GOALS_CONTAINER_WIDTH - 40;
     public static final int GOAL_BOX_HEIGHT = 180;
+    public static final int GOAL_FORM_WIDTH = 300;
+    public static final int GOAL_FORM_HEIGHT = 425;
 
     /*Wallet*/
+    public static final int WALLET_FORM_WIDTH = 430;
+    public static final int WALLET_FORM_HEIGHT = 310;
 
     /*Property Change Events*/
     public static enum STONKS_EVENT {

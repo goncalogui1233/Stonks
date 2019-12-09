@@ -91,8 +91,8 @@ public class GoalForm extends PropertyChangeSupport implements Constants {
         /*Remove window default border and buttons (minimize, close, etc...)*/
         goalForm.initModality(Modality.APPLICATION_MODAL);
         /*Unables clicks outside of this window*/
-        goalForm.setWidth(300);
-        goalForm.setHeight(425);
+        goalForm.setWidth(GOAL_FORM_WIDTH);
+        goalForm.setHeight(GOAL_FORM_HEIGHT);
         goalForm.setAlwaysOnTop(true);
         /*Cant be onfocused (application wise)*/
 

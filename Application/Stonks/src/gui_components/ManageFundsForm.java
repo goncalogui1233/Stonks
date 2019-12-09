@@ -5,6 +5,7 @@ import exceptions.GoalNotFoundException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,13 +21,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import models.GoalModel;
 import observables.GoalsObservable;
 import stonks.Constants;
 
 public class ManageFundsForm implements Constants {
 
     private int goalID = 0;
+    private GoalModel goal;
     private final GoalsObservable goalsObs;
+    private int originalAccomplished = 0;
     private int valueForAccom;
 
     private Stage fundsForm;
@@ -42,15 +46,19 @@ public class ManageFundsForm implements Constants {
 
     private VBox form;
 
-    private VBox fundsDiv;
+    private VBox ammountDiv;
 
     private VBox bottom;
 
+    private VBox titleContainer;
     private HBox accomplishedDiv;
+    private HBox objectiveDiv;
 
     private Label title;
-    private Label errorNegative;
-    private Label errorEmpty;
+    private Label subtitle;
+    private Label ammountTitle;
+    private Label errorAmmount;
+    private Label objectiveTitle;
     private Label objective;
     private Label accomplishedTitle;
     private Label accomplishedValue;
@@ -66,12 +74,18 @@ public class ManageFundsForm implements Constants {
         this.goalID = goalID;
 
         try {
-            this.valueForAccom = goalsObs.getGoal(goalID).getWallet().getSavedMoney();
+            goal = goalsObs.getGoal(goalID);
+
         } catch (AuthenticationException ex) {
             DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_AUTH);
+            return;
         } catch (GoalNotFoundException ex) {
             DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
+            return;
         }
+
+        this.valueForAccom = goal.getWallet().getSavedMoney();
+        originalAccomplished = valueForAccom;
 
         fundsForm = new Stage();
 
@@ -79,18 +93,18 @@ public class ManageFundsForm implements Constants {
         /*Remove window default border and buttons (minimize, close, etc...)*/
         fundsForm.initModality(Modality.APPLICATION_MODAL);
         /*Unables clicks outside of this window*/
-        fundsForm.setWidth(300);
-        fundsForm.setHeight(370);
+        fundsForm.setWidth(WALLET_FORM_WIDTH);
+        fundsForm.setHeight(WALLET_FORM_HEIGHT);
         fundsForm.setAlwaysOnTop(true);
 
-        setupWindow(goalID);
+        setupWindow();
         setupEventListeners();
 
         fundsForm.showAndWait();
 
     }
 
-    public void setupWindow(int goalID) {
+    public void setupWindow() {
 
         root = new BorderPane();
         root.setId("fundsForm");
@@ -101,19 +115,16 @@ public class ManageFundsForm implements Constants {
         topLayout.getStyleClass().addAll("topLayout");
 
         //Title 
-        title = new Label("Updating Funds");
-        if (goalID > 0) {
-            try {
-                title.setText(goalsObs.getGoal(goalID).getName() + " Wallet");
-            } catch (AuthenticationException ex) {
-                DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_AUTH);
-            } catch (GoalNotFoundException ex) {
-                DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
-            }
-            title.wrapTextProperty().set(true);
-        }
+        titleContainer = new VBox();
 
+        title = new Label("Manage Funds");
         title.getStyleClass().addAll("title");
+        subtitle = new Label(goal.getName());
+        subtitle.getStyleClass().add("subtitle");
+        subtitle.wrapTextProperty().setValue(true);
+        subtitle.setMinHeight(50);
+        subtitle.setMaxWidth(150);
+        titleContainer.getChildren().addAll(title, subtitle);
 
         //Btn Close
         imageContainer = new Pane();
@@ -127,20 +138,32 @@ public class ManageFundsForm implements Constants {
             fundsForm.close();
         });
 
-        topLayout.setLeft(title);
+        topLayout.setLeft(titleContainer);
         topLayout.setRight(imageContainer);
 
         //Form 
         form = new VBox();
         form.getStyleClass().addAll("form");
 
-        //Funds TextField 
-        fundsDiv = new VBox();
-        fundsDiv.getStyleClass().addAll("fieldDiv");
+        //Ammount div
+        ammountDiv = new VBox();
+        ammountDiv.getStyleClass().addAll("fieldDiv");
 
+        //Ammount Title
+        ammountTitle = new Label("Ammount (€)");
+        ammountTitle.getStyleClass().addAll("fieldTitle");
+
+        //Ammount TextField 
         ammountValue = new TextField();
         ammountValue.getStyleClass().addAll("value");
 
+        //Ammount Errors
+        errorAmmount = new Label("Insert an ammount to add or remove");
+        errorAmmount.getStyleClass().addAll("fieldError");
+        errorAmmount.setVisible(false);
+        errorAmmount.wrapTextProperty().setValue(true);
+
+        ammountDiv.getChildren().addAll(ammountTitle, ammountValue, errorAmmount);
         //Only accept number 
         ammountValue.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -159,20 +182,15 @@ public class ManageFundsForm implements Constants {
             }
         });
 
-        errorNegative = new Label("Funds value cannot be negative");
-        errorNegative.getStyleClass().addAll("fieldError");
-        errorNegative.setVisible(false);
-
-        errorEmpty = new Label("Insert an ammount to add or remove");
-        errorEmpty.getStyleClass().addAll("fieldError");
-        errorEmpty.setVisible(false);
-
         //Buttons Sum and Subtraction
         buttons = new HBox();
+        //buttons.setPadding(new Insets(20, 0, 0, 0));
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setSpacing(10);
 
         Pane imagePlusContainer = new Pane();
+        imagePlusContainer.setMinWidth(25);
+        imagePlusContainer.setMinHeight(25);
         imagePlusButton = new ImageView(new Image("resources/FundsFormPlus.png"));
         imagePlusButton.setFitWidth(25);
         imagePlusButton.setFitHeight(25);
@@ -180,13 +198,25 @@ public class ManageFundsForm implements Constants {
 
         imagePlusContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (!ammountValue.getText().isEmpty()) {
-                //if(Integer.parseInt(ammountValue.getText()) > goalsObs.getGoal(goalID).getObjective())
-                valueForAccom += Integer.parseInt(ammountValue.getText());
-                accomplishedValue.setText(Integer.toString(valueForAccom));
+                System.out.println(Integer.parseInt(ammountValue.getText()) + valueForAccom);
+                if (Integer.parseInt(ammountValue.getText()) + valueForAccom > goal.getObjective()) {
+                    errorAmmount.setText("Accomplished value cannot be superior than the objective");
+                    errorAmmount.setVisible(true);
+                } else {
+                    valueForAccom += Integer.parseInt(ammountValue.getText());
+                    accomplishedValue.setText(Integer.toString(valueForAccom));
+                    errorAmmount.setVisible(false);
+                }
+
+            } else {
+                errorAmmount.setText("Insert an ammount to add");
+                errorAmmount.setVisible(true);
             }
         });
 
         Pane imageSubContainer = new Pane();
+        imageSubContainer.setMinWidth(25);
+        imageSubContainer.setMinHeight(25);
         imageSubButton = new ImageView(new Image("resources/FundsFormSub.png"));
         imageSubButton.setFitWidth(25);
         imageSubButton.setFitHeight(25);
@@ -197,37 +227,44 @@ public class ManageFundsForm implements Constants {
                 if (valueForAccom - Integer.parseInt(ammountValue.getText()) >= 0) {
                     valueForAccom -= Integer.parseInt(ammountValue.getText());
                     accomplishedValue.setText(Integer.toString(valueForAccom));
+                    errorAmmount.setVisible(false);
+                } else {
+                    errorAmmount.setText("The ammount to remove cannot be superior than the accomplished");
+                    errorAmmount.setVisible(true);
                 }
+            } else {
+                errorAmmount.setText("Insert an ammount to remove");
+                errorAmmount.setVisible(true);
             }
         });
 
-        buttons.getChildren().addAll(imagePlusContainer, imageSubContainer);
-
-        //label Objective
-        objective = new Label();
-        objective.getStyleClass().addAll("fieldTitle");
-        try {
-            objective.setText("Objective: " + goalsObs.getGoal(goalID).getObjective() + "€");
-        } catch (AuthenticationException ex) {
-            DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_AUTH);
-        } catch (GoalNotFoundException ex) {
-            DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
-        }
-
         //Accomplished div
         accomplishedDiv = new HBox();
-
-        //label Accomplished
+        accomplishedDiv.getStyleClass().add("fieldDiv");
+        accomplishedDiv.setPadding(new Insets(5, 0, 0, 0));
+        
+        //Accomplished
         accomplishedTitle = new Label("Accomplished: ");
         accomplishedValue = new Label(Integer.toString(valueForAccom));
-        accomplishedCurrency = new Label(" €");
+        accomplishedCurrency = new Label("€");
         accomplishedTitle.getStyleClass().addAll("fieldTitle");
 
         accomplishedDiv.getChildren().addAll(accomplishedTitle, accomplishedValue, accomplishedCurrency);
 
-        fundsDiv.getChildren().addAll(ammountValue, errorEmpty, errorNegative, buttons, objective, accomplishedDiv);
+        buttons.getChildren().addAll(accomplishedDiv, imagePlusContainer, imageSubContainer);
 
-        form.getChildren().add(fundsDiv);
+        //label Objective
+        objectiveDiv = new HBox();
+        objectiveDiv.getStyleClass().add("fieldDiv");
+        objectiveTitle = new Label();
+        objectiveTitle.getStyleClass().addAll("fieldTitle");
+        objective = new Label();
+
+        objectiveTitle.setText("Objective: ");
+        objective.setText(goal.getObjective() + "€");
+        objectiveDiv.getChildren().addAll(objectiveTitle, objective);
+
+        form.getChildren().addAll(objectiveDiv, ammountDiv, buttons);
 
         //button submit
         bottom = new VBox();
@@ -244,36 +281,45 @@ public class ManageFundsForm implements Constants {
 
     private void setupEventListeners() {
         btnsubmit.setOnAction((ActionEvent e) -> {
-            try {
 
-                int errors = 0;
-                //Validate Objective 
-                if (ammountValue.getText().isEmpty()) {
-                    errorEmpty.setVisible(true);
+            int errors = 0;
+            //Validate Objective 
+            if (ammountValue.getText().isEmpty() && originalAccomplished == valueForAccom) {
+                errorAmmount.setText("Insert an ammount to add or remove");
+                errorAmmount.setVisible(true);
+                errors++;
+
+            } else {
+                if (originalAccomplished == valueForAccom) {
+                    errorAmmount.setText("Click on the button to add or remove your ammount");
+                    errorAmmount.setVisible(true);
                     errors++;
-
                 } else {
-                    errorEmpty.setVisible(false);
+                    errorAmmount.setVisible(false);
                 }
-
-                if (errors == 0) {
-
-                    if (valueForAccom > goalsObs.getGoal(goalID).getWallet().getSavedMoney()) //if the value on the label is bigger,
-                    {
-                        valueForAccom -= goalsObs.getGoal(goalID).getWallet().getSavedMoney();  //than he take off what is already saved
-                    }
-                    goalsObs.updateWallet(goalID, Integer.parseInt(accomplishedValue.getText()));
-                    goalsObs.firePropertyChange(GOAL_EVENT.GOAL_MANAGE_FUNDS.name(), null, null);
-                    DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCCESS_WALLET_UPDATE);
-
-                    fundsForm.close();
-                }
-
-            } catch (AuthenticationException ex) {
-                DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_AUTH);
-            } catch (GoalNotFoundException ex) {
-                DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_GOAL_NOTFOUND);
             }
+
+            if (errors == 0) {
+
+                /*if (valueForAccom > goal.getWallet().getSavedMoney()) //if the value on the label is bigger,
+                {
+                    valueForAccom -= goal.getWallet().getSavedMoney();  //than he take off what is already saved
+                }*/
+                DBOX_CONTENT content;
+                content = DBOX_CONTENT.CONFIRM_WALLET_UPDATE;
+                content.setSubExtra(goal.getName());
+                if (DialogBox.display(DBOX_TYPE.CONFIRM, content) == DBOX_RETURN.YES) {
+                    if (goalsObs.updateWallet(goalID, Integer.parseInt(accomplishedValue.getText()))) {
+                        goalsObs.firePropertyChange(GOAL_EVENT.GOAL_MANAGE_FUNDS.name(), null, null);
+                        DialogBox.display(Constants.DBOX_TYPE.SUCCESS, Constants.DBOX_CONTENT.SUCCESS_WALLET_UPDATE);
+                        fundsForm.close();
+                    } else {
+                        DialogBox.display(Constants.DBOX_TYPE.ERROR, Constants.DBOX_CONTENT.ERROR_WALLET_UPDATE);
+                    }
+
+                }
+            }
+
         });
     }
 
