@@ -68,14 +68,14 @@ public class DashboardController implements Constants {
         Map<String, Double> allData = new TreeMap<>(Collections.reverseOrder());
 
         try {
-
-        } catch (Exception e) {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
                 if (obj.getProgress() < 1) {
-                    String text = Double.toString(obj.getProgress()) + "% - " + obj.getName();
+                    int intAux = new Double(obj.getProgress()* 100.0).intValue();
+                    String text = Double.toString(intAux) + "% - " + obj.getName();
                     allData.put(text, obj.getProgress());
                 }
             }
+        } catch (Exception e) {
         }
 
         if (!allData.isEmpty()) {
@@ -116,8 +116,8 @@ public class DashboardController implements Constants {
             returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
-            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0â‚¬");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0â‚¬");
             return returnData;
         }
 
@@ -126,8 +126,8 @@ public class DashboardController implements Constants {
             returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
-            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
+            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0â‚¬");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0â‚¬");
         } else {
             //Check if both filters are selected
             if (!year.equals("Year") && !month.equals("Month")) {
@@ -181,10 +181,10 @@ public class DashboardController implements Constants {
                 Integer.toString(totalGoals));
 
         returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY,
-                Integer.toString(savedMoney) + "€");
+                Integer.toString(savedMoney) + "â‚¬");
 
         returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE,
-                Integer.toString(totalObjective) + "€");
+                Integer.toString(totalObjective) + "â‚¬");
 
     }
 
