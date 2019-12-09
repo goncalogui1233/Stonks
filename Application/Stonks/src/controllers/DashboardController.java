@@ -70,7 +70,7 @@ public class DashboardController implements Constants {
         try {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
                 if (obj.getProgress() < 1) {
-                    int intAux = new Double(obj.getProgress()* 100.0).intValue();
+                    int intAux = new Double(obj.getProgress() * 100.0).intValue();
                     String text = Double.toString(intAux) + "% - " + obj.getName();
                     allData.put(text, obj.getProgress());
                 }
@@ -116,18 +116,14 @@ public class DashboardController implements Constants {
             returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
             returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
-            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0â‚¬");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0â‚¬");
+            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0€");
+            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0€");
             return returnData;
         }
 
         //The Filters was the default value
         if (year.equals("Year") && month.equals("Month")) {
-            returnData.put(DASHBOARD_STATISTICS_GOALS_COMPLETE, "0");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_INCOMPLETE, "0");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_GOALS, "0");
-            returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY, "0â‚¬");
-            returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE, "0â‚¬");
+            listOfAllGoals = getListOfAllGoals();
         } else {
             //Check if both filters are selected
             if (!year.equals("Year") && !month.equals("Month")) {
@@ -143,8 +139,8 @@ public class DashboardController implements Constants {
                 }
             }
             //goals statics
-            goalStatistics(listOfAllGoals, returnData);
         }
+        goalStatistics(listOfAllGoals, returnData);
 
         return returnData;
     }
@@ -181,10 +177,10 @@ public class DashboardController implements Constants {
                 Integer.toString(totalGoals));
 
         returnData.put(DASHBOARD_STATISTICS_SAVED_MONEY,
-                Integer.toString(savedMoney) + "â‚¬");
+                Integer.toString(savedMoney) + "€");
 
         returnData.put(DASHBOARD_STATISTICS_TOTAL_OBJECTIVE,
-                Integer.toString(totalObjective) + "â‚¬");
+                Integer.toString(totalObjective) + "€");
 
     }
 
@@ -230,6 +226,21 @@ public class DashboardController implements Constants {
                         .getMonth().toString().equals(month)) {
                     listOfAllGoals.add(obj);
                 }
+            }
+        } catch (Exception e) {
+        }
+
+        return listOfAllGoals;
+    }
+
+    private List<GoalModel> getListOfAllGoals() {
+        List<GoalModel> listOfAllGoals = new ArrayList<>();
+
+        try {
+            for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
+                System.out.println(obj.getName());
+                listOfAllGoals.add(obj);
+
             }
         } catch (Exception e) {
         }

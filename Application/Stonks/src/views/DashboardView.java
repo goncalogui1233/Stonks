@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import observables.DashboardObservable;
 import stonks.Constants;
 
-public class DashboardView implements Constants {
+public class DashboardView implements Constants, PropertyChangeListener {
 
     private final DashboardObservable dashObs;
 
@@ -22,7 +22,7 @@ public class DashboardView implements Constants {
 
     //Containers
     private final HBox root;
-    
+
     public DashboardView(DashboardObservable dashObs) {
         this.dashObs = dashObs;
 
@@ -32,18 +32,30 @@ public class DashboardView implements Constants {
         root.setMaxSize(DASHBOARD_VIEW_WIDTH, DASHBOARD_VIEW_HEIGHT);
 
         setupContainers();
+        setupPropertyChangeListeners();
+    }
+
+    private void setupPropertyChangeListeners() {
+        dashObs.getStonksObs().addPropertyChangeListener(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), this);
     }
 
     private void setupContainers() {
         dashboardBox = new DashboardBox(dashObs);
         statisticsBox = new StatisticsBox(dashObs);
 
-
         root.getChildren().addAll(new SideMenu(dashObs.getStonksObs()).getRoot(),
-                dashboardBox.getRoot(),statisticsBox.getRoot());
+                dashboardBox.getRoot(), statisticsBox.getRoot());
     }
 
     public HBox getRoot() {
         return root;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
+           statisticsBox.populateLabels();
+           System.out.println("er");
+        }
     }
 }

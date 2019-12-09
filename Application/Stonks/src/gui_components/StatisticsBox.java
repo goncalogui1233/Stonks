@@ -81,7 +81,7 @@ public class StatisticsBox implements Constants {
         populateLabels();
     }
 
-    private void populateLabels() {
+    public void populateLabels() {
         Map<Integer, String> values = dashObs.goalsFiltered(cbYear.getValue().toString(), cbMonth.getValue().toString());
         // Switch 0's to values from controller
         lbTotalGoals = generateTotalGoalsLabel(
