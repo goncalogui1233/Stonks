@@ -199,7 +199,7 @@ public class GoalForm extends PropertyChangeSupport implements Constants {
         objectiveDiv = new VBox();
         objectiveDiv.getStyleClass().addAll("fieldDiv");
 
-        lblObjective = new Label("Objective (â‚¬)");
+        lblObjective = new Label("Objective (€)");
         lblObjective.getStyleClass().addAll("fieldTitle");
 
         txfObjective = new TextField();
