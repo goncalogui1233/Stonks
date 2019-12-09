@@ -68,13 +68,8 @@ public class DashboardBox implements Constants, PropertyChangeListener {
         Map<String, String> goalsWithDeadline = dashObs.goalsWithDeadline();
         Map<String, Double> goalsUncomplished = dashObs.dataForPieChart();
 
-        Label lbDeadlineGoal, lbDeadlineDate;
         if (goalsWithDeadline != null) {
-            for (Map.Entry<String, String> entry : goalsWithDeadline.entrySet()) {
-                lbDeadlineGoal = new Label(entry.getKey());
-                lbDeadlineDate = new Label(entry.getValue());
-                root.getChildren().addAll(lbDeadlineGoal, lbDeadlineDate);
-            }
+            generateDeadlinesLabel();
         } else {
         }    //Não existe deadlines
 
@@ -113,7 +108,7 @@ public class DashboardBox implements Constants, PropertyChangeListener {
 
         if (!goals.isEmpty()) {
             for (Map.Entry<String, String> entry : goals.entrySet()) {
-                lbNameGoal = new Label(entry.getKey());
+                lbNameGoal = new Label(entry.getKey()+ " :  ");
                 lbDate = new Label(entry.getValue());
                 line = new HBox();
                 line.getChildren().addAll(lbNameGoal, lbDate);
