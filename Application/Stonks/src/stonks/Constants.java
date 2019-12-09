@@ -33,7 +33,7 @@ public interface Constants {
         ERROR_RECOVER_PASSWORD("Invalid answer", "Try again"),
         ERROR_LOGIN("Invalid password", "Try again"),
         /*SUCCESS MESSAGES*/
-        /*To be changed*/ SUCCESS_PROFILE_CREATE("Limit of profiles reached", "You can only have 6 profiles, delete one to register another"),
+        /*To be changed*/ SUCCESS_PROFILE_CREATE("Profile Created", "Your profile was successfully created!"),
         SUCCESS_PROFILE_EDIT("Profile edited", "Your profile was successfully edited"),
         SUCCESS_GOAL_CREATE("Goal Created", "Your goal was successfully created!"),
         SUCCESS_GOAL_DELETE("Goal Deleted", "Your goal was successfully deleted!"),
