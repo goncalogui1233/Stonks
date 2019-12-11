@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class GoalModel implements Serializable {
 
@@ -107,4 +108,55 @@ public class GoalModel implements Serializable {
             }
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + this.id;
+        hash = 23 * hash + this.objective;
+        hash = 23 * hash + Objects.hashCode(this.deadlineDate);
+        hash = 23 * hash + Objects.hashCode(this.wallet);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GoalModel other = (GoalModel) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.objective != other.objective) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.creationDate, other.creationDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.achievementDate, other.achievementDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.deadlineDate, other.deadlineDate)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "GoalModel{" + "id=" + id + ", creationDate=" + creationDate + ", achievementDate=" + achievementDate + ", name=" + name + ", objective=" + objective + ", deadlineDate=" + deadlineDate + ", wallet=" + wallet + '}';
+    }
+    
+    
 }
