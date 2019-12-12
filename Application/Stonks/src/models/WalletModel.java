@@ -71,7 +71,6 @@ public class WalletModel implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 47 * hash + this.id;
         hash = 47 * hash + this.savedMoney;
         hash = 47 * hash + Objects.hashCode(this.firstDepositDate);
         hash = 47 * hash + Objects.hashCode(this.lastDepositDate);
@@ -92,7 +91,5 @@ public class WalletModel implements Serializable {
         final WalletModel other = (WalletModel) obj;
         return true;
     }
-    
-    
 
 }

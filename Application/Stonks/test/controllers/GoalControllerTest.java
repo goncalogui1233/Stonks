@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
+import org.junit.After;
 import stonks.StonksData;
-
 
 /**
  *
@@ -35,6 +35,11 @@ public class GoalControllerTest {
         goalController = new GoalController(data);
     }
 
+    @After
+    public void tearDown() {
+        data.getAuthProfile().getGoals().clear();
+    }
+
     /**
      * Test of createGoal method, of class GoalController.
      */
@@ -46,12 +51,12 @@ public class GoalControllerTest {
         // empty objective
         assertEquals(goalController.createGoal("Bike", 0, LocalDate.now()), null);
         // empty date
-        //assertThat(goalController.createGoal("Bike", 100, null), is(new GoalModel(1,  "Bike", 100, null)));
+        assertThat(goalController.createGoal("Bike", 100, null), is(new GoalModel(3, "Bike", 100, null)));
         // invalid date
         assertEquals(goalController.createGoal("Bike", 100, LocalDate.of(1900, Month.MARCH, 1)), null);
 //        // valid || but compara inst working
-//        assertEquals(goalController.createGoal("Bike", 100, LocalDate.of(2020, Month.MARCH, 1)), 
-//                is(new GoalModel(2,  "Bike", 100, LocalDate.of(2020, Month.MARCH, 1))));
+        assertThat(goalController.createGoal("Bike", 100, LocalDate.of(2020, Month.MARCH, 1)),
+                is(new GoalModel(3, "Bike", 100, LocalDate.of(2020, Month.MARCH, 1))));
     }
 
     /**
@@ -60,7 +65,7 @@ public class GoalControllerTest {
     @Test(expected = Exception.class)
     public void testEditGoal() throws Exception {
         GoalModel model = new GoalModel(1, "Bike", 100, LocalDate.of(2020, Month.MARCH, 1));
-        data.getAuthProfile().getGoals().put(2,model);
+        data.getAuthProfile().getGoals().put(2, model);
 
         // everything null
         assertEquals(goalController.editGoal(model.getId(), "", 0, null), null);
@@ -79,32 +84,39 @@ public class GoalControllerTest {
         assertEquals(goalController.editGoal(1000000, "Bike", 100, LocalDate.of(2020, Month.MARCH, 1)), null);
     }
 
-    
     /**
      * Test of removeGoal method, of class GoalController.
      */
     @Test(expected = Exception.class)
     public void testRemoveGoal() throws Exception {
-        GoalModel model =  new GoalModel(1,"Bike", 100, LocalDate.of(2020, Month.MARCH, 1));
-        data.getAuthProfile().getGoals().put(2,model);
+        GoalModel model = new GoalModel(1, "Bike", 100, LocalDate.of(2020, Month.MARCH, 1));
+        data.getAuthProfile().getGoals().put(2, model);
         // doesn't exist
         assertEquals(goalController.removeGoal(1000000), true);
         // exists
         assertEquals(goalController.removeGoal(model.getId()), true);
     }
 
-
     @Test(expected = Exception.class)
     public void testManageGoalFunds() throws Exception {
-        GoalModel model = new GoalModel(1,"Bike", 100, LocalDate.of(2020, Month.MARCH, 1));
+        GoalModel model = new GoalModel(1, "Bike", 100, LocalDate.of(2020, Month.MARCH, 1));
         model.getWallet().setSavedMoney(100);
-        data.getAuthProfile().getGoals().put(1,model);
+        data.getAuthProfile().getGoals().put(1, model);
         assertEquals(goalController.manageGoalFunds(100000000, 10), 0);
         assertEquals(goalController.manageGoalFunds(model.getId(), 10), 1);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void testGetEstimatedDate() throws Exception {
+        GoalModel model = new GoalModel(1, "Car", 3000, LocalDate.of(2020, Month.MARCH, 1));
+        data.getAuthProfile().getGoals().put(1, model);
+        goalController.manageGoalFunds(model.getId(), 100);
+
+        assertTrue(goalController.getEstimatedDate(model.getId()).toEpochDay() == LocalDate.of(2020, Month.JANUARY, 10).toEpochDay());
+        assertEquals(goalController.getEstimatedDate(1010100).toString(), null);
+        //assertEquals(, data);
+        
+        
     }
 
 }

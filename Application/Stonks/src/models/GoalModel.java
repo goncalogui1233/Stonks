@@ -112,10 +112,8 @@ public class GoalModel implements Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 23 * hash + this.id;
         hash = 23 * hash + this.objective;
         hash = 23 * hash + Objects.hashCode(this.deadlineDate);
-        hash = 23 * hash + Objects.hashCode(this.wallet);
         return hash;
     }
 
@@ -131,22 +129,14 @@ public class GoalModel implements Serializable {
             return false;
         }
         final GoalModel other = (GoalModel) obj;
-        if (this.id != other.id) {
-            return false;
-        }
         if (this.objective != other.objective) {
             return false;
         }
-        if (!Objects.equals(this.name, other.name)) {
+        if (!this.name.equals( other.name)) {
             return false;
         }
-        if (!Objects.equals(this.creationDate, other.creationDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.achievementDate, other.achievementDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.deadlineDate, other.deadlineDate)) {
+        if (!this.creationDate.equals(other.creationDate)) {
+            System.out.println("erro");
             return false;
         }
         

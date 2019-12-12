@@ -222,6 +222,5 @@ public class GoalController implements Constants {
         int daysToComplete = (int) Math.ceil((objective / moneyPerDay) - daysPassed);
 
         return now.plusDays(daysToComplete);
-
     }
 }
