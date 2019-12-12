@@ -7,10 +7,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class DashboardController implements Constants {
 
@@ -66,7 +69,6 @@ public class DashboardController implements Constants {
     //THE LAST ONE WILL OVERRIDE DE LASTONE
     public Map<String, Integer> getListOfUncomplichedGoals() {
         Map<String, Integer> allData = new TreeMap<>(Collections.reverseOrder());
-
         try {
             for (GoalModel obj : data.getAuthProfile().getGoals().values()) {
                 if (obj.getProgress() < 1 && obj.getWallet().getSavedMoney() > 0) {
@@ -88,15 +90,25 @@ public class DashboardController implements Constants {
     private static Map<String, Integer> putFirstEntries(int max, Map<String, Integer> source) {
         int count = 0;
         Map<String, Integer> target = new TreeMap<>();
-        for (Map.Entry<String, Integer> entry : source.entrySet()) {
+        SortedSet<Map.Entry<String, Integer>> aux = entriesSortedByValues(source);
+        for (Map.Entry<String, Integer> entry : aux) {
             if (count >= max) {
                 break;
             }
-
             target.put(entry.getKey(), entry.getValue());
             count++;
         }
         return target;
+    }
+
+    static SortedSet<Map.Entry<String, Integer>> entriesSortedByValues(Map<String, Integer> map) {
+        SortedSet<Map.Entry<String, Integer>> sortedEntries = new TreeSet<Map.Entry<String, Integer>>(
+                (Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) -> {
+                    int res = e2.getValue().compareTo(e1.getValue());
+                    return res != 0 ? res : 1;
+                });
+        sortedEntries.addAll(map.entrySet());
+        return sortedEntries;
     }
 
     //-------------Statistics-------------
