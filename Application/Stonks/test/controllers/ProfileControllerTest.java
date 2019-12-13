@@ -8,6 +8,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.Map;
 import models.ProfileModel;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -40,7 +41,21 @@ public class ProfileControllerTest {
 
     @Test
     public void testCreateProfile() {
-        //
+        //6 Users created 
+        profileController.createProfile("João", "Batatas", "securityQuestion", "securityAnswer", "password123", "#223456");
+        profileController.createProfile("Andre", "Batatas", "securityQuestion", "securityAnswer", "password123", "#323456");
+        profileController.createProfile("Rui", "Batatas", "securityQuestion", "securityAnswer", "password123", "#423456");
+        profileController.createProfile("Luis", "Batatas", "securityQuestion", "securityAnswer", "password123", "#623456");
+        profileController.createProfile("Ana", "Batatas", "securityQuestion", "securityAnswer", "password123", "#783456");
+        profileController.createProfile("Ana", "Batatas", "securityQuestion", "securityAnswer", "password123", "#783456");
+        //Max users
+        assertEquals(profileController.createProfile("Joana", "Batatas", "securityQuestion", "securityAnswer", "password123", "#783456"), false);
+
+        //Remove 1 User
+        data.setAuthProfile(profileController.getProfile(1));
+        profileController.removeProfile(1);
+        
+        assertEquals(profileController.createProfile("Joana", "Batatas", "securityQuestion", "securityAnswer", "password123", "#783456"), true);
     }
 
     /**
@@ -72,11 +87,16 @@ public class ProfileControllerTest {
 
     @Test
     public void testRemoveProfile() {
-    }
+        ProfileModel user;
+        //not auth
+        assertEquals(profileController.removeProfile(1), false);
+        //User Auth
+        profileController.createProfile("João", "Batatas", "securityQuestion", "securityAnswer", "password123", "#123456");
+        user = profileController.getProfile(1);
+        data.setAuthProfile(user);
+        //Try delete another user
+        assertEquals(profileController.removeProfile(user.getId()), true);
 
-
-    @Test
-    public void testHasAuthProfile() {
     }
 
     @Test
@@ -86,9 +106,24 @@ public class ProfileControllerTest {
         assertEquals(profileController.getNextId(), 2);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void testLoginProfile() {
+        assertEquals(profileController.loginProfile(0, ""), false);
+        ProfileModel user;
+        profileController.createProfile("João", "Batatas", "securityQuestion", "securityAnswer", "password123", "#123456");
+        profileController.createProfile("Alfredo", "Batatas", "securityQuestion", "securityAnswer", "", "#123456");
         
+        assertEquals(profileController.loginProfile(1, ""), false); //user without password
+        assertEquals(profileController.loginProfile(2, ""), false); //user with password
+        assertEquals(profileController.loginProfile(2, "password13"), true);
+        
+        //With user logged
+        user = profileController.getProfile(2);
+        data.setAuthProfile(user);
+
+        assertEquals(profileController.loginProfile(1, ""), false); //user without password
+        assertEquals(profileController.loginProfile(2, ""), false); //user with password
+        assertEquals(profileController.loginProfile(2, "password13"), false);
     }
 
     @Test
@@ -102,21 +137,19 @@ public class ProfileControllerTest {
         assertEquals(profileController.logoutProfile(), false);
     }
 
-    @Test (expected = Exception.class)
+    @Test
     public void testRecoverPassword() {
         ProfileModel user;
         //No User Auth
-        try {
-            //assertEquals(profileController.recoverPassword(0, ""),null);
-        } catch (Exception e) {
-        }
+        //assertNull(profileController.recoverPassword(0, ""));
 
-        //profileController.createProfile("João", "Batatas", "securityQuestion", "securityAnswer", "password123", "#123456");
-        //user = profileController.getProfile(1);
-        //data.setAuthProfile(user);
+
+        profileController.createProfile("João", "Batatas", "securityQuestion", "securityAnswer", "password123", "#123456");
+        user = profileController.getProfile(1);
+        data.setAuthProfile(user);
         //User Auth
-      //  assertNull(profileController.recoverPassword(1, ""));
-      //  assertEquals(profileController.recoverPassword(1, "securityAnswer"), "password123");
+          assertNull(profileController.recoverPassword(1, ""));
+          assertEquals(profileController.recoverPassword(1, "securityAnswer"), "password123");
     }
 
 }
