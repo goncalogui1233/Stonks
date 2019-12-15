@@ -4,6 +4,7 @@ import exceptions.EmptyDepositException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 import stonks.StonksData;
 
 public class WalletModel implements Serializable {
@@ -65,6 +66,30 @@ public class WalletModel implements Serializable {
     
     public void removeMoney(int quant){
         this.savedMoney -= quant;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + this.savedMoney;
+        hash = 47 * hash + Objects.hashCode(this.firstDepositDate);
+        hash = 47 * hash + Objects.hashCode(this.lastDepositDate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final WalletModel other = (WalletModel) obj;
+        return true;
     }
 
 }

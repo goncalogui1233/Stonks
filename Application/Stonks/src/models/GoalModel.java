@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class GoalModel implements Serializable {
 
@@ -107,4 +108,45 @@ public class GoalModel implements Serializable {
             }
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + this.objective;
+        hash = 23 * hash + Objects.hashCode(this.deadlineDate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GoalModel other = (GoalModel) obj;
+        if (this.objective != other.objective) {
+            return false;
+        }
+        if (!this.name.equals( other.name)) {
+            return false;
+        }
+        if (!this.creationDate.equals(other.creationDate)) {
+            System.out.println("erro");
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "GoalModel{" + "id=" + id + ", creationDate=" + creationDate + ", achievementDate=" + achievementDate + ", name=" + name + ", objective=" + objective + ", deadlineDate=" + deadlineDate + ", wallet=" + wallet + '}';
+    }
+    
+    
 }

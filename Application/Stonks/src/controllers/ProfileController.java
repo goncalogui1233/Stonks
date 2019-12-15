@@ -290,4 +290,8 @@ public class ProfileController implements Constants {
 
         return null;
     }
+
+    Object editProfile(int i, Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
