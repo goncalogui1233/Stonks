@@ -125,10 +125,10 @@ public class GoalView implements Constants, PropertyChangeListener {
         toggleDiv.pseudoClassStateChanged(show, showCompleted);
         
         if(showCompleted){
-            toggleButton.setText("Hide");
+            toggleButton.setText("Show");
             toggleDiv.setAlignment(Pos.CENTER_RIGHT);
         }else{
-            toggleButton.setText("Show");
+            toggleButton.setText("Hide");
             toggleDiv.setAlignment(Pos.CENTER_LEFT);
         }
         
@@ -137,10 +137,10 @@ public class GoalView implements Constants, PropertyChangeListener {
             toggleDiv.pseudoClassStateChanged(show, showCompleted);
             
             if(showCompleted){
-                toggleButton.setText("Hide");
+                toggleButton.setText("Show");
                 toggleDiv.setAlignment(Pos.CENTER_RIGHT);
             }else{
-                toggleButton.setText("Show");
+                toggleButton.setText("Hide");
                 toggleDiv.setAlignment(Pos.CENTER_LEFT);
             }
             

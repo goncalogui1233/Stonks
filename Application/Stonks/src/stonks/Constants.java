@@ -190,9 +190,12 @@ public interface Constants {
         GOTO_PROFILE_VIEW, 
         GOTO_GOAL_VIEW, 
         GOTO_DASHBOARD_VIEW,
+        GOTO_SETTING_VIEW,
         /*GENERAL EVENTS*/
         PROFILE_HAS_BEEN_EDITED,
         PROFILE_HAS_BEEN_AUTH,
+        DARKMODE_ACTIVE,
+        DARKMODE_INACTIVE,
         GOAL_STATE_CHANGED
     };
 

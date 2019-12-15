@@ -14,13 +14,16 @@ import observables.AuthenticationObservable;
 import observables.DashboardObservable;
 import observables.GoalsObservable;
 import observables.ProfileObservable;
+import observables.SettingsObservable;
 import observables.StonksObservable;
 import views.AuthenticationView;
 import views.DashboardView;
 import views.GoalView;
 import views.ProfileView;
+import views.SettingView;
 
 public class Stonks extends Application implements Constants, PropertyChangeListener {
+
     private Stage window;
     private StonksData data;
 
@@ -29,13 +32,15 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private Scene profileScene;
     private Scene goalScene;
     private Scene dashScene;
+    private Scene settingScene;
 
     /*Observables*/
     private StonksObservable stonksObs;
     private AuthenticationObservable authObs;
     private ProfileObservable profileObs;
     private GoalsObservable goalsObs;
-     private DashboardObservable dashObs;
+    private DashboardObservable dashObs;
+    private SettingsObservable settObs;
 
     /*Controllers*/
     private ProfileController cProfile;
@@ -47,7 +52,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
     private ProfileView profileView;
     private GoalView goalView;
     private DashboardView dashView;
-  
+    private SettingView settingView;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -59,11 +65,6 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         setupApp();
         setupWindow();
         setupPropertyChangeListeners();
-
-
-        /*DialogBox test - REMOVE LATER*/
-        //DBOX_CONTENT.CONFIRM_DELETE_PROFILE.setSubExtra("User 1");
-        //System.out.println("DBOX_RETURN = " + DialogBox.display(DBOX_TYPE.CONFIRM, DBOX_CONTENT.CONFIRM_DELETE_PROFILE));
     }
 
     public void setupApp() {
@@ -75,25 +76,24 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         cGoal = new GoalController(data);
         cDashboard = new DashboardController(data);
 
-//        populateApp(); /*Remove later*/
-        //ProfileModel.setData(data);
-        //WalletModel.setData(data);
         stonksObs = new StonksObservable(cProfile, data);
         authObs = new AuthenticationObservable(cProfile, stonksObs);
         profileObs = new ProfileObservable(cProfile, stonksObs);
         goalsObs = new GoalsObservable(cGoal, stonksObs);
         dashObs = new DashboardObservable(cDashboard, stonksObs);
+        settObs = new SettingsObservable(stonksObs);
 
-        
         authenticationView = new AuthenticationView(authObs);
         profileView = new ProfileView(profileObs);
         goalView = new GoalView(goalsObs);
         dashView = new DashboardView(dashObs);
+        settingView = new SettingView(settObs);
 
         authScene = new Scene(authenticationView.getRoot());
         profileScene = new Scene(profileView.getRoot());
         goalScene = new Scene(goalView.getRoot());
         dashScene = new Scene(dashView.getRoot());
+        settingScene = new Scene(settingView.getRoot());
 
         window.getIcons().add(new Image("/resources/stonks_icon.png"));
     }
@@ -108,7 +108,8 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         window.setScene(authScene);
 
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS.css");
+
+        setCSS(false);
 
         window.show();
     }
@@ -118,29 +119,43 @@ public class Stonks extends Application implements Constants, PropertyChangeList
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name(), this);
         stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.GOTO_SETTING_VIEW.name(), this);
+
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.DARKMODE_ACTIVE.name(), this);
+        stonksObs.addPropertyChangeListener(STONKS_EVENT.DARKMODE_INACTIVE.name(), this);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_GOAL_VIEW.name())) {
-            //goalView.displayIncompleteProfileGoals();/*CHECK LATER - GOAL VIEW CAN BE NOTIFIED BY STONKS OBS*/
             window.setScene(goalScene);
         } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_PROFILE_VIEW.name())) {
             window.setScene(profileScene);
-        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())) {
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_AUTHENTICATION_VIEW.name())) {
             window.setScene(authScene);
-        }else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name())) {
             window.setScene(dashScene);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.GOTO_SETTING_VIEW.name())) {
+            window.setScene(settingScene);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.PROFILE_HAS_BEEN_AUTH.name())) {
+            try{
+                setCSS(data.getAuthProfile().getSettings().isDarkMode());
+            }catch(NullPointerException ex){}
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.DARKMODE_ACTIVE.name())) {
+            setCSS(true);
+        } else if (evt.getPropertyName().equals(STONKS_EVENT.DARKMODE_INACTIVE.name())) {
+            setCSS(false);
         }
     }
 
-    /*Remove later*/
-    private void populateApp() {
-        cProfile.createProfile("Ricardo",
-                "Pereira",
-                SECURITY_QUESTIONS.CHILDHOOD_NICKNAME.getQuestion(),
-                "kekkek",
-                "kekkek",
-                "#d3d9f1");
+    private void setCSS(boolean darkMode) {
+        if (darkMode) {
+            StyleManager.getInstance().removeUserAgentStylesheet("resources/StonksCSS.css");
+            StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS_darkMode.css");
+        } else {
+            StyleManager.getInstance().removeUserAgentStylesheet("resources/StonksCSS_darkMode.css");
+            StyleManager.getInstance().addUserAgentStylesheet("resources/StonksCSS.css");
+        }
     }
 }

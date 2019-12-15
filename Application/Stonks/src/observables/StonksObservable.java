@@ -30,6 +30,10 @@ public class StonksObservable extends PropertyChangeSupport implements Constants
         return data.getAuthProfile();
     }
     
+    public void updateDatabase(){
+        data.updateDatabase();
+    }
+    
     public boolean logout(){
         boolean loggedOut = cProfile.logoutProfile();
         

@@ -38,6 +38,7 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private Label profileFirstName;
     private Label profileLastName;
     private Label profileLink;
+    private Label settingLink;
     private Label logoutLink;
     private Label dashboardLink;
     private Label goalLink;
@@ -108,8 +109,8 @@ public class SideMenu implements Constants, PropertyChangeListener {
     private void setupLinkDiv() {
         linkDiv = new VBox();
 
-        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
-        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.21);
+        linkDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.28);
+        linkDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.28);
         linkDiv.setId("linkDiv");
 
         last = PseudoClass.getPseudoClass("last");
@@ -118,6 +119,10 @@ public class SideMenu implements Constants, PropertyChangeListener {
         profileLink = new Label("Profile");
         profileLink.setMinWidth(SIDEMENU_WIDTH);
         profileLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
+
+        settingLink = new Label("Settings");
+        settingLink.setMinWidth(SIDEMENU_WIDTH);
+        settingLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
 
         dashboardLink = new Label("Dashboard");
         dashboardLink.setMinWidth(SIDEMENU_WIDTH);
@@ -128,15 +133,15 @@ public class SideMenu implements Constants, PropertyChangeListener {
         goalLink.setMinHeight(SIDEMENU_HEIGHT * 0.07);
         goalLink.pseudoClassStateChanged(last, true);
 
-        linkDiv.getChildren().addAll(profileLink, dashboardLink, goalLink);
+        linkDiv.getChildren().addAll(profileLink, settingLink, dashboardLink, goalLink);
 
         rootDiv.getChildren().add(linkDiv);
     }
 
     private void setupGoalDiv() {
         goalDiv = new StackPane();
-        goalDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
-        goalDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.64);
+        goalDiv.setMinSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.57);
+        goalDiv.setMaxSize(SIDEMENU_WIDTH, SIDEMENU_HEIGHT * 0.57);
         
         topGoalsDiv = new VBox();
         labelDiv = new BorderPane();
@@ -169,6 +174,9 @@ public class SideMenu implements Constants, PropertyChangeListener {
         });
         profileLink.setOnMouseClicked(e -> {
             stonksObs.firePropertyChange(STONKS_EVENT.GOTO_PROFILE_VIEW.name(), null, null);
+        });
+        settingLink.setOnMouseClicked(e -> {
+            stonksObs.firePropertyChange(STONKS_EVENT.GOTO_SETTING_VIEW.name(), null, null);
         });
         dashboardLink.setOnMouseClicked(e -> {
             stonksObs.firePropertyChange(STONKS_EVENT.GOTO_DASHBOARD_VIEW.name(), null, null);

@@ -2,7 +2,6 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +18,8 @@ public class ProfileModel implements Serializable {
     private String password;
     private String color;
     private HashMap<Integer, GoalModel> goalList;
+    
+    private SettingsModel settings;
 
     /*ProfileModel constructor WITH Password*/
     public ProfileModel(String firstName, String lastName, String securityQuestion, String securityAnswer, String password, String color) {
@@ -29,6 +30,8 @@ public class ProfileModel implements Serializable {
         this.password = password;
         this.color = color;
         this.goalList = new HashMap<>();
+        
+        settings = new SettingsModel();
 
         id = idCounter++;
     }
@@ -41,6 +44,8 @@ public class ProfileModel implements Serializable {
         this.securityAnswer = securityAnswer;
         this.color = color;
         this.goalList = new HashMap<>();
+        
+        settings = new SettingsModel();
 
         id = idCounter++;
     }
@@ -99,6 +104,10 @@ public class ProfileModel implements Serializable {
 
     public void setGoals(HashMap<Integer, GoalModel> goals) {
         this.goalList = goals;
+    }
+
+    public SettingsModel getSettings() {
+        return settings;
     }
 
     public boolean hasGoals() {
